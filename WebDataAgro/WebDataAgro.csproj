@@ -825,12 +825,6 @@
     <Content Include="Content\Images\descargar-pdf-excel.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Images\distribucion-cupos-header-bg.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\distribucion-cupos-logo.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\eliminar-agenda.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -62,6 +62,11 @@ document.addEventListener('DOMContentLoaded', async function () {
   bindUpload();
   updateActionButtons();
 
+  $(document).on('input', '#pct-op input.pct-inp, #pct-cls input.pct-inp', onPctInputChange);
+  $(document).on('click', '#res-tabs .tab', function () {
+    switchTab($(this).data('target'), this);
+  });
+
   try {
     await loadConfig();
   } catch (error) {
@@ -262,8 +267,9 @@ function safeId(value) {
   return String(value || '').replace(/[^A-Za-z0-9_-]/g, '_');
 }
 
-function escapeJs(value) {
-  return String(value || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+function toLocaleNumber(value) {
+  const numeric = Number(value || 0);
+  return Number.isFinite(numeric) ? numeric.toLocaleString('es-AR') : '0';
 }
 
 function matCol(material) {
@@ -466,6 +472,7 @@ function normalizeStats(stats, contracts) {
   return base;
 }
 
+// Normaliza la respuesta importada y deja el estado listo para la UI.
 function applyParsed(data) {
   const parsed = camelizeKeys(data || {});
   S.contracts = Array.isArray(parsed.contratos) ? parsed.contratos : [];
@@ -544,138 +551,251 @@ function syncStaticUi() {
   onToggleMultiDay();
 }
 
+// Crea la grilla de topes diarios y por material para la configuración.
 function buildLimGrid() {
-  const grid = document.getElementById('lim-grid');
-  if (!grid) {
+  const container = $('#grid-limites');
+  if (!container.length) {
     return;
   }
-  grid.innerHTML = '';
   const cupoKg = S.cupoKg || 30000;
 
   if (!S.multiDay || S.dayDates.length < 2) {
-    S.allMats.forEach(function (mat) {
-      const col = matCol(mat);
-      const currentLimit = S.limits[mat] !== undefined ? S.limits[mat] : 0;
+    const rows = S.allMats.map(function (mat) {
       const ccppKg = toNumber(S.ccppByMat[mat]);
-      const ccppCupos = Math.ceil(ccppKg / cupoKg);
-      const row = document.createElement('div');
-      row.className = 'lim-row';
-      row.innerHTML = `
-        <div class="mat-nm"><span class="dot ${col.cls}"></span>${esc(mat)}</div>
-        <div class="lim-inp">
-          <label>Tope diario (cupos totales)</label>
-          <input type="number" min="0" step="1" id="lim-${safeId(mat)}" value="${currentLimit}" oninput="S.limits['${escapeJs(mat)}']=parseInt(this.value,10)||0">
-        </div>
-        <div class="lim-ccpp">
-          CCPP pendiente: <strong class="txt-org">${ccppCupos.toLocaleString('es-AR')} cupos</strong>
-          <span class="d-block fs-11">${(ccppKg / 1000).toLocaleString('es-AR', { maximumFractionDigits: 0 })} t — descontado por CUIT</span>
-        </div>`;
-      grid.appendChild(row);
-      S.limits[mat] = currentLimit;
+      return {
+        material: mat,
+        colClass: matCol(mat).cls,
+        limit: S.limits[mat] !== undefined ? S.limits[mat] : 0,
+        ccppCupos: Math.ceil(ccppKg / cupoKg),
+        ccppTon: ccppKg / 1000
+      };
+    });
+    renderDataGrid('grid-limites', rows, [
+      { field: 'material', title: 'Material', template: function (row) { return '<span class="dot ' + row.colClass + '"></span>' + esc(row.material); } },
+      {
+        field: 'limit',
+        title: 'Tope diario (cupos totales)',
+        template: function (row) {
+          return '<input type="number" min="0" step="1" class="lim-input" data-material="' + esc(row.material) + '" value="' + row.limit + '">';
+        }
+      },
+      {
+        field: 'ccppCupos',
+        title: 'CCPP pendiente',
+        template: function (row) {
+          return 'CCPP pendiente: <strong class="txt-org">' + row.ccppCupos.toLocaleString('es-AR') + ' cupos</strong>' +
+            '<span class="d-block fs-11">' + row.ccppTon.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + ' t — descontado por CUIT</span>';
+        }
+      }
+    ], {
+      sortable: false,
+      dataBound: function () {
+        this.element.find('input.lim-input').on('input', function () {
+          const material = $(this).data('material');
+          S.limits[material] = parseInt(this.value, 10) || 0;
+        });
+      }
     });
     return;
   }
 
-  const header = document.createElement('div');
-  header.className = 'lim-row lim-row-hdr ' + dayColsClass(S.dayDates.length);
-  header.innerHTML = '<div>Material</div>' + S.dayDates.map(function (day, index) {
-    return `<div class="text-center">Día ${index + 1}<br><span class="fw-400">${fmt(day, '/')}</span></div>`;
-  }).join('') + '<div>CCPP pendiente</div>';
-  grid.appendChild(header);
-
-  S.allMats.forEach(function (mat) {
-    const col = matCol(mat);
+  const rows = S.allMats.map(function (mat) {
     const ccppKg = toNumber(S.ccppByMat[mat]);
-    const ccppCupos = Math.ceil(ccppKg / cupoKg);
+    const defaultDayLimit = toNumber(S.limits[mat]);
     if (!Array.isArray(S.dayLimits[mat])) {
-      S.dayLimits[mat] = Array(S.dayDates.length).fill(0);
+      S.dayLimits[mat] = Array(S.dayDates.length).fill(defaultDayLimit);
+    } else {
+      while (S.dayLimits[mat].length < S.dayDates.length) {
+        S.dayLimits[mat].push(defaultDayLimit);
+      }
+      S.dayLimits[mat] = S.dayLimits[mat].slice(0, S.dayDates.length).map(function (value, index) {
+        return toNumber(value) || (index === 0 ? defaultDayLimit : 0);
+      });
     }
-    const row = document.createElement('div');
-    row.className = 'lim-row ' + dayColsClass(S.dayDates.length);
-    row.innerHTML = `
-      <div class="mat-nm"><span class="dot ${col.cls}"></span>${esc(mat)}</div>
-      ${S.dayDates.map(function (_, index) {
-        const value = toNumber(S.dayLimits[mat][index]);
-        return `<div class="lim-inp"><input class="w-100 input-center" type="number" min="0" step="1" id="lim-D${index}-${safeId(mat)}" value="${value}" oninput="if(!Array.isArray(S.dayLimits['${escapeJs(mat)}'])){S.dayLimits['${escapeJs(mat)}']=[];}S.dayLimits['${escapeJs(mat)}'][${index}]=parseInt(this.value,10)||0"></div>`;
-      }).join('')}
-      <div class="lim-ccpp">
-        <strong class="txt-org">${ccppCupos.toLocaleString('es-AR')} cupos</strong>
-        <span class="d-block fs-11">${(ccppKg / 1000).toLocaleString('es-AR', { maximumFractionDigits: 0 })} t</span>
-      </div>`;
-    grid.appendChild(row);
+    const row = {
+      material: mat,
+      colClass: matCol(mat).cls,
+      ccppCupos: Math.ceil(ccppKg / cupoKg),
+      ccppTon: ccppKg / 1000
+    };
+    S.dayDates.forEach(function (_, index) {
+      row['day' + index] = toNumber(S.dayLimits[mat][index]);
+    });
+    return row;
+  });
+
+  const dayColumns = S.dayDates.map(function (day, index) {
+    return {
+      field: 'day' + index,
+      title: 'Día ' + (index + 1),
+      headerTemplate: '<div class="lim-day-header"><div>Día ' + (index + 1) + '</div><div class="fw-400">' + fmt(day, '/') + '</div></div>',
+      encoded: false,
+      attributes: { class: 'text-center' },
+      template: function (row) {
+        return '<input class="w-100 input-center lim-day-input" type="number" min="0" step="1" data-material="' +
+          esc(row.material) + '" data-day="' + index + '" value="' + row['day' + index] + '">';
+      }
+    };
+  });
+
+  renderDataGrid('grid-limites', rows, [
+    { field: 'material', title: 'Material', template: function (row) { return '<span class="dot ' + row.colClass + '"></span>' + esc(row.material); } }
+  ].concat(dayColumns).concat([
+    {
+      field: 'ccppCupos',
+      title: 'CCPP pendiente',
+      template: function (row) {
+        return '<strong class="txt-org">' + row.ccppCupos.toLocaleString('es-AR') + ' cupos</strong>' +
+          '<span class="d-block fs-11">' + row.ccppTon.toLocaleString('es-AR', { maximumFractionDigits: 0 }) + ' t</span>';
+      }
+    }
+  ]), {
+    sortable: false,
+    dataBound: function () {
+      this.element.find('input.lim-day-input').on('input', function () {
+        const material = $(this).data('material');
+        const dayIndex = $(this).data('day');
+        if (!Array.isArray(S.dayLimits[material])) {
+          S.dayLimits[material] = [];
+        }
+        S.dayLimits[material][dayIndex] = parseInt(this.value, 10) || 0;
+      });
+    }
   });
 }
 
 function buildStatsUI() {
   const totalKg = S.contracts.reduce(function (sum, contract) { return sum + toNumber(contract.kg); }, 0) || 1;
-  const statsOp = document.getElementById('stats-op');
-  const statsCls = document.getElementById('stats-cls');
 
-  if (statsOp) {
-    statsOp.innerHTML = '';
-    OP_TYPES.forEach(function (item) {
-      const stat = S.stats.op[item.id] || { count: 0, kg: 0 };
-      const pct = stat.kg / totalKg * 100;
-      statsOp.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td><span class="dot ${item.colorClass}"></span> ${esc(item.label)}</td>
-          <td class="r">${stat.count}</td>
-          <td class="r">${(stat.kg / 1e6).toFixed(1)}</td>
-          <td class="r">${pct.toFixed(1)}%<span class="bar-bg"><span class="bar-fg ${item.colorClass} ${pctWidthClass(pct)}"></span></span></td>
-        </tr>`);
-    });
-  }
+  const opRows = OP_TYPES.map(function (item) {
+    const stat = S.stats.op[item.id] || { count: 0, kg: 0 };
+    const pct = stat.kg / totalKg * 100;
+    return { label: item.label, colorClass: item.colorClass, count: stat.count, kgM: stat.kg / 1e6, pct: pct };
+  });
+  renderStatsGrid('grid-stats-op', opRows);
 
-  if (statsCls) {
-    statsCls.innerHTML = '';
-    CLASS_ORDER.forEach(function (clase) {
-      const stat = S.stats.cls[clase] || { count: 0, kg: 0 };
-      const meta = classMeta(clase);
-      const pct = stat.kg / totalKg * 100;
-      statsCls.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td><span class="bp ${meta.cls}">${esc(meta.label)}</span></td>
-          <td class="r">${stat.count}</td>
-          <td class="r">${(stat.kg / 1e6).toFixed(1)}</td>
-          <td class="r">${pct.toFixed(1)}%<span class="bar-bg"><span class="bar-fg bar-g ${pctWidthClass(pct)}"></span></span></td>
-        </tr>`);
-    });
+  const clsRows = CLASS_ORDER.map(function (clase) {
+    const stat = S.stats.cls[clase] || { count: 0, kg: 0 };
+    const meta = classMeta(clase);
+    const pct = stat.kg / totalKg * 100;
+    return { label: meta.label, badgeClass: meta.cls, count: stat.count, kgM: stat.kg / 1e6, pct: pct };
+  });
+  renderStatsGrid('grid-stats-cls', clsRows);
+}
+
+function renderDataGrid(elementId, rows, columns, options) {
+  const element = $('#' + elementId);
+  if (!element.length) {
+    return null;
   }
+  const existing = element.data('kendoGrid');
+  if (existing) {
+    existing.setOptions({ columns: columns });
+    existing.dataSource.data(rows);
+    return existing;
+  }
+  const config = Object.assign({
+    dataSource: { data: rows },
+    scrollable: false,
+    sortable: true,
+    columns: columns
+  }, options || {});
+  return element.kendoGrid(config).data('kendoGrid');
+}
+
+function renderStatsGrid(elementId, rows) {
+  renderDataGrid(elementId, rows, [
+    {
+      field: 'label',
+      title: rows[0] && rows[0].badgeClass !== undefined ? 'Clase' : 'Tipo',
+      template: function (row) {
+        return row.badgeClass
+          ? '<span class="bp ' + row.badgeClass + '">' + esc(row.label) + '</span>'
+          : '<span class="dot ' + row.colorClass + '"></span> ' + esc(row.label);
+      }
+    },
+    { field: 'count', title: 'Contratos', attributes: { class: 'r' } },
+    { field: 'kgM', title: 'Kg (M)', attributes: { class: 'r' }, template: function (row) { return row.kgM.toFixed(1); } },
+    {
+      field: 'pct',
+      title: '%',
+      attributes: { class: 'r' },
+      template: function (row) {
+        const barClass = row.badgeClass ? 'bar-g' : row.colorClass;
+        return row.pct.toFixed(1) + '%<span class="bar-bg"><span class="bar-fg ' + barClass + ' ' + pctWidthClass(row.pct) + '"></span></span>';
+      }
+    }
+  ], { sortable: false, scrollable: false });
+}
+
+function filterGrid(elementId, query) {
+  const grid = $('#' + elementId).data('kendoGrid');
+  if (!grid) {
+    return;
+  }
+  const value = String(query || '').trim();
+  if (!value) {
+    grid.dataSource.filter({});
+    return;
+  }
+  const filters = grid.columns
+    .filter(function (column) { return column.field; })
+    .map(function (column) { return { field: column.field, operator: 'contains', value: value }; });
+  grid.dataSource.filter({ logic: 'or', filters: filters });
+}
+
+function getPctRowTemplate() {
+  if (!S._pctRowTemplate) {
+    S._pctRowTemplate = kendo.template($('#tmpl-pct-row').html());
+  }
+  return S._pctRowTemplate;
 }
 
 function buildPctInputs() {
-  const pctOp = document.getElementById('pct-op');
-  const pctCls = document.getElementById('pct-cls');
+  const pctOp = $('#pct-op');
+  const pctCls = $('#pct-cls');
+  const template = getPctRowTemplate();
 
-  if (pctOp) {
-    pctOp.innerHTML = '';
-    OP_TYPES.forEach(function (item) {
-      const value = toNumber(S.opPct[item.id]);
-      pctOp.insertAdjacentHTML('beforeend', `
-        <div class="pct-row">
-          <div class="pct-nm"><span class="dot ${item.colorClass}"></span>${esc(item.label)}</div>
-          <input class="pct-inp" type="number" min="0" max="100" step="1" value="${value}" oninput="S.opPct['${item.id}']=parseInt(this.value,10)||0;updatePctTotal('op')">
-          <span class="pct-sym">%</span>
-        </div>`);
+  if (pctOp.length) {
+    const opData = OP_TYPES.map(function (item) {
+      return {
+        kind: 'op',
+        key: item.id,
+        value: toNumber(S.opPct[item.id]),
+        iconHtml: '<span class="dot ' + item.colorClass + '"></span>' + esc(item.label)
+      };
     });
+    pctOp.html(kendo.render(template, opData));
   }
 
-  if (pctCls) {
-    pctCls.innerHTML = '';
-    CLASS_ORDER.forEach(function (clase) {
+  if (pctCls.length) {
+    const clsData = CLASS_ORDER.map(function (clase) {
       const meta = classMeta(clase);
-      const value = toNumber(S.clsPct[clase]);
-      pctCls.insertAdjacentHTML('beforeend', `
-        <div class="pct-row">
-          <div class="pct-nm"><span class="bp ${meta.cls}">${esc(meta.label)}</span></div>
-          <input class="pct-inp" type="number" min="0" max="100" step="1" value="${value}" oninput="S.clsPct['${escapeJs(clase)}']=parseInt(this.value,10)||0;updatePctTotal('cls')">
-          <span class="pct-sym">%</span>
-        </div>`);
+      return {
+        kind: 'cls',
+        key: clase,
+        value: toNumber(S.clsPct[clase]),
+        iconHtml: '<span class="bp ' + meta.cls + '">' + esc(meta.label) + '</span>'
+      };
     });
+    pctCls.html(kendo.render(template, clsData));
   }
 
   updatePctTotal('op');
   updatePctTotal('cls');
+}
+
+function onPctInputChange(event) {
+  const input = $(event.target);
+  const kind = input.data('kind');
+  const key = String(input.data('key'));
+  const value = parseInt(input.val(), 10) || 0;
+  if (kind === 'op') {
+    S.opPct[key] = value;
+  } else {
+    S.clsPct[key] = value;
+  }
+  updatePctTotal(kind);
 }
 
 function updatePctTotal(which) {
@@ -697,81 +817,62 @@ function updatePctTotal(which) {
 }
 
 function onToggleOp() {
-  S.useOp = !!pick(document.getElementById('chk-op') || {}, 'checked');
-  toggleHidden('pct-op-wrap', !S.useOp);
-  toggleHidden('pct-op-off', S.useOp);
+  S.useOp = $('#chk-op').is(':checked');
+  $('#pct-op-wrap').toggleClass('hidden', !S.useOp);
+  $('#pct-op-off').toggleClass('hidden', S.useOp);
 }
 
 function onToggleCls() {
-  S.useCls = !!pick(document.getElementById('chk-cls') || {}, 'checked');
-  toggleHidden('pct-cls-wrap', !S.useCls);
-  toggleHidden('pct-cls-off', S.useCls);
+  S.useCls = $('#chk-cls').is(':checked');
+  $('#pct-cls-wrap').toggleClass('hidden', !S.useCls);
+  $('#pct-cls-off').toggleClass('hidden', S.useCls);
 }
 
 function toggleSection(sectionId, dividerId) {
-  const section = document.getElementById(sectionId);
-  const divider = document.getElementById(dividerId);
-  if (!section || !divider) {
+  const divider = $('#' + dividerId);
+  if (!divider.length) {
     return;
   }
-  const isOpen = divider.classList.contains('open');
-  divider.classList.toggle('open', !isOpen);
-  section.classList.toggle('hidden', isOpen);
+  const isOpen = divider.hasClass('open');
+  divider.toggleClass('open', !isOpen);
+  $('#' + sectionId).toggleClass('hidden', isOpen);
 }
 
+// Muestra los rangos reales del archivo y activa el filtro de fechas opcional.
 function buildDateFilterUI() {
   const container = document.getElementById('date-filter-ui');
   if (!container) {
     return;
   }
   const dates = S.stats.dates || {};
-  container.innerHTML = `
-    <div class="grid-2col mb-14">
-      <div>
-        <div class="section-caption-upper">RANGOS EN EL ARCHIVO</div>
-        <div class="stats-box">
-          <div class="sb-hdr sb-hdr-op">📅 Fechas de contratos CTO vigentes</div>
-          <table><thead><tr><th>Campo</th><th class="r">Mínimo</th><th class="r">Máximo</th></tr></thead>
-          <tbody>
-            <tr><td>Fecha Desde</td><td class="r">${fmt(dates.fdMin, '.')}</td><td class="r">${fmt(dates.fdMax, '.')}</td></tr>
-            <tr><td>Fecha Hasta</td><td class="r">${fmt(dates.fhMin, '.')}</td><td class="r">${fmt(dates.fhMax, '.')}</td></tr>
-          </tbody></table>
-        </div>
-      </div>
-      <div>
-        <div class="toggle-row">
-          <label class="toggle"><input type="checkbox" id="chk-date" onchange="onToggleDate()"><span class="slider"></span></label>
-          <label for="chk-date">Filtrar contratos por rango de fechas</label>
-        </div>
-        <div id="date-filter-wrap" class="hidden">
-          <div class="al al-p mb-10"><span class="ico">💡</span><div>Incluí solo contratos dentro de los rangos de fecha indicados. Dejá en blanco los campos que no querés restringir. Se aplica <em>además</em> del filtro automático de vigencia.</div></div>
-          <div class="grid-gap-8">
-            <div class="filter-title">Fecha Desde del contrato</div>
-            <div class="grid-2col-gap8">
-              <div><label class="field-label">No anterior a</label><input type="date" id="df-fdMin" class="input-ui w-100" value="${toInputDate(S.dateFilter.fdMin)}" onchange="onDateFilterChange()"></div>
-              <div><label class="field-label">No posterior a</label><input type="date" id="df-fdMax" class="input-ui w-100" value="${toInputDate(S.dateFilter.fdMax)}" onchange="onDateFilterChange()"></div>
-            </div>
-            <div class="filter-title mt-8">Fecha Hasta del contrato</div>
-            <div class="grid-2col-gap8">
-              <div><label class="field-label">No anterior a</label><input type="date" id="df-fhMin" class="input-ui w-100" value="${toInputDate(S.dateFilter.fhMin)}" onchange="onDateFilterChange()"></div>
-              <div><label class="field-label">No posterior a</label><input type="date" id="df-fhMax" class="input-ui w-100" value="${toInputDate(S.dateFilter.fhMax)}" onchange="onDateFilterChange()"></div>
-            </div>
-          </div>
-        </div>
-        <div id="date-filter-off" class="al al-w mt-8"><span class="ico">⚪</span>Sin filtro de fechas adicional. Se incluyen todos los contratos vigentes.</div>
-      </div>
-    </div>`;
+  container.innerHTML = renderTemplate('tmpl-date-filter-ui', {
+    enabled: !!S.dateFilter.enabled,
+    dateFilter: {
+      fdMin: toInputDate(S.dateFilter.fdMin),
+      fdMax: toInputDate(S.dateFilter.fdMax),
+      fhMin: toInputDate(S.dateFilter.fhMin),
+      fhMax: toInputDate(S.dateFilter.fhMax)
+    }
+  });
   const checkbox = document.getElementById('chk-date');
   if (checkbox) {
     checkbox.checked = S.dateFilter.enabled;
   }
   onToggleDate();
+  renderDataGrid('grid-dates', [
+    { campo: 'Fecha Desde', min: fmt(dates.fdMin, '.'), max: fmt(dates.fdMax, '.') },
+    { campo: 'Fecha Hasta', min: fmt(dates.fhMin, '.'), max: fmt(dates.fhMax, '.') }
+  ], [
+    { field: 'campo', title: 'Campo' },
+    { field: 'min', title: 'Mínimo', attributes: { class: 'r' } },
+    { field: 'max', title: 'Máximo', attributes: { class: 'r' } }
+  ], { sortable: false, pageable: false });
 }
 
 function onToggleDate() {
-  S.dateFilter.enabled = !!pick(document.getElementById('chk-date') || {}, 'checked');
-  toggleHidden('date-filter-wrap', !S.dateFilter.enabled);
-  toggleHidden('date-filter-off', S.dateFilter.enabled);
+  S.dateFilter.enabled = $('#chk-date').is(':checked');
+  $('#date-filter-wrap').toggleClass('hidden', !S.dateFilter.enabled);
+  $('#date-filter-off').toggleClass('hidden', S.dateFilter.enabled);
 }
 
 function onDateFilterChange() {
@@ -781,6 +882,7 @@ function onDateFilterChange() {
   S.dateFilter.fhMax = parseFlexibleDate(pick(document.getElementById('df-fhMax') || {}, 'value'));
 }
 
+// Configura la prioridad por sustentabilidad y precio de referencia.
 function buildPricesUI() {
   const container = document.getElementById('prices-sust-ui');
   if (!container) {
@@ -789,92 +891,76 @@ function buildPricesUI() {
   const sust = S.stats.sust || { count: 0, kg: 0 };
   const totalKg = S.contracts.reduce(function (sum, contract) { return sum + toNumber(contract.kg); }, 0) || 1;
   const sustPct = ((toNumber(sust.kg) / totalKg) * 100).toFixed(1);
-  const materialInputs = S.allMats.map(function (mat) {
-    const col = matCol(mat);
-    const value = S.prices[mat] || '';
-    return `
-      <div class="lim-row">
-        <div class="mat-nm"><span class="dot ${col.cls}"></span>${esc(mat)}</div>
-        <div class="lim-inp">
-          <label>Precio ref. (USD/tn)</label>
-          <input type="number" min="0" step="0.01" id="price-${safeId(mat)}" value="${value}" placeholder="ej: 280" oninput="S.prices['${escapeJs(mat)}']=parseFloat(this.value)||0">
-        </div>
-        <div class="lim-ccpp">Contratos Fijo/Hijo con precio ≥ ref.<br><span class="fs-11">se priorizan dentro de su clase</span></div>
-      </div>`;
-  }).join('');
-
-  container.innerHTML = `
-    <div class="grid-2col mb-14">
-      <div>
-        <div class="section-caption-upper">CONTRATOS SUSTENTABLES EN EL ARCHIVO</div>
-        <div class="stats-box">
-          <div class="sb-hdr sb-hdr-sust">🌱 Sust. / EPA</div>
-          <table><thead><tr><th>Indicador</th><th class="r">Valor</th></tr></thead>
-          <tbody>
-            <tr><td>Contratos con Sust.=X o EPA=X</td><td class="r"><strong class="txt-green">${toNumber(sust.count)}</strong></td></tr>
-            <tr><td>Kg sustentables (M)</td><td class="r">${(toNumber(sust.kg) / 1e6).toFixed(2)} M kg</td></tr>
-            <tr><td>% del total kg</td><td class="r">${sustPct}%</td></tr>
-          </tbody></table>
-        </div>
-      </div>
-      <div>
-        <div class="toggle-row">
-          <label class="toggle"><input type="checkbox" id="chk-sust" onchange="S.sustainFirst=this.checked"><span class="slider"></span></label>
-          <label for="chk-sust">🌱 Priorizar contratos sustentables</label>
-        </div>
-        <div class="al al-t mt-8"><span class="ico">ℹ️</span><div>Dentro de cada clase de prioridad, los contratos con <strong>Sust.=X</strong> o <strong>EPA=X</strong> se asignarán antes que los no sustentables.</div></div>
-      </div>
-    </div>
-    <div>
-      <div class="toggle-row">
-        <label class="toggle"><input type="checkbox" id="chk-prices" onchange="onTogglePrices()"><span class="slider"></span></label>
-        <label for="chk-prices">💰 Priorizar contratos Fijo/Hijo por precio de referencia</label>
-      </div>
-      <div id="prices-wrap" class="hidden">
-        <div class="al al-p mb-10"><span class="ico">💡</span><div>Los contratos <strong>Fijo</strong> y <strong>Contrato Hijo</strong> con precio ≥ precio de referencia se asignarán antes que los de precio menor o sin precio. Si no se ingresa precio de referencia, todos los contratos con precio se priorizan sobre los sin precio.</div></div>
-        <div class="lim-grid">${materialInputs}</div>
-      </div>
-      <div id="prices-off" class="al al-w mt-8"><span class="ico">⚪</span>Sin priorización por precio de referencia (contratos Fijo/Hijo con precio se asignan antes que sin precio). Activá para definir un umbral por material.</div>
-    </div>`;
+  container.innerHTML = renderTemplate('tmpl-prices-sust-ui', {
+    sustainFirst: !!S.sustainFirst,
+    pricesEnabled: !!S.pricesEnabled
+  });
 
   const sustain = document.getElementById('chk-sust');
   const prices = document.getElementById('chk-prices');
   if (sustain) { sustain.checked = S.sustainFirst; }
   if (prices) { prices.checked = S.pricesEnabled; }
   onTogglePrices();
+
+  renderDataGrid('grid-sust', [
+    { indicador: 'Contratos con Sust.=X o EPA=X', valor: toNumber(sust.count), cls: 'txt-green' },
+    { indicador: 'Kg sustentables (M)', valor: (toNumber(sust.kg) / 1e6).toFixed(2) + ' M kg' },
+    { indicador: '% del total kg', valor: sustPct + '%' }
+  ], [
+    { field: 'indicador', title: 'Indicador' },
+    { field: 'valor', title: 'Valor', attributes: { class: 'r' }, template: function (row) { return row.cls ? '<strong class="' + row.cls + '">' + row.valor + '</strong>' : row.valor; } }
+  ], { sortable: false, pageable: false });
+
+  const priceRows = S.allMats.map(function (mat) {
+    return { material: mat, colClass: matCol(mat).cls, price: S.prices[mat] || '' };
+  });
+  renderDataGrid('grid-prices', priceRows, [
+    { field: 'material', title: 'Material', template: function (row) { return '<span class="dot ' + row.colClass + '"></span>' + esc(row.material); } },
+    {
+      field: 'price',
+      title: 'Precio ref. (USD/tn)',
+      template: function (row) {
+        return '<input type="number" min="0" step="0.01" class="price-input" data-material="' + esc(row.material) + '" value="' + row.price + '" placeholder="ej: 280">';
+      }
+    },
+    { field: 'material', title: '', template: function () { return 'Contratos Fijo/Hijo con precio ≥ ref.<br><span class="fs-11">se priorizan dentro de su clase</span>'; } }
+  ], {
+    sortable: false,
+    pageable: false,
+    dataBound: function () {
+      this.element.find('input.price-input').on('input', function () {
+        const material = $(this).data('material');
+        S.prices[material] = parseFloat(this.value) || 0;
+      });
+    }
+  });
 }
 
 function onTogglePrices() {
-  S.pricesEnabled = !!pick(document.getElementById('chk-prices') || {}, 'checked');
-  toggleHidden('prices-wrap', !S.pricesEnabled);
-  toggleHidden('prices-off', S.pricesEnabled);
+  S.pricesEnabled = $('#chk-prices').is(':checked');
+  $('#prices-wrap').toggleClass('hidden', !S.pricesEnabled);
+  $('#prices-off').toggleClass('hidden', S.pricesEnabled);
 }
 
 function updateExclBadge(which) {
   if (which === 'fason') {
-    S.excludeFason = !!pick(document.getElementById('chk-excl-fason') || {}, 'checked');
-    const label = document.getElementById('lbl-excl-fason');
-    if (label) {
-      label.classList.toggle('excl-on-red', S.excludeFason);
-    }
+    S.excludeFason = $('#chk-excl-fason').is(':checked');
+    $('#lbl-excl-fason').toggleClass('excl-on-red', S.excludeFason);
     return;
   }
-  S.excludeAgCompra = !!pick(document.getElementById('chk-excl-agcompra') || {}, 'checked');
-  const label = document.getElementById('lbl-excl-agcompra');
-  if (label) {
-    label.classList.toggle('excl-on-purple', S.excludeAgCompra);
-  }
+  S.excludeAgCompra = $('#chk-excl-agcompra').is(':checked');
+  $('#lbl-excl-agcompra').toggleClass('excl-on-purple', S.excludeAgCompra);
 }
 
 function onToggleMultiDay() {
-  S.multiDay = !!pick(document.getElementById('chk-multiday') || {}, 'checked');
-  toggleHidden('multiday-config', !S.multiDay);
+  S.multiDay = $('#chk-multiday').is(':checked');
+  $('#multiday-config').toggleClass('hidden', !S.multiDay);
   updateDayDates();
   buildLimGrid();
 }
 
 function onDayCountChange() {
-  const value = parseInt(pick(document.getElementById('day-count') || {}, 'value'), 10) || 2;
+  const value = parseInt($('#day-count').val(), 10) || 2;
   S.dayCount = Math.max(2, Math.min(7, value));
   updateDayDates();
   buildLimGrid();
@@ -893,17 +979,20 @@ function updateDayDates() {
   }
   const preview = document.getElementById('day-dates-preview');
   if (preview) {
-    preview.innerHTML = S.dayDates.map(function (day, index) {
-      return `<span class="day-badge">Día ${index + 1}: ${fmt(day, '/')}</span>`;
-    }).join('');
+    if (!S._dayBadgeTemplate) {
+      S._dayBadgeTemplate = kendo.template($('#tmpl-day-badge').html());
+    }
+    const data = S.dayDates.map(function (day, index) {
+      return { index: index, label: fmt(day, '/') };
+    });
+    preview.innerHTML = kendo.render(S._dayBadgeTemplate, data);
   }
 }
 
 function readSingleDayLimits() {
   const limits = {};
   S.allMats.forEach(function (mat) {
-    const input = document.getElementById('lim-' + safeId(mat));
-    limits[mat] = input ? (parseInt(input.value, 10) || 0) : toNumber(S.limits[mat]);
+    limits[mat] = toNumber(S.limits[mat]);
   });
   S.limits = limits;
   return limits;
@@ -912,16 +1001,23 @@ function readSingleDayLimits() {
 function readMultiDayLimits() {
   const limitsByDay = [];
   const totalByMaterial = {};
-  S.allMats.forEach(function (mat) { totalByMaterial[mat] = 0; });
+  S.allMats.forEach(function (mat) {
+    totalByMaterial[mat] = 0;
+    if (!Array.isArray(S.dayLimits[mat])) {
+      S.dayLimits[mat] = Array(S.dayDates.length).fill(toNumber(S.limits[mat]));
+    }
+    while (S.dayLimits[mat].length < S.dayDates.length) {
+      S.dayLimits[mat].push(toNumber(S.limits[mat]));
+    }
+    S.dayLimits[mat] = S.dayLimits[mat].slice(0, S.dayDates.length).map(function (value) {
+      const numeric = toNumber(value);
+      return numeric > 0 ? numeric : toNumber(S.limits[mat]);
+    });
+  });
   S.dayDates.forEach(function (day, dayIndex) {
     const dayLimits = {};
     S.allMats.forEach(function (mat) {
-      const input = document.getElementById('lim-D' + dayIndex + '-' + safeId(mat));
-      const value = input ? (parseInt(input.value, 10) || 0) : toNumber((S.dayLimits[mat] || [])[dayIndex]);
-      if (!Array.isArray(S.dayLimits[mat])) {
-        S.dayLimits[mat] = [];
-      }
-      S.dayLimits[mat][dayIndex] = value;
+      const value = toNumber((S.dayLimits[mat] || [])[dayIndex]);
       dayLimits[mat] = value;
       totalByMaterial[mat] += value;
     });
@@ -935,6 +1031,7 @@ function buildExcludedClasses() {
   return S.excludeFason ? ['MP-Fason'] : [];
 }
 
+// Genera la config que se envía al backend para respetar reglas y filtros.
 function buildDistributionConfig() {
   return {
     cupoKg: S.cupoKg,
@@ -959,6 +1056,7 @@ function buildDistributionConfig() {
   };
 }
 
+// Arma el payload del cálculo para un solo día de distribución.
 function buildSingleDayRequest() {
   return {
     fecha: toInputDate(getToday()),
@@ -969,6 +1067,7 @@ function buildSingleDayRequest() {
   };
 }
 
+// Arma el payload con límites por día y reparto uniforme opcional.
 function buildMultiDayRequest() {
   return {
     contratos: S.contracts,
@@ -1143,6 +1242,43 @@ function normalizeDistributionResult(data) {
   };
 }
 
+function getTemplateById(id) {
+  if (!S._tplCache) {
+    S._tplCache = {};
+  }
+  if (!S._tplCache[id]) {
+    const node = document.getElementById(id);
+    if (!node) {
+      return null;
+    }
+    S._tplCache[id] = kendo.template(node.innerHTML);
+  }
+  return S._tplCache[id];
+}
+
+function renderTemplate(id, data) {
+  const template = getTemplateById(id);
+  if (!template) {
+    return '';
+  }
+  return template(data);
+}
+
+function getResTabTemplate() {
+  if (!S._resTabTemplate) {
+    S._resTabTemplate = kendo.template($('#tmpl-res-tab').html());
+  }
+  return S._resTabTemplate;
+}
+
+function getResTabContentTemplate() {
+  if (!S._resTabContentTemplate) {
+    S._resTabContentTemplate = kendo.template($('#tmpl-res-tab-content').html());
+  }
+  return S._resTabContentTemplate;
+}
+
+// Re-renderiza la pantalla con tabs, resúmenes y detalle por material.
 function renderResults(result) {
   S.lastRendered = result;
   const outputRows = result.outputRows || [];
@@ -1159,27 +1295,44 @@ function renderResults(result) {
     byMaterial[row.material].push(row);
   });
 
-  const tabs = document.getElementById('res-tabs');
-  const contents = document.getElementById('res-contents');
-  tabs.innerHTML = '';
-  contents.innerHTML = '';
+  const tabDefs = [{ id: 'output', label: '📋 Cupos a asignar', iconHtml: '', active: true }];
+  tabDefs.push({ id: 'resumen', label: '📊 Resumen', iconHtml: '', active: false });
 
-  addTab(tabs, contents, 'output', '📋 Cupos a asignar', true);
-  document.getElementById('tab-output').innerHTML = buildOutputTab(outputRows, getToday());
+  if (S.useOp) {
+    tabDefs.push({ id: 'op_tab', label: '🏢 Por tipo operador', iconHtml: '', active: false });
+  }
+  if (S.useCls) {
+    tabDefs.push({ id: 'cls_tab', label: '📋 Por clase contrato', iconHtml: '', active: false });
+  }
+  S.allMats.forEach(function (mat) {
+    const id = 'mat_' + safeId(mat);
+    const label = mat.length > 20 ? mat.slice(0, 20) + '…' : mat;
+    tabDefs.push({
+      id: id,
+      label: esc(label),
+      iconHtml: '<span class="mini-dot ' + matCol(mat).cls + '"></span>',
+      active: false
+    });
+  });
 
-  addTab(tabs, contents, 'resumen', '📊 Resumen');
+  const tabs = $('#res-tabs');
+  const contents = $('#res-contents');
+  const tabTemplate = getResTabTemplate();
+  const contentTemplate = getResTabContentTemplate();
+  tabs.html(tabDefs.map(function (tab) { return tabTemplate(tab); }).join(''));
+  contents.html(tabDefs.map(function (tab) { return contentTemplate(tab); }).join(''));
+
+  buildOutputTab('tab-output', outputRows, getToday());
   document.getElementById('tab-resumen').innerHTML = buildResumenTab(summaryRows, result.remaining || {});
 
   if (S.useOp) {
-    addTab(tabs, contents, 'op_tab', '🏢 Por tipo operador');
-    document.getElementById('tab-op_tab').innerHTML = buildBreakdownTab(summaryRows, 'opType', 'Tipo de Operador', OP_TYPES.map(function (item) {
+    buildBreakdownTab('tab-op_tab', summaryRows, 'opType', 'Tipo de Operador', OP_TYPES.map(function (item) {
       return { id: item.id, label: item.label, colorClass: item.colorClass };
     }));
   }
 
   if (S.useCls) {
-    addTab(tabs, contents, 'cls_tab', '📋 Por clase contrato');
-    document.getElementById('tab-cls_tab').innerHTML = buildBreakdownTab(summaryRows, 'descCl', 'Clase de Contrato', CLASS_ORDER.map(function (clase) {
+    buildBreakdownTab('tab-cls_tab', summaryRows, 'descCl', 'Clase de Contrato', CLASS_ORDER.map(function (clase) {
       const meta = classMeta(clase);
       return { id: clase, label: meta.label, badgeClass: meta.cls, colorClass: 'bar-g' };
     }));
@@ -1187,203 +1340,217 @@ function renderResults(result) {
 
   S.allMats.forEach(function (mat) {
     const id = 'mat_' + safeId(mat);
-    const tab = document.createElement('div');
-    tab.className = 'tab';
-    tab.onclick = function () { switchTab(id, tab); };
-    tab.innerHTML = `<span class="mini-dot ${matCol(mat).cls}"></span>${esc(mat.length > 20 ? mat.slice(0, 20) + '…' : mat)}`;
-    tabs.appendChild(tab);
-
-    const content = document.createElement('div');
-    content.className = 'tc';
-    content.id = 'tab-' + id;
-    content.innerHTML = buildMatTab(mat, byMaterial[mat] || [], toNumber(S.limits[mat]), toNumber((result.remaining || {})[mat]));
-    contents.appendChild(content);
+    buildMatTab('tab-' + id, mat, byMaterial[mat] || [], toNumber(S.limits[mat]), toNumber((result.remaining || {})[mat]));
   });
 
   updateActionButtons();
 }
 
-function addTab(tabs, contents, id, label, active) {
-  tabs.insertAdjacentHTML('beforeend', `<div class="tab${active ? ' active' : ''}" onclick="switchTab('${id}',this)">${label}</div>`);
-  const content = document.createElement('div');
-  content.className = 'tc' + (active ? ' active' : '');
-  content.id = 'tab-' + id;
-  contents.appendChild(content);
-}
-
 function switchTab(id, element) {
-  document.querySelectorAll('#res-tabs .tab').forEach(function (tab) { tab.classList.remove('active'); });
-  document.querySelectorAll('#res-contents .tc').forEach(function (content) { content.classList.remove('active'); });
-  element.classList.add('active');
-  const target = document.getElementById('tab-' + id);
-  if (target) {
-    target.classList.add('active');
-  }
+  $('#res-tabs .tab').removeClass('active');
+  $('#res-contents .tc').removeClass('active');
+  $(element).addClass('active');
+  $('#tab-' + id).addClass('active');
 }
 
-function buildOutputTab(rows, today) {
-  let html = '<div class="al al-t"><span class="ico">✅</span><div>Tabla para cargar en SAP: <strong>FechaSugerida / CantidadDeCupos / ContratoSAP</strong>. Solo contratos con cupos asignados.</div></div>';
-  html += `<div class="sb-row"><input type="text" placeholder="Buscar contrato, CUIT, proveedor…" oninput="filterTable('tbl-out',this.value)"><span class="search-meta">${rows.length} líneas</span></div>`;
-  if (!rows.length) {
-    return html + '<div class="al al-w"><span class="ico">⚠️</span>No hay contratos con cupos asignados.</div>';
-  }
-
-  const fallbackDate = fmt(today, '/');
-  html += '<div class="tw"><table id="tbl-out" class="out-table"><thead><tr><th>FechaSugerida</th><th class="r">CantidadDeCupos</th><th>ContratoSAP</th><th>Proveedor</th><th>CUIT</th><th>Material</th><th>Tipo Operador</th><th>Clase</th><th class="r">Precio (USD/t)</th><th class="text-center">🌱</th></tr></thead><tbody>';
-  rows.forEach(function (row) {
-    const operator = opMeta(row.opType);
-    html += `
-      <tr>
-        <td>${row.fechaAsignada ? fmt(row.fechaAsignada, '/') : fallbackDate}</td>
-        <td class="r"><span class="big-num">${row.cuposAssigned.toLocaleString('es-AR')}</span></td>
-        <td class="mono bold">${esc(row.numeroSAP)}</td>
-        <td>${esc(row.prov)}</td>
-        <td class="mono">${esc(row.cuit)}</td>
-        <td><span class="mini-dot ${matCol(row.material).cls}"></span>${esc(row.material)}</td>
-        <td><span class="dot ${operator.colorClass}"></span> ${esc(row.opLabel)}</td>
-        <td><span class="bp ${row.prioCls}">${esc(row.prioLabel)}</span></td>
-        <td class="r">${row.pricePt > 0 ? row.pricePt.toLocaleString('es-AR', { maximumFractionDigits: 1 }) : '—'}</td>
-        <td class="text-center">${row.isSust ? '🌱' : ''}</td>
-      </tr>`;
-  });
-  html += '</tbody></table></div>';
-
+function buildTotalsByMaterial(rows) {
   const totals = {};
-  rows.forEach(function (row) { totals[row.material] = (totals[row.material] || 0) + row.cuposAssigned; });
-  html += '<div class="totals-box"><strong>Totales:</strong>';
-  Object.keys(totals).forEach(function (material) {
-    html += `<span><span class="mini-dot-sm ${matCol(material).cls}"></span>${esc(material)}: <strong>${totals[material].toLocaleString('es-AR')} cupos</strong> (${(totals[material] * 30).toLocaleString('es-AR')} t)</span>`;
+  rows.forEach(function (row) {
+    totals[row.material] = (totals[row.material] || 0) + row.cuposAssigned;
   });
-  html += '</div>';
-  return html;
+  return Object.keys(totals).map(function (material) {
+    return {
+      material: material,
+      color: matCol(material).cls,
+      cupos: toLocaleNumber(totals[material]),
+      tons: toLocaleNumber(totals[material] * 30)
+    };
+  });
 }
 
-function buildResumenTab(rows, remaining) {
-  let html = '<div class="grid-auto-265">';
-  S.allMats.forEach(function (mat) {
+function buildOutputGridRows(rows, fallbackDate) {
+  return rows.map(function (row) {
+    const operator = opMeta(row.opType);
+    return Object.assign({}, row, {
+      fechaLabel: row.fechaAsignada ? fmt(row.fechaAsignada, '/') : fallbackDate,
+      opColorClass: operator.colorClass,
+      matColClass: matCol(row.material).cls
+    });
+  });
+}
+
+function buildStatusCounts(rows) {
+  return [
+    { label: 'Total', value: rows.length, cls: '' },
+    { label: 'Completo', value: rows.filter(function (row) { return row.status === 'completo'; }).length, cls: 'txt-green' },
+    { label: 'Parcial', value: rows.filter(function (row) { return row.status === 'parcial'; }).length, cls: 'txt-org' },
+    { label: 'CCPP', value: rows.filter(function (row) { return row.status === 'ccpp'; }).length, cls: 'txt-teal' },
+    { label: 'Sin cupos', value: rows.filter(function (row) { return row.status === 'sin_cupos'; }).length, cls: 'txt-red' },
+    { label: 'Bloq. filtros', value: rows.filter(function (row) { return row.status === 'bloq_op' || row.status === 'bloq_cls'; }).length, cls: 'txt-purple' }
+  ];
+}
+
+function buildMaterialSummaryCards(rows, remaining) {
+  return S.allMats.map(function (mat) {
     const limit = toNumber(S.limits[mat]);
     const rest = toNumber(remaining[mat]);
     const assigned = Math.max(0, limit - rest);
     const materialRows = rows.filter(function (row) { return row.material === mat; });
-    const covered = materialRows.filter(function (row) { return row.status === 'ccpp'; }).length;
-    const blocked = materialRows.filter(function (row) { return row.status === 'bloq_op' || row.status === 'bloq_cls'; }).length;
-    html += `
-      <div class="summary-card">
-        <div class="summary-card-hdr ${matCol(mat).cls}">${esc(mat)}</div>
-        <div class="summary-card-body">
-          <table class="summary-table">
-            <tr><td class="summary-label">Tope diario</td><td class="text-right summary-val">${limit.toLocaleString('es-AR')} cupos</td></tr>
-            <tr><td class="summary-label">Cupos asignados</td><td class="text-right summary-val txt-teal">${assigned.toLocaleString('es-AR')}</td></tr>
-            <tr><td class="summary-label">Sin asignar</td><td class="text-right ${rest > 0 ? 'txt-gold' : 'summary-val-rem'}">${rest.toLocaleString('es-AR')}</td></tr>
-            <tr><td class="summary-label">Cubiertos por CCPP</td><td class="text-right txt-teal">${covered}</td></tr>
-            ${blocked > 0 ? `<tr><td class="summary-label">Bloqueados por filtros</td><td class="text-right txt-purple">${blocked}</td></tr>` : ''}
-          </table>
-        </div>
-      </div>`;
+    return {
+      material: mat,
+      colorClass: matCol(mat).cls,
+      limit: toLocaleNumber(limit),
+      assigned: toLocaleNumber(assigned),
+      remaining: toLocaleNumber(rest),
+      covered: materialRows.filter(function (row) { return row.status === 'ccpp'; }).length,
+      blocked: materialRows.filter(function (row) { return row.status === 'bloq_op' || row.status === 'bloq_cls'; }).length
+    };
   });
-  html += '</div>';
-
-  const total = rows.length;
-  const complete = rows.filter(function (row) { return row.status === 'completo'; }).length;
-  const partial = rows.filter(function (row) { return row.status === 'parcial'; }).length;
-  const ccpp = rows.filter(function (row) { return row.status === 'ccpp'; }).length;
-  const noCupos = rows.filter(function (row) { return row.status === 'sin_cupos'; }).length;
-  const blockedCount = rows.filter(function (row) { return row.status === 'bloq_op' || row.status === 'bloq_cls'; }).length;
-
-  html += '<div class="summary-box"><div class="summary-box-title">📈 Estadísticas de contratos</div><div class="grid-auto-140">';
-  [
-    [total, 'Total', ''],
-    [complete, 'Completo', 'txt-green'],
-    [partial, 'Parcial', 'txt-org'],
-    [ccpp, 'CCPP', 'txt-teal'],
-    [noCupos, 'Sin cupos', 'txt-red'],
-    [blockedCount, 'Bloq. filtros', 'txt-purple']
-  ].forEach(function (item) {
-    html += `<div class="summary-stat"><div class="summary-stat-value ${item[2]}">${item[0]}</div><div class="summary-stat-label">${item[1]}</div></div>`;
-  });
-  html += '</div></div>';
-  return html;
 }
 
-function buildBreakdownTab(rows, keyField, title, items) {
-  const assignedRows = rows.filter(function (row) { return row.cuposAssigned > 0; });
-  const totalCupos = assignedRows.reduce(function (sum, row) { return sum + row.cuposAssigned; }, 0) || 1;
-  let html = `<h3 class="breakdown-title">📊 Distribución real de cupos asignados por ${esc(title)}</h3>`;
-  html += `<div class="tw mb-14"><table><thead><tr><th>${esc(title)}</th><th class="r">Contratos asignados</th><th class="r">Cupos</th><th class="r">Toneladas</th><th class="r">% del total</th></tr></thead><tbody>`;
-  items.forEach(function (item) {
-    const subset = assignedRows.filter(function (row) { return row[keyField] === item.id; });
-    const cupos = subset.reduce(function (sum, row) { return sum + row.cuposAssigned; }, 0);
-    const pct = cupos / totalCupos * 100;
-    html += `
-      <tr>
-        <td>${item.badgeClass ? `<span class="bp ${item.badgeClass}">${esc(item.label)}</span>` : `<span class="dot ${item.colorClass}"></span> ${esc(item.label)}`}</td>
-        <td class="r">${subset.length}</td>
-        <td class="r bold">${cupos.toLocaleString('es-AR')}</td>
-        <td class="r">${(cupos * 30).toLocaleString('es-AR')} t</td>
-        <td class="r">${pct.toFixed(1)}%<span class="bar-bg"><span class="bar-fg ${item.colorClass || 'bar-g'} ${pctWidthClass(pct)}"></span></span></td>
-      </tr>`;
-  });
-  html += '</tbody></table></div>';
-  items.forEach(function (item) {
-    const subset = assignedRows.filter(function (row) { return row[keyField] === item.id; });
-    if (!subset.length) {
-      return;
-    }
-    html += `<h4 class="breakdown-subtitle">${esc(item.label)} — ${subset.length} contratos</h4>`;
-    html += '<div class="tw mb-14"><table><thead><tr><th>ContratoSAP</th><th>Proveedor</th><th>CUIT</th><th>Material</th><th class="r">Cupos</th></tr></thead><tbody>';
-    subset.forEach(function (row) {
-      html += `<tr><td class="mono">${esc(row.numeroSAP)}</td><td>${esc(row.prov)}</td><td class="mono">${esc(row.cuit)}</td><td>${esc(row.material)}</td><td class="r bold">${row.cuposAssigned.toLocaleString('es-AR')}</td></tr>`;
-    });
-    html += '</tbody></table></div>';
-  });
-  return html;
-}
-
-function buildMatTab(material, rows, limit, remaining) {
-  const assigned = Math.max(0, limit - remaining);
-  const tableId = 'tbl-' + safeId(material);
-  let html = `
-    <div class="sg">
-      <div class="sc sc-g"><div class="lb">Tope diario</div><div class="vl">${limit.toLocaleString('es-AR')}</div><div class="sb">cupos</div></div>
-      <div class="sc sc-t"><div class="lb">Asignados</div><div class="vl">${assigned.toLocaleString('es-AR')}</div><div class="sb">${(assigned * 30).toLocaleString('es-AR')} t</div></div>
-      <div class="sc sc-gl"><div class="lb">Sin asignar</div><div class="vl">${remaining.toLocaleString('es-AR')}</div><div class="sb">cupos remanentes</div></div>
-      <div class="sc sc-o"><div class="lb">CCPP material</div><div class="vl">${Math.ceil(toNumber(S.ccppByMat[material]) / (S.cupoKg || 30000)).toLocaleString('es-AR')}</div><div class="sb">${(toNumber(S.ccppByMat[material]) / 1000).toLocaleString('es-AR', { maximumFractionDigits: 0 })} t</div></div>
-    </div>`;
-  html += `<div class="sb-row"><input type="text" placeholder="Buscar…" oninput="filterTable('${tableId}',this.value)"><span class="search-meta">${rows.length} contratos</span></div>`;
-  html += `<div class="tw"><table id="${tableId}"><thead><tr><th>ContratoSAP</th><th>Clase</th><th>Tipo Operador</th><th>Proveedor</th><th>CUIT</th><th class="r">KG Contrato</th><th class="r">CCPP Desc.</th><th class="r">KG Efectivo</th><th class="r">Cupos Asig.</th><th>Estado</th><th>Cosecha</th><th>F.Hasta</th><th class="r">Precio (USD/t)</th><th class="text-center">🌱</th></tr></thead><tbody>`;
-  rows.forEach(function (row) {
-    const operator = opMeta(row.opType);
-    html += `
-      <tr>
-        <td class="mono bold">${esc(row.numeroSAP)}</td>
-        <td><span class="bp ${row.prioCls}">${esc(row.prioLabel)}</span></td>
-        <td><span class="dot ${operator.colorClass}"></span> ${esc(row.opLabel)}</td>
-        <td>${esc(row.prov)}</td>
-        <td class="mono">${esc(row.cuit)}</td>
-        <td class="r">${(row.kg / 1000).toLocaleString('es-AR', { maximumFractionDigits: 1 })} t</td>
-        <td class="r metric-org">${row.ccppKgUsed > 0 ? (row.ccppKgUsed / 1000).toLocaleString('es-AR', { maximumFractionDigits: 1 }) + ' t' : '—'}</td>
-        <td class="r">${(row.effKg / 1000).toLocaleString('es-AR', { maximumFractionDigits: 1 })} t</td>
-        <td class="r bold ${row.cuposAssigned > 0 ? 'metric-pos' : 'metric-neg'}">${row.cuposAssigned > 0 ? row.cuposAssigned.toLocaleString('es-AR') : '—'}</td>
-        <td><span class="bs s-${row.status}">${STATUS_LABELS[row.status] || row.status}</span></td>
-        <td class="mt">${esc(row.cosecha)}</td>
-        <td class="mt">${fmt(row.fechaHasta, '.')}</td>
-        <td class="r">${row.pricePt > 0 ? row.pricePt.toLocaleString('es-AR', { maximumFractionDigits: 1 }) : '—'}</td>
-        <td class="text-center">${row.isSust ? '🌱' : ''}</td>
-      </tr>`;
-  });
-  html += '</tbody></table></div>';
-  return html;
-}
-
-function filterTable(id, query) {
-  const table = document.getElementById(id);
-  if (!table) {
+function buildOutputTab(containerId, rows, today) {
+  const container = document.getElementById(containerId);
+  if (!container) {
     return;
   }
-  const normalizedQuery = String(query || '').toLowerCase();
-  table.querySelectorAll('tbody tr').forEach(function (row) {
-    row.classList.toggle('row-hidden', !row.textContent.toLowerCase().includes(normalizedQuery));
+  const fallbackDate = fmt(today, '/');
+  const totalList = buildTotalsByMaterial(rows);
+  container.innerHTML = renderTemplate('tmpl-output-tab', {
+    rows: rows,
+    totals: totalList
   });
+
+  if (!rows.length) {
+    return;
+  }
+
+  renderDataGrid('grid-out', buildOutputGridRows(rows, fallbackDate), [
+    { field: 'fechaLabel', title: 'FechaSugerida' },
+    { field: 'cuposAssigned', title: 'CantidadDeCupos', attributes: { class: 'r' }, template: function (row) { return '<span class="big-num">' + row.cuposAssigned.toLocaleString('es-AR') + '</span>'; } },
+    { field: 'numeroSAP', title: 'ContratoSAP', attributes: { class: 'mono bold' }, template: function (row) { return esc(row.numeroSAP); } },
+    { field: 'prov', title: 'Proveedor', template: function (row) { return esc(row.prov); } },
+    { field: 'cuit', title: 'CUIT', attributes: { class: 'mono' }, template: function (row) { return esc(row.cuit); } },
+    { field: 'material', title: 'Material', template: function (row) { return '<span class="mini-dot ' + row.matColClass + '"></span>' + esc(row.material); } },
+    { field: 'opLabel', title: 'Tipo Operador', template: function (row) { return '<span class="dot ' + row.opColorClass + '"></span> ' + esc(row.opLabel); } },
+    { field: 'prioLabel', title: 'Clase', template: function (row) { return '<span class="bp ' + row.prioCls + '">' + esc(row.prioLabel) + '</span>'; } },
+    { field: 'pricePt', title: 'Precio (USD/t)', attributes: { class: 'r' }, template: function (row) { return row.pricePt > 0 ? row.pricePt.toLocaleString('es-AR', { maximumFractionDigits: 1 }) : '—'; } },
+    { field: 'isSust', title: '🌱', attributes: { class: 'text-center' }, template: function (row) { return row.isSust ? '🌱' : ''; } }
+  ], { pageable: false });
+}
+
+function buildResumenTab(rows, remaining) {
+  const cards = buildMaterialSummaryCards(rows, remaining);
+  const stats = buildStatusCounts(rows);
+  return renderTemplate('tmpl-resumen-tab', { cards: cards, stats: stats });
+}
+
+function buildBreakdownSummary(items, assignedRows, keyField, totalCupos) {
+  const subsets = {};
+  items.forEach(function (item) {
+    subsets[item.id] = assignedRows.filter(function (row) { return row[keyField] === item.id; });
+  });
+
+  return items.map(function (item) {
+    const subset = subsets[item.id];
+    const cupos = subset.reduce(function (sum, row) { return sum + row.cuposAssigned; }, 0);
+    return {
+      label: item.label,
+      badgeClass: item.badgeClass,
+      colorClass: item.colorClass,
+      count: subset.length,
+      cupos: cupos,
+      tons: cupos * 30,
+      pct: cupos / totalCupos * 100,
+      gridId: 'grid-breakdown-' + safeId(item.label) + '-' + safeId(item.id),
+      rows: subset
+    };
+  });
+}
+
+function buildBreakdownTab(containerId, rows, keyField, title, items) {
+  const container = document.getElementById(containerId);
+  if (!container) {
+    return;
+  }
+  const assignedRows = rows.filter(function (row) { return row.cuposAssigned > 0; });
+  const totalCupos = assignedRows.reduce(function (sum, row) { return sum + row.cuposAssigned; }, 0) || 1;
+  const summaryRows = buildBreakdownSummary(items, assignedRows, keyField, totalCupos);
+  const groups = summaryRows.filter(function (row) { return row.rows.length; }).map(function (row) {
+    return {
+      label: row.label,
+      count: row.count,
+      gridId: row.gridId
+    };
+  });
+
+  container.innerHTML = renderTemplate('tmpl-breakdown-tab', {
+    title: title,
+    summaryGridId: 'grid-breakdown-' + containerId,
+    groups: groups
+  });
+
+  renderDataGrid('grid-breakdown-' + containerId, summaryRows, [
+    { field: 'label', title: title, template: function (row) { return row.badgeClass ? '<span class="bp ' + row.badgeClass + '">' + esc(row.label) + '</span>' : '<span class="dot ' + row.colorClass + '"></span> ' + esc(row.label); } },
+    { field: 'count', title: 'Contratos asignados', attributes: { class: 'r' } },
+    { field: 'cupos', title: 'Cupos', attributes: { class: 'r bold' }, template: function (row) { return row.cupos.toLocaleString('es-AR'); } },
+    { field: 'tons', title: 'Toneladas', attributes: { class: 'r' }, template: function (row) { return row.tons.toLocaleString('es-AR') + ' t'; } },
+    { field: 'pct', title: '% del total', attributes: { class: 'r' }, template: function (row) { return row.pct.toFixed(1) + '%<span class="bar-bg"><span class="bar-fg ' + (row.colorClass || 'bar-g') + ' ' + pctWidthClass(row.pct) + '"></span></span>'; } }
+  ], { sortable: false, pageable: false });
+
+  summaryRows.forEach(function (row) {
+    if (!row.rows.length) {
+      return;
+    }
+    renderDataGrid(row.gridId, row.rows, [
+      { field: 'numeroSAP', title: 'ContratoSAP', attributes: { class: 'mono' }, template: function (item) { return esc(item.numeroSAP); } },
+      { field: 'prov', title: 'Proveedor', template: function (item) { return esc(item.prov); } },
+      { field: 'cuit', title: 'CUIT', attributes: { class: 'mono' }, template: function (item) { return esc(item.cuit); } },
+      { field: 'material', title: 'Material', template: function (item) { return esc(item.material); } },
+      { field: 'cuposAssigned', title: 'Cupos', attributes: { class: 'r bold' }, template: function (item) { return item.cuposAssigned.toLocaleString('es-AR'); } }
+    ], { pageable: false });
+  });
+}
+
+function buildMatTab(containerId, material, rows, limit, remaining) {
+  const container = document.getElementById(containerId);
+  if (!container) {
+    return;
+  }
+  const assigned = Math.max(0, limit - remaining);
+  const gridId = 'grid-' + safeId(material);
+  const ccppKg = toNumber(S.ccppByMat[material]);
+  const ccppTon = Math.round((ccppKg / 1000) * 10) / 10;
+  container.innerHTML = renderTemplate('tmpl-mat-tab', {
+    limit: limit,
+    assigned: assigned,
+    remaining: remaining,
+    ccppCupos: Math.ceil(ccppKg / (S.cupoKg || 30000)),
+    ccppTon: ccppTon,
+    rows: rows,
+    gridId: gridId
+  });
+
+  const gridRows = rows.map(function (row) {
+    const operator = opMeta(row.opType);
+    return Object.assign({}, row, { opColorClass: operator.colorClass });
+  });
+
+  renderDataGrid(gridId, gridRows, [
+    { field: 'numeroSAP', title: 'ContratoSAP', attributes: { class: 'mono bold' }, template: function (row) { return esc(row.numeroSAP); } },
+    { field: 'prioLabel', title: 'Clase', template: function (row) { return '<span class="bp ' + row.prioCls + '">' + esc(row.prioLabel) + '</span>'; } },
+    { field: 'opLabel', title: 'Tipo Operador', template: function (row) { return '<span class="dot ' + row.opColorClass + '"></span> ' + esc(row.opLabel); } },
+    { field: 'prov', title: 'Proveedor', template: function (row) { return esc(row.prov); } },
+    { field: 'cuit', title: 'CUIT', attributes: { class: 'mono' }, template: function (row) { return esc(row.cuit); } },
+    { field: 'kg', title: 'KG Contrato', attributes: { class: 'r' }, template: function (row) { return (row.kg / 1000).toLocaleString('es-AR', { maximumFractionDigits: 1 }) + ' t'; } },
+    { field: 'ccppKgUsed', title: 'CCPP Desc.', attributes: { class: 'r metric-org' }, template: function (row) { return row.ccppKgUsed > 0 ? (row.ccppKgUsed / 1000).toLocaleString('es-AR', { maximumFractionDigits: 1 }) + ' t' : '—'; } },
+    { field: 'effKg', title: 'KG Efectivo', attributes: { class: 'r' }, template: function (row) { return (row.effKg / 1000).toLocaleString('es-AR', { maximumFractionDigits: 1 }) + ' t'; } },
+    { field: 'cuposAssigned', title: 'Cupos Asig.', attributes: { class: 'r bold' }, template: function (row) { return '<span class="' + (row.cuposAssigned > 0 ? 'metric-pos' : 'metric-neg') + '">' + (row.cuposAssigned > 0 ? row.cuposAssigned.toLocaleString('es-AR') : '—') + '</span>'; } },
+    { field: 'status', title: 'Estado', template: function (row) { return '<span class="bs s-' + row.status + '">' + (STATUS_LABELS[row.status] || row.status) + '</span>'; } },
+    { field: 'cosecha', title: 'Cosecha', attributes: { class: 'mt' }, template: function (row) { return esc(row.cosecha); } },
+    { field: 'fechaHasta', title: 'F.Hasta', attributes: { class: 'mt' }, template: function (row) { return fmt(row.fechaHasta, '.'); } },
+    { field: 'pricePt', title: 'Precio (USD/t)', attributes: { class: 'r' }, template: function (row) { return row.pricePt > 0 ? row.pricePt.toLocaleString('es-AR', { maximumFractionDigits: 1 }) : '—'; } },
+    { field: 'isSust', title: '🌱', attributes: { class: 'text-center' }, template: function (row) { return row.isSust ? '🌱' : ''; } }
+  ], { pageable: false });
 }
 
 function copyOutput() {

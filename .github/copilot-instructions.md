@@ -13,13 +13,13 @@ continuar el ciclo de una feature, invocar el prompt `/sdd-workflow`.
 Open the solution and build in Visual Studio, or use command line:
 ```bash
 # Build entire solution (Debug)
-dotnet build DataAgro.sln /p:Configuration=Debug
+msbuild DataAgro.sln /p:Configuration=Debug
 
 # Build entire solution (Release)
-dotnet build DataAgro.sln /p:Configuration=Release
+msbuild DataAgro.sln /p:Configuration=Release
 
 # Build specific project
-dotnet build Molinos.DataAgro.Business/Molinos.DataAgro.Business.csproj
+msbuild Molinos.DataAgro.Business/Molinos.DataAgro.Business.csproj
 ```
 
 ### Running Tests

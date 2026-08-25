@@ -675,7 +675,14 @@
                                         </a>
                                     </li>
                                 }
-
+                                @if (PermisosHelper.Is(PermisosDataAgro.SugerenciaDeCupos))
+                                {
+                                    <li>
+                                        <a href="~/Distribucion" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Distribuidor Cupos
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.Visualizar_CupoNoPropio))
                                 {
                                     <li>
@@ -690,15 +697,6 @@
                                         <i class="icon-bar-chart"></i> Alta Masiva de Sugerencias
                                     </a>
                                 </li>
-                                @if (PermisosHelper.Is(PermisosDataAgro.SugerenciaDeCupos))
-                                {
-                                    <li>
-                                        <a href="~/Distribucion" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Distribuidor Cupos
-                                        </a>
-                                    </li>
-                                }
-
                             </ul>
                         </li>
                     }
