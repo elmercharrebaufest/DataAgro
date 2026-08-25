@@ -2,6 +2,8 @@
 var ControlBoletos = (function () {
     "use strict";
 
+    var ui = window.ControlDeBoletosUI;
+
     var config = {
         urls: {
             getMateriales: "/ControlDeBoletos/GetMateriales",
@@ -41,49 +43,19 @@ var ControlBoletos = (function () {
 
     // Funciones privadas
     function mostrarSpinner(mostrar) {
-        var spinner = document.getElementById("loadingSpinner");
-        if (spinner) {
-            spinner.style.display = mostrar ? "flex" : "none";
-        }
+        ui.toggleSpinner(mostrar);
     }
 
     function mostrarMensaje(titulo, mensaje, tipo) {
-        tipo = tipo || "info";
-        $("#mensajeModalTitle").text(titulo);
-        $("#mensajeModalBody").html(
-            '<div class="alert alert-' + tipo + '">' + mensaje + "</div>",
-        );
-        $("#mensajeModal").modal("show");
+        ui.showModalMessage(titulo, mensaje, tipo);
     }
 
     function actualizarBoton(selector, habilitado, texto) {
-        var btn = selector;
-        btn.prop("disabled", !habilitado);
-        if (texto) {
-            btn.find("span").text(texto);
-        }
+        ui.setButtonState(selector, habilitado, texto);
     }
 
     async function cargarDropdown(url, selector, textoCarga, textoDefault) {
-        var $select = selector;
-        $select.html('<option value="">' + textoCarga + "</option>");
-
-        try {
-            var data = await MSExecuteGetOnServerAsync(url);
-            $select.empty().append('<option value="">' + textoDefault + "</option>");
-            if (data && Array.isArray(data)) {
-                $.each(data, function (i, item) {
-                    $select.append(
-                        '<option value="' + item.Value + '">' + item.Text + "</option>",
-                    );
-                });
-            } else {
-                $select.append('<option value="">Sin datos disponibles</option>');
-            }
-        } catch (error) {
-            console.error("Error cargando dropdown " + selector + ":", error);
-            $select.html('<option value="">Error al cargar datos</option>');
-        }
+        return ui.loadDropdown(url, selector, textoCarga, textoDefault);
     }
 
     // ── Estilos globales del grid ────────────────────────────────────────────
@@ -185,26 +157,6 @@ var ControlBoletos = (function () {
         $wrapper.find(".k-grid-header-wrap table, .k-grid-content table").css("width", totalWidth + "px");
     }
 
-    // ── Restaurar anchos de columnas ────────────────────────────────────────
-
-    function restaurarAnchosColumnas(grid) {
-        if (!state.columnWidths || state.columnWidths.length === 0) return;
-
-        var $wrapper = grid.element;
-        var $headerCols = $wrapper.find(".k-grid-header-wrap colgroup col");
-        var $contentCols = $wrapper.find(".k-grid-content colgroup col");
-
-        state.columnWidths.forEach(function (width, idx) {
-            $headerCols.eq(idx).css("width", width);
-            $contentCols.eq(idx).css("width", width);
-        });
-
-        var totalWidth = state.columnWidths.reduce(function (sum, widthStr) {
-            return sum + (parseInt(widthStr) || 0);
-        }, 0);
-        $wrapper.find(".k-grid-header-wrap table, .k-grid-content table").css("width", totalWidth + "px");
-    }
-
     // Funciones públicas
     return {
         init: async function () {
@@ -257,28 +209,11 @@ var ControlBoletos = (function () {
             var self = this;
 
             controlNegocioSAP
-                .on("paste", function (e) {
-
-                    e.preventDefault();
-                    controlEstadoControl.val("").trigger('change');
-                    let texto = (e.originalEvent.clipboardData || window.clipboardData)
-                        .getData("text");
-
-                    // Separar por saltos de línea
-                    let valores = texto
-                        .split(/\r?\n/)           // soporta Excel / Windows / Linux
-                        .map(v => v.trim())       // quitar espacios
-                        .filter(v => v !== "");   // eliminar vacíos
-
-                    // eliminar duplicados
-                    valores = [...new Set(valores)];
-
-                    // unir en una sola línea con ;
-                    $(this).val(valores.join(";"));
-
-                })
-                .on("keypress", e => {
-                    if (e.which === 32) e.preventDefault(); // bloquear espacios
+                .off("paste keypress")
+                .each(function () {
+                    ui.bindContractsPaste($(this), function () {
+                        controlEstadoControl.val("").trigger("change");
+                    });
                 });
 
             // Eventos de botones

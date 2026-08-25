@@ -1,6 +1,8 @@
 var ControlDeBoletosDatosCertificacion = (function () {
     "use strict";
 
+    var ui = window.ControlDeBoletosUI;
+
     var config = {
         urls: {
             createPreCertificacion: "/ControlDeBoletos/RegistrarDatosPreCertificacion",
@@ -65,28 +67,19 @@ var ControlDeBoletosDatosCertificacion = (function () {
     }
 
     function getKendoDate($el) {
-        var dp = $el.data("kendoDatePicker");
-        return dp ? dp.value() : null;
+        return ui.getKendoDate($el);
     }
 
     function getKendoDateISO($el) {
-        var d = getKendoDate($el);
-        return d ? d.toISOString() : null;
+        return ui.getKendoDateISO($el);
     }
 
     function setKendoDate($el, value) {
-        var dp = $el.data("kendoDatePicker");
-        if (!dp) return;
-        if (!value) { dp.value(null); return; }
-        var match = /\/Date\((\d+)\)\//.exec(value);
-        var date  = match ? new Date(parseInt(match[1], 10)) : new Date(value);
-        dp.value(isNaN(date.getTime()) ? null : date);
+        ui.setKendoDate($el, value);
     }
 
     function parseFechaTexto(texto) {
-        if (!texto) return null;
-        var parsed = kendo.parseDate(texto, "dd/MM/yyyy") || kendo.parseDate(texto);
-        return parsed && !isNaN(parsed.getTime()) ? parsed : null;
+        return ui.parseDateText(texto);
     }
 
     function inicializarDatePicker($el) {
@@ -156,38 +149,7 @@ var ControlDeBoletosDatosCertificacion = (function () {
     }
 
     function parseDateFromResponse(dateValue) {
-        if (!dateValue) return null;
-
-        // Si es una cadena vacía
-        if (typeof dateValue === 'string' && $.trim(dateValue) === '') {
-            return null;
-        }
-
-        // Normalizar formato escapado: \/Date(...)\/ -> Date(...)
-        if (typeof dateValue === 'string') {
-            // Remover todas las barras invertidas
-            dateValue = dateValue.replace(/\\/g, '');
-        }
-
-        var date = null;
-
-        // Formato JSON de .NET: Date(1234567890) - más flexible sin las barras
-        var match = /Date\((\d+)\)/.exec(dateValue);
-
-        if (match) {
-            date = new Date(parseInt(match[1], 10));
-        } else {
-            // Intenta parsear como ISO o fecha normal
-            date = new Date(dateValue);
-        }
-
-        // Verificar que la fecha sea válida
-        if (isNaN(date.getTime())) {
-            console.warn("Invalid date format received:", dateValue);
-            return null;
-        }
-
-        return date;
+        return ui.parseServerDate(dateValue);
     }
     function formatDateForDisplay(date) {
         if (!date) return "";
@@ -258,18 +220,7 @@ var ControlDeBoletosDatosCertificacion = (function () {
         ctrl.bolsaPlanCanje.val(null).trigger('change');
     }
     async function cargarDropdown(url, $select, textoDefault) {
-        $select.html('<option value="">Cargando...</option>');
-        try {
-            var data = await MSExecuteGetOnServerAsync(url);
-            $select.empty().append('<option value="">' + textoDefault + '</option>');
-            if (data && Array.isArray(data)) {
-                $.each(data, function (i, item) {
-                    $select.append('<option value="' + item.Value + '">' + item.Text + '</option>');
-                });
-            }
-        } catch (e) {
-            $select.html('<option value="">Error al cargar datos</option>');
-        }
+        return ui.loadDropdown(url, $select, "Cargando...", textoDefault);
     }
     function cargarFechasPorDefecto() {
         var ahora = new Date();
@@ -394,23 +345,7 @@ var ControlDeBoletosDatosCertificacion = (function () {
         ]);
     }
     function mostrarNotificacion(mensaje, tipo) {
-        var $notification = $("#notification");
-        var notification = $notification.data("kendoNotification");
-
-        if (!notification) {
-            $notification.kendoNotification({
-                position: {
-                    pinned: true,
-                    top: 50,
-                    left: "50%"
-                },
-                autoHideAfter: 3000,
-                stacking: "down"
-            });
-            notification = $notification.data("kendoNotification");
-        }
-
-        notification.show(mensaje, tipo);
+        ui.showNotification(mensaje, tipo);
     }
     async function verificarTipoBoletoYFechaRecepcion() {
         if (!state.controlDeBoletosId) return;

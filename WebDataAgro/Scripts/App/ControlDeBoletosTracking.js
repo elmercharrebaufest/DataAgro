@@ -146,14 +146,10 @@ var ControlBoletosTracking = (function () {
             ],
             dataBound: function (e) {
                 var data = e.sender.dataSource.data();
-                if (data.length === 0) {
-                    $(config.gridId).hide();
-                    $("#lblNoTrackingInfo").show();
-                } else {
-                    $(config.gridId).show();
-                    $("#lblNoTrackingInfo").hide();
-                    autoFitColumnas(e.sender);
-                }
+                var hayDatos = data.length > 0;
+                $(config.gridId).toggle(hayDatos);
+                $("#lblNoTrackingInfo").toggle(!hayDatos);
+                if (hayDatos) autoFitColumnas(e.sender);
             }
         }).data("kendoGrid");
     }

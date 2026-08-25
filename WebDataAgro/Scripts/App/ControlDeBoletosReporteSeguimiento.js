@@ -3,6 +3,8 @@
 var ControlBoletosReporteSeguimiento = (function () {
     "use strict";
 
+    var ui = window.ControlDeBoletosUI;
+
     var config = {
         urls: {
             getMateriales: "/ControlDeBoletos/GetMateriales",
@@ -95,27 +97,15 @@ var ControlBoletosReporteSeguimiento = (function () {
 
     // Funciones privadas
     function mostrarSpinner(mostrar) {
-        var spinner = document.getElementById("loadingSpinner");
-        if (spinner) {
-            spinner.style.display = mostrar ? "flex" : "none";
-        }
+        ui.toggleSpinner(mostrar);
     }
 
     function mostrarMensaje(titulo, mensaje, tipo) {
-        tipo = tipo || "info";
-        $("#mensajeModalTitle").text(titulo);
-        $("#mensajeModalBody").html(
-            '<div class="alert alert-' + tipo + '">' + mensaje + "</div>",
-        );
-        $("#mensajeModal").modal("show");
+        ui.showModalMessage(titulo, mensaje, tipo);
     }
 
     function actualizarBoton(selector, habilitado, texto) {
-        var btn = selector;
-        btn.prop("disabled", !habilitado);
-        if (texto) {
-            btn.find("span").text(texto);
-        }
+        ui.setButtonState(selector, habilitado, texto);
     }
 
     function validarNumero(valor) {
@@ -128,24 +118,7 @@ var ControlBoletosReporteSeguimiento = (function () {
     }
 
     function cargarDropdown(url, $select, textoCarga, textoDefault) {
-        $select.html('<option value="">' + textoCarga + "</option>");
-        return MSExecuteGetOnServerAsync(url)
-            .then(function (data) {
-                $select.empty().append('<option value="">' + textoDefault + "</option>");
-                if (data && Array.isArray(data)) {
-                    $.each(data, function (i, item) {
-                        $select.append(
-                            '<option value="' + item.Value + '">' + item.Text + "</option>",
-                        );
-                    });
-                } else {
-                    $select.append('<option value="">Sin datos disponibles</option>');
-                }
-            })
-            .catch(function (error) {
-                console.error("Error cargando dropdown:", error);
-                $select.html('<option value="">Error al cargar datos</option>');
-            });
+        return ui.loadDropdown(url, $select, textoCarga, textoDefault);
     }
 
     // ── Estilos globales del grid ────────────────────────────────────────────
@@ -243,27 +216,9 @@ var ControlBoletosReporteSeguimiento = (function () {
             var self = this;
 
             controlNegocioSAP
-                .on("paste", function (e) {
-
-                    e.preventDefault();
-
-                    let texto = (e.originalEvent.clipboardData || window.clipboardData)
-                        .getData("text");
-
-                    // Separar por saltos de línea
-                    let valores = texto
-                        .split(/\r?\n/)           // soporta Excel / Windows / Linux
-                        .map(v => v.trim())       // quitar espacios
-                        .filter(v => v !== "");   // eliminar vacíos
-
-                    // eliminar duplicados
-                    valores = [...new Set(valores)];
-
-                    // unir en una sola línea con ;
-                    $(this).val(valores.join(";"));
-                })
-                .on("keypress", e => {
-                    if (e.which === 32) e.preventDefault(); // bloquear espacios
+                .off("paste keypress")
+                .each(function () {
+                    ui.bindContractsPaste($(this));
                 });	
 
             // Eventos de botones
@@ -523,15 +478,6 @@ var ControlBoletosReporteSeguimiento = (function () {
             }
         },
 
-        actualizarContadores: function () {
-            if (state.grid) {
-                var total = state.grid.dataSource.total();
-                $("#totalRegistros").text(
-                    total + " registro" + (total !== 1 ? "s" : ""),
-                );
-            }
-        },
-
         obtenerFiltros: function () {
             return {
                 contratoSAP:                        controlNegocioSAP.val().trim()                        || null,
@@ -566,14 +512,6 @@ var ControlBoletosReporteSeguimiento = (function () {
             if (!esNegocioSAPValido()) {
                 errores.push("Solo se admiten números y el ';' en el campo Negocio SAP.");
                 return;
-            }
-
-            if (
-                filtros.fechaCargaDesde &&
-                filtros.fechaCargaHasta &&
-                new Date(filtros.fechaCargaDesde) > new Date(filtros.fechaCargaHasta)
-            ) {
-                errores.push("La fecha desde debe ser anterior a la fecha hasta");
             }
 
             return errores;

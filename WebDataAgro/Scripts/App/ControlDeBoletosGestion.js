@@ -57,6 +57,14 @@ var ControlDeBoletosGestion = (function () {
     let controlPagoDirectoVendedor;
     let controlCanje;
 
+    function setControlText(control, value, defaultValue) {
+        control.text(value != null ? value : (defaultValue || ""));
+    }
+
+    function boolToSiNo(value) {
+        return value ? "SI" : "NO";
+    }
+
 
     async function configurarEventos() {
 
@@ -175,8 +183,8 @@ var ControlDeBoletosGestion = (function () {
             controlProvincia.text(contrato.Provincia);
             controlKilos.text(contrato.Cantidad);
             controlProcedencia.text(contrato.Localidad);
-            controlPrecioXTonelada.text(contrato.PrecioNeto || '');
-            controlMoneda.text(contrato.Moneda || '') ;
+            setControlText(controlPrecioXTonelada, contrato.PrecioNeto, '');
+            setControlText(controlMoneda, contrato.Moneda, '');
             controlDestino.text(contrato.Destino);
             controlClasificacionProveedor.text(contrato.Clasificacion + ' - Consignatario:' + contrato.Consignatario);
             controlStandardCalidad.text(contrato.StandarCalidad);
@@ -184,22 +192,22 @@ var ControlDeBoletosGestion = (function () {
             controlCampania.text(contrato.Campana);
             controlTipoBoleto.text(contrato.TipoBoleto);
             controlPeriodoOperacion.text(contrato.FechaOperacion);
-            controlVersionBoleto.text(contrato.VersionBoleto != null ? contrato.VersionBoleto : '');
-            controlFechaGeneracion.text(contrato.FechaGeneracion != null ? contrato.FechaGeneracion : '');
-            controlNumeroSio.text(contrato.NumeroSio != null ? contrato.NumeroSio : '');
+            setControlText(controlVersionBoleto, contrato.VersionBoleto, '');
+            setControlText(controlFechaGeneracion, contrato.FechaGeneracion, '');
+            setControlText(controlNumeroSio, contrato.NumeroSio, '');
 
-            controlFechaCierta.text(contrato.FechaCierta != null ? contrato.FechaCierta : '');
-            controlCantidadFijacionMaxima.text(contrato.CantidadFijacionMaxima != null ? contrato.CantidadFijacionMaxima : '');
-            controlCantidadFijacionMinima.text(contrato.CantidadFijacionMinima != null ? contrato.CantidadFijacionMinima : '');
-            controlCesion.text(contrato.Cesion? 'SI' : 'NO');
-            controlCompensacion.text(contrato.Compensacion? 'SI' : 'NO');
-            controlDolarizadoExpress.text(contrato.DolarizadoExpress? 'SI' : 'NO');
-            controlEUDR.text(contrato.EUDR? 'SI' : 'NO');
-            controlEPA.text(contrato.EPA? 'SI' : 'NO');
-            controlSustentable.text(contrato.Sustentable? 'SI' : 'NO');
-            controlCD.text(contrato.CD? 'SI' : 'NO');
-            controlPagoDirectoVendedor.text(contrato.PagoDirectoVendedor? 'SI' : 'NO');
-            controlCanje.text(contrato.Canje? 'SI' : 'NO');
+            setControlText(controlFechaCierta, contrato.FechaCierta, '');
+            setControlText(controlCantidadFijacionMaxima, contrato.CantidadFijacionMaxima, '');
+            setControlText(controlCantidadFijacionMinima, contrato.CantidadFijacionMinima, '');
+            controlCesion.text(boolToSiNo(contrato.Cesion));
+            controlCompensacion.text(boolToSiNo(contrato.Compensacion));
+            controlDolarizadoExpress.text(boolToSiNo(contrato.DolarizadoExpress));
+            controlEUDR.text(boolToSiNo(contrato.EUDR));
+            controlEPA.text(boolToSiNo(contrato.EPA));
+            controlSustentable.text(boolToSiNo(contrato.Sustentable));
+            controlCD.text(boolToSiNo(contrato.CD));
+            controlPagoDirectoVendedor.text(boolToSiNo(contrato.PagoDirectoVendedor));
+            controlCanje.text(boolToSiNo(contrato.Canje));
 
             state.operaSinOblea = contrato.OperaSinOblea;
             state.planCanje = contrato.PlanCanje;

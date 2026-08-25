@@ -46,38 +46,38 @@ var ModalVisualizar = (function () {
     // =============================
 
     function cargarDatos(d) {
-        setText("visualizar_contratoSap", d.ContratoSAP);
-        setText("visualizar_proveedor", d.Proveedor);
-        setText("visualizar_fecha_operacion", d.FechaOperacion);
-        setText(
-            "visualizar_fecha_desde_hasta_entrega",
-           d.PeriodoEntrega
-        );
-        setText(
-            "visualizar_fecha_desde_hasta_original",
-            formatearFechaHora(d.FechaDesde),
-        );
-        setText("visualizar_clasificacion", d.Clasificacion);
-        setText("visualizar_material", d.Material);
-        setText("visualizar_campana", d.Campana);
-        setText("visualizar_cantidad", formatNumber(d.Cantidad));
-        setText("visualizar_fijacion_cantidad_minimo", formatNumber(d.CantidadFijacionMinima));
-        setText("visualizar_fijacion_cantidad_maximo", formatNumber(d.CantidadFijacionMaxima));
-        setText("visualizar_precio", formatNumber(d.Precio) + ' ' + d.Moneda);
-        setText("visualizar_comercial", d.Comercial);
-        setText("visualizar_porcentaje_pago", d.PorcentajeDePago);
-        setText("visualizar_precio_neto", formatNumber(d.PrecioNeto) + ' ' + d.Moneda);
-        setText("visualizar_redespacho", formatNumber(d.ImporteRedespacho) + ' ' + d.MonedaRedespacho);
-        setText("visualizar_tipo", d.TipoNegocio);
-        setText("visualizar_destino", d.Destino);
-        setText("visualizar_procedencia", d.Localidad);
-        setText("visualizar_dolarizo_origen", d.FechaDolarizadoOriginal);
-        setText("visualizar_mercaderia_deposito", d.MercaderaDeposito);
-        setText("visualizar_cantidad_deposito", d.CantidadDeposito);
-        setText("visualizar_boleto", d.TipoBoleto);
-        setText("visualizar_bolsa", d.Bolsa);
-        setText("visualizar_calidad", d.StandarCalidad);
-        setText("visualizar_observacion", d.Observacion);
+        var campos = [
+            { id: "visualizar_contratoSap", valor: d.ContratoSAP },
+            { id: "visualizar_proveedor", valor: d.Proveedor },
+            { id: "visualizar_fecha_operacion", valor: d.FechaOperacion },
+            { id: "visualizar_fecha_desde_hasta_entrega", valor: d.PeriodoEntrega },
+            { id: "visualizar_fecha_desde_hasta_original", valor: formatearFechaHora(d.FechaDesde) },
+            { id: "visualizar_clasificacion", valor: d.Clasificacion },
+            { id: "visualizar_material", valor: d.Material },
+            { id: "visualizar_campana", valor: d.Campana },
+            { id: "visualizar_cantidad", valor: formatNumber(d.Cantidad) },
+            { id: "visualizar_fijacion_cantidad_minimo", valor: formatNumber(d.CantidadFijacionMinima) },
+            { id: "visualizar_fijacion_cantidad_maximo", valor: formatNumber(d.CantidadFijacionMaxima) },
+            { id: "visualizar_precio", valor: formatNumber(d.Precio) + " " + d.Moneda },
+            { id: "visualizar_comercial", valor: d.Comercial },
+            { id: "visualizar_porcentaje_pago", valor: d.PorcentajeDePago },
+            { id: "visualizar_precio_neto", valor: formatNumber(d.PrecioNeto) + " " + d.Moneda },
+            { id: "visualizar_redespacho", valor: formatNumber(d.ImporteRedespacho) + " " + d.MonedaRedespacho },
+            { id: "visualizar_tipo", valor: d.TipoNegocio },
+            { id: "visualizar_destino", valor: d.Destino },
+            { id: "visualizar_procedencia", valor: d.Localidad },
+            { id: "visualizar_dolarizo_origen", valor: d.FechaDolarizadoOriginal },
+            { id: "visualizar_mercaderia_deposito", valor: d.MercaderaDeposito },
+            { id: "visualizar_cantidad_deposito", valor: d.CantidadDeposito },
+            { id: "visualizar_boleto", valor: d.TipoBoleto },
+            { id: "visualizar_bolsa", valor: d.Bolsa },
+            { id: "visualizar_calidad", valor: d.StandarCalidad },
+            { id: "visualizar_observacion", valor: d.Observacion }
+        ];
+
+        campos.forEach(function (campo) {
+            setText(campo.id, campo.valor);
+        });
     }
 
     // =============================

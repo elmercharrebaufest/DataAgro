@@ -1,10 +1,7 @@
-function getDate(id) {
-    var v = $(id).val();
-    return v ? v : null;
-}
-
 var ControlDeBoletosSeguimiento = (function () {
     "use strict";
+
+    var ui = window.ControlDeBoletosUI;
 
     var config = {
         urls: {
@@ -83,8 +80,6 @@ var ControlDeBoletosSeguimiento = (function () {
 
             if (Array.isArray(state.boletoSap) && state.boletoSap.length) {
                 var idSeleccionado = $(this).val();
-                var caracterSAP = null;
-
                 const boleto = state.boletoSap.find(x => x.Id == idSeleccionado);
                 controlCaracterBoleto.empty().append('<option value="">Seleccione</option>');
                 controlCaracterBoleto.prop('disabled', false);
@@ -97,22 +92,15 @@ var ControlDeBoletosSeguimiento = (function () {
         });
     }
     function getKendoDate($el) {
-        var dp = $el.data("kendoDatePicker");
-        return dp ? dp.value() : null;
+        return ui.getKendoDate($el);
     }
 
     function getKendoDateISO($el) {
-        var d = getKendoDate($el);
-        return d ? d.toISOString() : null;
+        return ui.getKendoDateISO($el);
     }
 
     function setKendoDate($el, value) {
-        var dp = $el.data("kendoDatePicker");
-        if (!dp) return;
-        if (!value) { dp.value(null); return; }
-        var match = /\/Date\((\d+)\)\//.exec(value);
-        var date = match ? new Date(parseInt(match[1], 10)) : new Date(value);
-        dp.value(isNaN(date.getTime()) ? null : date);
+        ui.setKendoDate($el, value);
     }
 
     var fechaMinimaFallback = new Date(1900, 0, 1);
@@ -123,10 +111,7 @@ var ControlDeBoletosSeguimiento = (function () {
     }
 
     function parseFechaTexto(texto) {
-        if (!texto) return null;
-
-        var parsed = kendo.parseDate(texto, "dd/MM/yyyy") || kendo.parseDate(texto);
-        return parsed && !isNaN(parsed.getTime()) ? parsed : null;
+        return ui.parseDateText(texto);
     }
 
     function validarFechaDatePicker($el, esRecepcionBoleto) {
@@ -173,17 +158,7 @@ var ControlDeBoletosSeguimiento = (function () {
         return true;
     }
     function mostrarNotificacion(mensaje, tipo) {
-        $("#notification").kendoNotification({
-            position: {
-                pinned: true,
-                top: 50,
-                left: "50%"
-            },
-            autoHideAfter: 3000,
-            stacking: "down"
-        });
-        var notification = $("#notification").data("kendoNotification");
-        notification.show(mensaje, tipo);
+        ui.showNotification(mensaje, tipo);
     }
     function aplicarMinimoDatePicker($el) {
         var dp = $el.data("kendoDatePicker");
@@ -416,24 +391,7 @@ var ControlDeBoletosSeguimiento = (function () {
         };
     }
     async function cargarDropdown(url, selector, textoCarga, textoDefault) {
-        var $select = selector;
-        $select.html('<option value="">' + textoCarga + "</option>");
-        try {
-            var data = await MSExecuteGetOnServerAsync(url);
-            $select.empty().append('<option value="">' + textoDefault + "</option>");
-            if (data && Array.isArray(data)) {
-                $.each(data, function (i, item) {
-                    $select.append(
-                        '<option value="' + item.Value + '">' + item.Text + "</option>",
-                    );
-                });
-            } else {
-                $select.append('<option value="">Sin datos disponibles</option>');
-            }
-        } catch (error) {
-            console.error("Error cargando dropdown " + selector + ":", error);
-            $select.html('<option value="">Error al cargar datos</option>');
-        }
+        return ui.loadDropdown(url, selector, textoCarga, textoDefault);
     }
     async function cargarDropdownBoletoSap(selector, textoCarga, textoDefault) {
         var $select = selector;
@@ -555,28 +513,33 @@ var ControlDeBoletosSeguimiento = (function () {
     return {
 
         inicializar: async function (ControlDeBoletosId, OperaSinOblea, EsCartaOferta, EsSinBoleto, BoletoCompraNet, ContratoSAP) {
-            bindControls();
-            inicializarFechas();
-            state.controlDeBoletosId = ControlDeBoletosId;
-            state.operaSinOblea = OperaSinOblea;
-            state.esCartaOferta = EsCartaOferta;
-            state.esSinBoleto = EsSinBoleto;
-            state.boletoCompraNet = BoletoCompraNet;
-            state.contratoSAP = ContratoSAP;
-            limpiarSeguimientoControlBoleto();
-            bloqueaControlesSinOblea();
-            await Promise.all([
-                cargarDropdown(config.urls.getBolsa, controlBolsa, "Cargando...", "Seleccione una bolsa"),
-                cargarBolsaSAP()
-            ]);
-            var parametros = "?boletoCompraNetId=" + state.boletoCompraNet;
-            var urlBoletoSap = config.urls.getBoletoSap + parametros;
-            var dataBoletoSap = await MSExecuteGetOnServerAsync(urlBoletoSap);
-            state.boletoSap = dataBoletoSap || [];
-            cargarDropdownBoletoSap(controlBoleto, "Cargando...", "Seleccione un boleto");
+            BlockUi('Cargando...');
+            try {
+                bindControls();
+                inicializarFechas();
+                state.controlDeBoletosId = ControlDeBoletosId;
+                state.operaSinOblea = OperaSinOblea;
+                state.esCartaOferta = EsCartaOferta;
+                state.esSinBoleto = EsSinBoleto;
+                state.boletoCompraNet = BoletoCompraNet;
+                state.contratoSAP = ContratoSAP;
+                limpiarSeguimientoControlBoleto();
+                bloqueaControlesSinOblea();
+                await Promise.all([
+                    cargarDropdown(config.urls.getBolsa, controlBolsa, "Cargando...", "Seleccione una bolsa"),
+                    cargarBolsaSAP()
+                ]);
+                var parametros = "?boletoCompraNetId=" + state.boletoCompraNet;
+                var urlBoletoSap = config.urls.getBoletoSap + parametros;
+                var dataBoletoSap = await MSExecuteGetOnServerAsync(urlBoletoSap);
+                state.boletoSap = dataBoletoSap || [];
+                cargarDropdownBoletoSap(controlBoleto, "Cargando...", "Seleccione un boleto");
 
-            if (state.controlDeBoletosId != null && state.controlDeBoletosId > 0) {
-                await obtener(state.controlDeBoletosId);
+                if (state.controlDeBoletosId != null && state.controlDeBoletosId > 0) {
+                        await obtener(state.controlDeBoletosId);
+                }
+            } finally {
+                $.unblockUI();
             }
         },
 
@@ -585,9 +548,9 @@ var ControlDeBoletosSeguimiento = (function () {
             inicializarFechas();
             state.controlDeBoletosId = ControlDeBoletosId;
             limpiarSeguimientoControlBoleto();
-            BlockUi('Cargando...');
 
             try {
+                BlockUi('Cargando...');
                 await Promise.all([
                     cargarDropdown(config.urls.getBoletoCompraNet, controlBoleto, "Cargando...", "Seleccione un boleto"),
                     cargarDropdown(config.urls.getBolsa, controlBolsa, "Cargando...", "Seleccione una bolsa"),
