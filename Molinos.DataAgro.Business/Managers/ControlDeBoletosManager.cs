@@ -1568,12 +1568,28 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         private void ActualizarEstado(
-            ControlDeBoletos boleto,
-            EnumControlDeBoletosEstado estado)
+           ControlDeBoletos boleto,
+           EnumControlDeBoletosEstado estado)
         {
-            boleto.ControlDeBoletosEstado =
-                repositorio.Obtener<ControlDeBoletosEstado>(
-                    x => x.Id == (int)estado);
+            if (boleto == null) return;
+
+            var estadoId = (int)estado;
+
+            var estadoEntidad = repositorio.Obtener<ControlDeBoletosEstado>(x => x.Id == estadoId);
+            if (estadoEntidad == null)
+            {
+                logger.Error(
+                    $"ControlDeBoletosEstado Id={estadoId} no existe en el catálogo. " +
+                    $"Se aborta ActualizarEstado para ControlDeBoletos Id={boleto.Id}.");
+                return;
+            }
+
+            // Setear SIEMPRE la FK escalar, no solo la navegación.
+            // Así evitamos que EF genere UPDATE con ControlDeBoletosEstadoId = 0
+            // si la nav property quedó en null por algún motivo (contexto compartido,
+            // entidad ya trackeada, etc.).
+            boleto.ControlDeBoletosEstadoId = estadoId;
+            boleto.ControlDeBoletosEstado = estadoEntidad;
 
             repositorio.GuardarCambios();
         }
