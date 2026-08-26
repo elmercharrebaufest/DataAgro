@@ -12,6 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public int ControlDeBoletosId { get; set; }
         public int? BolsaCompraNetId { get; set; }
         public int? BoletoSapId { get; set; }
+        public string RechazadoAfip { get; set; }
         public string BoletoSapCaracter { get; set; }
         public string BolsaSellado { get; set; }
 
