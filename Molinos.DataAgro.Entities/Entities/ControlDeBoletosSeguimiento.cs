@@ -31,6 +31,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaRecepcionAfip { get; set; }
         public DateTime? FechaEnvioSellado { get; set; }
 
+        [StringLength(10)]
+        public string RechazadoAfip { get; set; }
+
         [StringLength(500)]
         public string ObsCtrlBoleto { get; set; }
 

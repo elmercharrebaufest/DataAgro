@@ -14,6 +14,7 @@ CREATE TABLE [dbo].[ControlDeBoletosSeguimiento]
     [FechaRecepcionBolsa] DATETIME NULL,
     [FechaRecepcionAfip] DATETIME NULL,
     [FechaEnvioSellado] DATETIME NULL,
+    [RechazadoAfip]     VARCHAR(10) NULL,
     ObsCtrlBoleto VARCHAR(500) NULL, 
     ObsCtrlBoleto2 VARCHAR(500) NULL, 
     FechaCreacion DATETIME NOT NULL DEFAULT SYSDATETIME(), 

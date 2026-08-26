@@ -45,8 +45,8 @@ var ControlDeBoletosSeguimiento = (function () {
         controlBoleto = $form.find("#Boleto");
         controlCaracterBoleto = $form.find("#CaracterBoleto");
         controlBolsa         = $form.find("#Bolsa");
-        controlBolsaSellado  = $form.find("#BolsaSellado");
-        controlRechazadoAfip = $form.find("#txtRechazadoAfip");
+        controlBolsaSellado = $form.find("#BolsaSellado");
+        controlRechazadoAfip = $form.find("#RechazadoAfip");
 
         controlFechaRecepcionBoleto = $form.find("#FechaRecepcionBoleto");
 
@@ -368,6 +368,7 @@ var ControlDeBoletosSeguimiento = (function () {
         return null; // ✅ Todo correcto
     }
     function obtenerRequest() {
+        var rechazado = controlRechazadoAfip.is(":checked");
         return {
             Id: state.seguimientoBoletoId ? state.seguimientoBoletoId : 0,
             ControlDeBoletosId: state.controlDeBoletosId,
@@ -375,7 +376,7 @@ var ControlDeBoletosSeguimiento = (function () {
             BolsaSellado: controlBolsaSellado.val(),
             BoletoSapId: controlBoleto.val(),
             BoletoSapCaracter: controlCaracterBoleto.val(),
-            RechazadoAfip: controlRechazadoAfip.val(),
+            RechazadoAfip: rechazado ? "X" : "",
             FechaRecepcionBoleto: getKendoDateISO(controlFechaRecepcionBoleto),
             FechaEnvioFirma: getKendoDateISO(controlFechaEnvioFirma),
             FechaEnvioAfip: getKendoDateISO(controlFechaEnvioAfip),
@@ -580,7 +581,7 @@ var ControlDeBoletosSeguimiento = (function () {
             state.cargando = true;
             BlockUi('Guardando...');
             var request = obtenerRequest();
-
+            console.log('request--->>>>', request);
             try {
                 var response = await MSExecuteOnServerAsync(config.urls.createSeguimiento, request);
                 if (!response) return;
