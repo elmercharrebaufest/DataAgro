@@ -3384,15 +3384,15 @@ function CargarCalidadPorMaterial(value) {
 
         if (viewModel.Calidades.length === 0) {
             CambioCalidades();
-            AplicarCalidadesPorDefectoMaterial(value);
         }
     });
 }
 
-// Precarga en viewModel.Calidades las calidades por defecto segun material.
-// Solo se ejecuta para negocios A_FIJAR, A_PRECIO y CONTRATO_ACUERDO y cuando la lista esta vacia.
-// Los valores por defecto se completan luego en la "Edicion de Servicios".
+// Se removio la precarga de calidades por defecto por material a pedido del negocio.
+// Se mantiene la funcion vacia para preservar compatibilidad con posibles llamadas externas.
 function AplicarCalidadesPorDefectoMaterial(materialId) {
+    return;
+    // eslint-disable-next-line no-unreachable
     // No aplicar defaults cuando se está editando un contrato existente.
     if (Id !== undefined && Id !== null && Id !== "" && Id != 0) return;
 
