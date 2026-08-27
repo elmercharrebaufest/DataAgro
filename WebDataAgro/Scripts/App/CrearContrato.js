@@ -12,6 +12,9 @@ var MonedaSobrePrecio = "";
 var PorcentajeSobrePrecio = 0;
 var cargaFijacionAyer;
 var esEdicion;
+// DAT-1268: true mientras CargarDatosEditar puebla el formulario con los datos guardados de un negocio existente.
+// Evita que la auto-selección de Destino por Material (pensada para alta) pise el Destino real durante la carga.
+var cargandoDatosEdicion = false;
 var feriados = [];
 var boletoId;
 var cantidadEditar, fechaHastaEditar;
@@ -824,10 +827,12 @@ function InicializarElementos() {
             MonedaSobrePrecio = "";
             PorcentajeSobrePrecio = 0;
 
-            if ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR) {
-                var destinoId = viewModel.MaterialCombo.find(x => x.MaterialId == $("#material").val()).DestinoId;
-                $("#destinoId").data("kendoDropDownList").value(destinoId)
-                //$("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
+            if (!cargandoDatosEdicion && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
+                var materialSeleccionadoCombo = viewModel.MaterialCombo.find(x => x.MaterialId == $("#material").val());
+                if (materialSeleccionadoCombo) {
+                    $("#destinoId").data("kendoDropDownList").value(materialSeleccionadoCombo.DestinoId)
+                    //$("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
+                }
             }
 
             //A FIJAR, FIJACION O ACUERDO
@@ -1033,10 +1038,12 @@ function InicializarElementos() {
                 $("#dolarExportadorId").prop("checked", false);
             }
 
-            if ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR) {
-                var destinoId = viewModel.MaterialCombo.find(x => x.MaterialId == $("#material").val()).DestinoId;
-                $("#destinoId").data("kendoDropDownList").value(destinoId)
-                //$("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
+            if (!cargandoDatosEdicion && ($("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO || $("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR)) {
+                var materialSeleccionadoCombo = viewModel.MaterialCombo.find(x => x.MaterialId == $("#material").val());
+                if (materialSeleccionadoCombo) {
+                    $("#destinoId").data("kendoDropDownList").value(materialSeleccionadoCombo.DestinoId)
+                    //$("#destinoId").data("kendoDropDownList").value(7) // Rosario Norte/Sur, opción comprador
+                }
             }
 
             $("#contratoId").val("");
@@ -4277,6 +4284,7 @@ function InicializarAcuerdoEdit() {
 }
 
 function CargarDatosEditar(contrato, hijo) {
+    cargandoDatosEdicion = true;
     if (!hijo) {
         //$("#fechaOperacionId").val(contrato.FechaFormateado);
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
@@ -5088,6 +5096,7 @@ function CargarDatosEditar(contrato, hijo) {
         }
     }
 
+    cargandoDatosEdicion = false;
     //Fin cargar datos editar
 }
 
