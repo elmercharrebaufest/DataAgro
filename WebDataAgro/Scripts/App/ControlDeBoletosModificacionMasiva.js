@@ -28,9 +28,11 @@ var ControlBoletos = (function () {
         selectedPasteField: null,
         selectedPasteRowIndex: 0,
         selectedPasteColIndex: 0,
+        selectedPasteOrigin: "cell",
         rangeAnchor: null,
         selectedRange: null,
         selectedCells: {},
+        columnClipboard: null,
         listaBolsaSAP: null,
         listaBolsa: null,
         opcionesBolsa: [],
@@ -693,6 +695,110 @@ var ControlBoletos = (function () {
         return String(valor);
     }
 
+    function obtenerValorNormalizadoParaCampoDesdeTexto(field, texto) {
+        var textoNormalizado = texto == null ? "" : String(texto).trim();
+        if (textoNormalizado === "") {
+            return esCampoTextoEditable(field) ? "" : null;
+        }
+        return normalizarValorPegado(field, textoNormalizado);
+    }
+
+    function copiarColumnaAlPortapapeles(field) {
+        if (!state.grid || !field) return;
+
+        var view = state.grid.dataSource.view() || [];
+        var valoresTexto = [];
+
+        for (var i = 0; i < view.length; i++) {
+            var item = view[i];
+            if (!item) {
+                valoresTexto.push("");
+                continue;
+            }
+
+            var valor = typeof item.get === "function" ? item.get(field) : item[field];
+            valoresTexto.push(formatearValorParaCopiar(field, valor));
+        }
+
+        state.columnClipboard = {
+            sourceField: field,
+            values: valoresTexto
+        };
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(valoresTexto.join("\n"));
+        }
+    }
+
+    function aplicarPegadoColumnaEntreCampos(sourceField, targetField, valoresTexto) {
+        if (!state.grid || !targetField || !valoresTexto || !valoresTexto.length) return;
+        if (!esCampoEditablePegado(targetField)) return;
+
+        var view = state.grid.dataSource.view() || [];
+        var huboValorInvalido = false;
+        var huboValorInvalidoOblea = false;
+        var huboCampoBloqueado = false;
+        var huboFechaInvalida = false;
+        var mensajesFechas = [];
+
+        for (var i = 0; i < view.length && i < valoresTexto.length; i++) {
+            var item = view[i];
+            if (!item) continue;
+
+            if (!esCampoEditablePegadoEnFila(item, targetField)) {
+                huboCampoBloqueado = true;
+                continue;
+            }
+
+            var valorTexto = valoresTexto[i];
+            var valor = obtenerValorNormalizadoParaCampoDesdeTexto(targetField, valorTexto);
+
+            if ((valorTexto || "").trim() !== "") {
+                if (esCampoComboBolsa(targetField) && !valor) {
+                    huboValorInvalido = true;
+                    continue;
+                }
+                if (targetField === "Oblea" && valor === null) {
+                    huboValorInvalidoOblea = true;
+                    continue;
+                }
+            }
+
+            if (esCampoFecha(targetField) && valor) {
+                var errorFecha = validarFechaRelacional(item, targetField, valor);
+                if (errorFecha) {
+                    mensajesFechas.push(
+                        "Para el contrato " + normalizarTextoContratoSAP(item.ContratoSAP) + ", se encontró la siguiente observación: " + errorFecha
+                    );
+                    huboFechaInvalida = true;
+                    continue;
+                }
+            }
+
+            item.set(targetField, valor);
+            state.dirtyItems[item.ControlDeBoletosId] = item.toJSON();
+        }
+
+        if (huboValorInvalido) {
+            mostrarMensaje("Validación", "Se ignoraron valores de columna copiada que no coinciden con códigos de bolsa válidos.", "warning");
+        }
+        if (huboValorInvalidoOblea) {
+            mostrarMensaje("Validación", "Se ignoraron valores de columna copiada para oblea porque superan el límite de 18 caracteres.", "warning");
+        }
+        if (huboCampoBloqueado) {
+            mostrarMensaje("Validación", "Se ignoraron filas bloqueadas por reglas de negocio al pegar la columna.", "warning");
+        }
+        if (huboFechaInvalida) {
+            mostrarMensaje("Validación", mensajesFechas.join("<br>"), "warning");
+        }
+
+        state.selectedPasteField = targetField;
+        state.selectedPasteRowIndex = 0;
+        state.selectedPasteOrigin = "header";
+        marcarColumnaSeleccionada(state.selectedPasteField);
+        actualizarBoton(controlGuardarFechas, Object.keys(state.dirtyItems).length > 0);
+    }
+
     function limpiarSeleccionRangoVisual() {
         if (!state.grid || !state.grid.tbody) return;
         state.grid.tbody.find("td").removeClass("range-selected range-anchor");
@@ -1006,6 +1112,11 @@ var ControlBoletos = (function () {
             var field = $(this).attr("data-field");
             state.selectedPasteField = esCampoEditablePegado(field) ? field : null;
             state.selectedPasteRowIndex = 0;
+            state.selectedPasteColIndex = $(this).index();
+            state.selectedPasteOrigin = "header";
+            state.selectedRange = null;
+            limpiarSeleccionCeldas();
+            limpiarSeleccionRangoVisual();
             marcarColumnaSeleccionada(state.selectedPasteField);
             state.grid.wrapper.focus();
         });
@@ -1028,6 +1139,7 @@ var ControlBoletos = (function () {
             state.selectedPasteField = esCampoEditablePegado(field) ? field : null;
             state.selectedPasteRowIndex = rowIndex >= 0 ? rowIndex : 0;
             state.selectedPasteColIndex = colIndex >= 0 ? colIndex : 0;
+            state.selectedPasteOrigin = "cell";
             marcarColumnaSeleccionada(state.selectedPasteField);
 
             if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
@@ -1136,6 +1248,7 @@ var ControlBoletos = (function () {
                 state.selectedPasteField = esCampoEditablePegado(field) ? field : null;
                 state.selectedPasteRowIndex = rowIndex;
                 state.selectedPasteColIndex = colIndex;
+                state.selectedPasteOrigin = "cell";
                 marcarColumnaSeleccionada(state.selectedPasteField);
 
                 if (e.shiftKey) {
@@ -1296,8 +1409,15 @@ var ControlBoletos = (function () {
 
             // Ctrl+C en campo editable: copiar valor actual al portapapeles
             if ((e.ctrlKey || e.metaKey) && (e.key === "c" || e.key === "C" || e.keyCode === 67)) {
+                if (state.selectedPasteOrigin === "header" && esCampoEditablePegado(state.selectedPasteField)) {
+                    e.preventDefault();
+                    copiarColumnaAlPortapapeles(state.selectedPasteField);
+                    return;
+                }
+
                 if (hayCeldasSeleccionadas() || state.selectedRange) {
                     e.preventDefault();
+                    state.columnClipboard = null;
                     copiarRangoSeleccionadoAlPortapapeles();
                     return;
                 }
@@ -1315,6 +1435,7 @@ var ControlBoletos = (function () {
 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     e.preventDefault();
+                    state.columnClipboard = null;
                     navigator.clipboard.writeText(texto);
                 }
                 return;
@@ -1322,6 +1443,31 @@ var ControlBoletos = (function () {
 
             // Ctrl+V en campo editable: pegar desde portapapeles comenzando en la celda actual
             if ((e.ctrlKey || e.metaKey) && (e.key === "v" || e.key === "V" || e.keyCode === 86)) {
+                if (state.selectedPasteOrigin === "header" && esCampoEditablePegado(state.selectedPasteField)) {
+                    e.preventDefault();
+
+                    if (state.columnClipboard && state.columnClipboard.values && state.columnClipboard.values.length) {
+                        aplicarPegadoColumnaEntreCampos(
+                            state.columnClipboard.sourceField,
+                            state.selectedPasteField,
+                            state.columnClipboard.values
+                        );
+                    } else if (navigator.clipboard && navigator.clipboard.readText) {
+                        navigator.clipboard.readText().then(function (textoPegado) {
+                            var valores = parsearValoresPegadosPorCampo(state.selectedPasteField, textoPegado);
+                            if (!valores.length) {
+                                valores = obtenerMatrizDesdeTextoPortapapeles(textoPegado).map(function (fila) {
+                                    return (fila && fila.length) ? (fila[0] || "") : "";
+                                });
+                            }
+                            aplicarPegadoColumnaEntreCampos(null, state.selectedPasteField, valores);
+                        }).catch(function () {
+                            state.grid.wrapper.focus();
+                        });
+                    }
+                    return;
+                }
+
                 if (!esCampoEditablePegado(fieldActual) && !state.selectedRange) return;
 
                 var viewPaste = state.grid.dataSource.view();

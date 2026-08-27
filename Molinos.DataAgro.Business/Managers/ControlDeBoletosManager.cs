@@ -700,6 +700,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 seguimientoControlDeBoletos.FechaEnvioSellado = controlDeBoletosSeguimiento.FechaEnvioSellado;
 
+                seguimientoControlDeBoletos.RechazadoAfip = controlDeBoletosSeguimiento.RechazadoAfip;
                 seguimientoControlDeBoletos.ObsCtrlBoleto = controlDeBoletosSeguimiento.ObsCtrlBoleto;
                 seguimientoControlDeBoletos.ObsCtrlBoleto2 = controlDeBoletosSeguimiento.ObsCtrlBoleto2;
             }
@@ -920,7 +921,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 BolsaCompraNetId = item.BolsaCompraNetId,
                                 FechaCertificacion = item.FechaCertificacion,
                                 FechaVencimiento = item.FechaVencimiento,
-                                Rechazado = item.Rechazado ?? string.Empty,
+                                Rechazado = item.Rechazado,
                                 FechaCreacion = ahora
                             };
                             repositorio.Agregar(nuevo);
@@ -1032,7 +1033,7 @@ namespace Molinos.DataAgro.Business.Managers
                     datosCertificacionDetalleDto.Oblea = controlDeBoletosPreCertificacion.Oblea;
                     datosCertificacionDetalleDto.FeCertificacion = FormatDate(controlDeBoletosPreCertificacion.FechaCertificacion);
                     datosCertificacionDetalleDto.FeVencCerti = FormatDate(controlDeBoletosPreCertificacion.FechaVencimiento);
-                    datosCertificacionDetalleDto.Rechazado = string.Empty;
+                    datosCertificacionDetalleDto.Rechazado = controlDeBoletosPreCertificacion.Rechazado;
                     datosCertificacionDetalleDto.Tipo = tipoOblea?.Codigo ?? string.Empty;
                 }
                 datosCertificacionCabeceraDto.Detalle = new List<RegistroDatosCertificacionControlDeBoletosDetalleDto> { datosCertificacionDetalleDto };
@@ -1972,12 +1973,12 @@ namespace Molinos.DataAgro.Business.Managers
             return new SeguimientoControlDeBoletosDto
             {
                 Bolsa = bolsa,
-                BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado ?? string.Empty,
+                BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado,
                 Contrato = contrato,
                 FecAcopio = string.Empty,
                 Fecha = ahora.ToString("yyyy-MM-dd"),
                 Hora = ahora.ToString("HH:mm:ss"),
-                TipoBoleto = controlDeBoletosDatosSeguimiento.BoletoSapCaracter ?? string.Empty,
+                TipoBoleto = controlDeBoletosDatosSeguimiento.BoletoSapCaracter,
                 Usuario = PermisosHelper.ObtenerUsuario(),
                 FechaRecepBoleto = controlDeBoletosDatosSeguimiento.FechaRecepcionBoleto?.ToString("yyyy-MM-dd"),
                 FechaEnvioFirma = controlDeBoletosDatosSeguimiento.FechaEnvioFirma?.ToString("yyyy-MM-dd"),
@@ -1987,9 +1988,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaRecepcionBolsa = controlDeBoletosDatosSeguimiento.FechaRecepcionBolsa?.ToString("yyyy-MM-dd"),
                 FechaRecepcionAfip = controlDeBoletosDatosSeguimiento.FechaRecepcionAfip?.ToString("yyyy-MM-dd"),
                 FechaEnvioSellado = controlDeBoletosDatosSeguimiento.FechaEnvioSellado?.ToString("yyyy-MM-dd"),
-                ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto ?? string.Empty,
-                ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2 ?? string.Empty,
-                RechazadoAfip = string.Empty // TODO: Verificar si debe venir del DTO de entrada
+                ObsCtrlBoleto = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto,
+                ObsCtrlBoleto2 = controlDeBoletosDatosSeguimiento.ObsCtrlBoleto2,
+                RechazadoAfip = controlDeBoletosDatosSeguimiento.RechazadoAfip
             };
         }
         private void PersistirDatosDeSeguimientoLocal(ControlDeBoletosDatosSeguimientoDto controlDeBoletosDatosSeguimiento)
@@ -2040,6 +2041,7 @@ namespace Molinos.DataAgro.Business.Managers
             entidad.FechaEnvioAfip = dto.FechaEnvioAfip;
             entidad.FechaRecepcionFirma = dto.FechaRecepcionFirma;
             entidad.FechaRecepcionBolsa = dto.FechaRecepcionBolsa;
+            entidad.RechazadoAfip = dto.RechazadoAfip;
             entidad.FechaRecepcionAfip = dto.FechaRecepcionAfip;
             entidad.FechaEnvioSellado = dto.FechaEnvioSellado;
             entidad.ObsCtrlBoleto = dto.ObsCtrlBoleto;

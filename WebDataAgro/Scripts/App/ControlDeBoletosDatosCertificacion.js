@@ -441,7 +441,12 @@ var ControlDeBoletosDatosCertificacion = (function () {
         var bolsaId            = ctrl.bolsa.val() ? parseInt(ctrl.bolsa.val(), 10) : null;
         var fechaCert          = getKendoDateISO(ctrl.fechaCertificacion);
         var fechaVenc          = getKendoDateISO(ctrl.fechaVencimiento);
-        var rechazado          = ctrl.rechazado.is(":checked");
+        var rechazado = ctrl.rechazado.is(":checked");
+        bolsaId = oblea == '' ? null : bolsaId;
+        fechaCert = oblea == '' ? null : fechaCert;
+        fechaVenc = oblea == '' ? null : fechaVenc;
+        rechazado = oblea == '' ? false : rechazado;
+
         if (oblea || bolsaId || fechaCert || fechaVenc) {
             detalle.push({
                 ControlDeBoletosId: state.controlDeBoletosId,
@@ -457,7 +462,10 @@ var ControlDeBoletosDatosCertificacion = (function () {
         // Registración AFIP (código 'A')
         var codigoAfip         = ctrl.codigoRegistracionAfip.val();
         var fechaAfip          = getKendoDateISO(ctrl.fechaRegistracionAfip);
-        var rechazadoAfip      = ctrl.rechazadoAfip.is(":checked");
+        var rechazadoAfip = ctrl.rechazadoAfip.is(":checked");
+        fechaAfip = codigoAfip == '' ? null : fechaAfip;
+        rechazadoAfip = codigoAfip == '' ? false : rechazadoAfip;
+
         if (codigoAfip || fechaAfip) {
             detalle.push({
                 ControlDeBoletosId: state.controlDeBoletosId,
@@ -482,7 +490,12 @@ var ControlDeBoletosDatosCertificacion = (function () {
         var obleaCanje         = ctrl.obleaPlanCanje.val();
         var bolsaCanjeId       = ctrl.bolsaPlanCanje.val() ? parseInt(ctrl.bolsaPlanCanje.val(), 10) : null;
         var fechaCertCanje     = getKendoDateISO(ctrl.fechaCertificacionPlanCanje);
-        var fechaVencCanje     = getKendoDateISO(ctrl.fechaVencimientoPlanCanje);
+        var fechaVencCanje = getKendoDateISO(ctrl.fechaVencimientoPlanCanje);
+
+        bolsaCanjeId = obleaCanje == '' ? null : bolsaCanjeId;
+        fechaCertCanje = obleaCanje == '' ? null : fechaCertCanje;
+        fechaVencCanje = obleaCanje == '' ? null : fechaVencCanje;
+
         if (obleaCanje || bolsaCanjeId || fechaCertCanje || fechaVencCanje) {
             detalle.push({
                 ControlDeBoletosId: state.controlDeBoletosId,
@@ -509,6 +522,45 @@ var ControlDeBoletosDatosCertificacion = (function () {
         var incremento = [3, 3, 3, 5, 5, 5, 4][fecha.getDay()];
         fecha.setDate(fecha.getDate() + incremento);
         return fecha;
+    }
+    function validarDatosPreCertificacion(request) {
+        let mensaje = '';
+        const detalleObleaBolsa = request.find(x => x.CodigoTipoOblea === 'O');
+        const detalleRegistracionArca = request.find(x => x.CodigoTipoOblea === 'A');
+        const detallePlanCanje = request.find(x => x.CodigoTipoOblea === 'F');
+        if (detalleObleaBolsa) {
+            if (detalleObleaBolsa.Oblea != ''
+                && (
+                (detalleObleaBolsa.BolsaCompraNetId == null || detalleObleaBolsa.BolsaCompraNetId == '') ||
+                (detalleObleaBolsa.FechaCertificacion == null || detalleObleaBolsa.FechaCertificacion == '') ||
+                (detalleObleaBolsa.FechaVencimiento == null || detalleObleaBolsa.FechaVencimiento == '')
+                    )
+            ) {
+                mensaje = 'Falto ingresar datos para el registro de oblea de bolsa.';
+                return mensaje;
+            }
+        }
+        if (detalleRegistracionArca) {
+            if (detalleRegistracionArca.Oblea != ''
+                && (detalleRegistracionArca.FechaCertificacion == null || detalleRegistracionArca.FechaCertificacion == '')
+            ) {
+                mensaje = 'Falto ingresar datos para el registro registración arca.';
+                return mensaje;
+            }
+        }
+        if (detallePlanCanje) {
+            if (detallePlanCanje.Oblea != ''
+                && (
+                (detallePlanCanje.BolsaCompraNetId == null || detallePlanCanje.BolsaCompraNetId == '') ||
+                (detallePlanCanje.FechaCertificacion == null || detallePlanCanje.FechaCertificacion == '') ||
+                (detallePlanCanje.FechaVencimiento == null || detallePlanCanje.FechaVencimiento == '')
+                )
+            ) {
+                mensaje = 'Falto ingresar datos para el registro de oblea plan de canje.';
+                return mensaje;
+            }
+        }
+        return mensaje;
     }
     // ======================
     // API pública
@@ -610,6 +662,12 @@ var ControlDeBoletosDatosCertificacion = (function () {
 
             try {
                 var request = obtenerRequest();
+                var mensaje = validarDatosPreCertificacion(request.Detalle);
+                if (mensaje != '') {
+                    MensAlerta(mensaje);
+                    $.unblockUI();
+                    return;
+                }
                 var oblea = request.Detalle.find(d => d.CodigoTipoOblea === 'O')?.Oblea || '';
                 var codigoArca = request.Detalle.find(d => d.CodigoTipoOblea === 'A')?.Oblea || '';
                 var urlValidacion = config.urls.getVerificarDuplicidadObleaCodigoArca + "?controlDeBoletosId=" + state.controlDeBoletosId + "&numeroOblea=" + oblea + "&codigoArca=" + codigoArca;

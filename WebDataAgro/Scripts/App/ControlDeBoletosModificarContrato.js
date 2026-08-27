@@ -74,6 +74,7 @@ var ControlDeBoletosModificarContrato = (function () {
             bindControls();
             state.negocioId = NegocioId;
             await this.cargarContrato();
+            await this.configurarEventos();
         },
         abrir: function (NegocioId) {
             bindControls();
@@ -116,7 +117,19 @@ var ControlDeBoletosModificarContrato = (function () {
                 controlProcedencia.val(contrato.LocalidadId);
             });
         },
-
+        configurarEventos: async function () {
+            controlProvincia
+                .off("change")
+                .on("change", async function () {
+                    var provinciaId = controlProvincia.val();
+                    await cargarDropdown(
+                        config.urls.getProcedencias + "?provinciaId=" + provinciaId,
+                        controlProcedencia,
+                        "Cargando...",
+                        "Seleccione procedencia"
+                    );
+                });
+        },
         guardar: async function () {
             if (state.cargando) return;
 

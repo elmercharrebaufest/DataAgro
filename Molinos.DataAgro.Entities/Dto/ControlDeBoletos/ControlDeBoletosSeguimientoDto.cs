@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public DateTime FechaVueltaBolsa { get; set; }
 
         public DateTime FechaAcopio { get; set; }
-
+        public string RechazadoAfip { get; set; }
         public string ObsCtrlBoleto { get; set; }
 
         public string ObsCtrlBoleto2 { get; set; }
