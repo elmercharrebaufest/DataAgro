@@ -2880,7 +2880,7 @@ function LimpiarBoleto() {
     $("#BolsaCartaDiv").hide();
 }
 
-function CargarCampaniaPorMaterial(value) {
+function CargarCampaniaPorMaterial(value, campanaIdForzada) {
     var requestsComplete = 0;
     var totalRequests = 2;
     var resultGrano = null;
@@ -2890,7 +2890,10 @@ function CargarCampaniaPorMaterial(value) {
         requestsComplete++;
         if (requestsComplete === totalRequests) {
             viewModel.set("CampanaCombo", resultGrano);
-            if (campanaActualId) {
+            // Si viene una campaña forzada (por ejemplo, en edición) se prioriza sobre la actual.
+            if (campanaIdForzada !== undefined && campanaIdForzada !== null && campanaIdForzada !== "") {
+                $("#campanaId").data("kendoDropDownList").value(campanaIdForzada);
+            } else if (campanaActualId) {
                 $("#campanaId").data("kendoDropDownList").value(campanaActualId);
             }
         }
@@ -3679,6 +3682,9 @@ function CargarDatosEditar(contrato, hijo) {
     }
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
     $("#material").data("kendoDropDownList").trigger("change");
+    // En edición: forzar la campaña del contrato para que no la pise el callback async
+    // que setea la campaña actual desde CargarCampaniaPorMaterial (disparado por el change de material).
+    CargarCampaniaPorMaterial(contrato.MaterialId, contrato.CampanaId);
 
     $("#NivelTarifaId").data("kendoDropDownList").value(contrato.NivelTarifaId);
     $("#NivelTarifaId").data("kendoDropDownList").trigger("change");
@@ -3724,6 +3730,8 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.ComercialId !== "null" && contrato.ComercialId !== "undefined") $("#comercialFijacionId").data("kendoDropDownList").value(contrato.ComercialId);
 
     $("#campanaId").data("kendoDropDownList").value(contrato.CampanaId);
+    // Reaseguro por si el combo aún se está poblando asincrónicamente
+    CargarCampaniaPorMaterial(contrato.MaterialId, contrato.CampanaId);
 
     if (contrato.Base == true) {
         $("#baseId").prop("checked", true);
