@@ -855,10 +855,6 @@ function InicializarElementos() {
             if ($("#material").val() !== "") {
                 CargarCampaniaPorMaterial($("#material").val());
                 CargarCalidadPorMaterial($("#material").val());
-                var iteraciones = viewModel.Calidades.length;
-                for (var i = 0; i < iteraciones; i++) {
-                    viewModel.Calidades.pop();
-                }
             }
             if ($("#material").val() === "3" && ($("#tipoId").val() === "1" || $("#tipoId").val() === "2" || $("#tipoId").val() === "6")) {
                 $(".sojaSustentable").show();
