@@ -831,10 +831,6 @@ function InicializarElementos() {
             if ($("#material").val() !== "") {
                 CargarCampaniaPorMaterial($("#material").val());
                 CargarCalidadPorMaterial($("#material").val());
-                var iteraciones = viewModel.Calidades.length;
-                for (var i = 0; i < iteraciones; i++) {
-                    viewModel.Calidades.pop();
-                }
                 $("#material").val() == Materiales.MAIZ || $("#material").val() == Materiales.TRIGO ? $("#condicionFijacionId").data("kendoDropDownList").value("5") : $("#condicionFijacionId").data("kendoDropDownList").value("7");
             }
             if ($("#material").val() == Materiales.SOJA && ($("#tipoId").val() == TIPO_NEGOCIO.A_FIJAR || $("#tipoId").val() == TIPO_NEGOCIO.A_PRECIO)) {
