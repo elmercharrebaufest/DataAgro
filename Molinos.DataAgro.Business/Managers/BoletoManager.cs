@@ -1237,31 +1237,11 @@ namespace Molinos.DataAgro.Business.Managers
                     HttpRuntime.Cache.Insert(cacheKey, consultaBoleto, null,
                         DateTime.UtcNow.AddMinutes(5), System.Web.Caching.Cache.NoSlidingExpiration);
                 }
-                var version = Int32.Parse(consultaBoleto.Version);
-                if (version > boleto.Version)
-                {
-                    mensaje = "Anulado";
-                }
-                else if (version == boleto.Version)
-                {
-                    if (consultaBoleto.Anulado == "X")
-                    {
-                        mensaje = "Anulado";
-                    }
-                    else if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "")
-                    {
-                        mensaje = "Vigente";
-                    }
-                    else
-                    {
-                        mensaje = "Pendiente";
-                    }
-                }
-                else if (version == 0 && consultaBoleto.Anulado == "" && consultaBoleto.Generado == "")
-                {
-                    mensaje = "Pendiente";
-                }
-                else
+
+                var resultadoVersion = EstadoBoletoVersionHelper.Evaluar(consultaBoleto, boleto.Version, mensaje);
+                mensaje = resultadoVersion.Estado;
+
+                if (resultadoVersion.TieneInconsistencia)
                 {
                     logger.Info($"Generar Boleto - Listar Negocios - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Las Versiones No Coinciden.");
                 }

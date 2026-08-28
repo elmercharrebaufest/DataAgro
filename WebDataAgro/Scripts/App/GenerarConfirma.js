@@ -162,6 +162,18 @@ const GenerarConfirma = (() => {
         return Math.ceil(ctx.measureText(texto).width);
     }
 
+    function obtenerColumnasHoja(columns, result) {
+        result = result || [];
+        (columns || []).forEach(function (col) {
+            if (col && Array.isArray(col.columns) && col.columns.length > 0) {
+                obtenerColumnasHoja(col.columns, result);
+            } else {
+                result.push(col);
+            }
+        });
+        return result;
+    }
+
     // Ajusta columnas con field al contenido; las columnas sin field (acciones/checkbox)
     // conservan el width fijo declarado en la definición de columns[].
     // El header NO tiene scroll: solo el body hace overflow-x.
@@ -169,36 +181,39 @@ const GenerarConfirma = (() => {
         const $wrapper = grid.element;
         const $headerCols = $wrapper.find(".k-grid-header-wrap colgroup col");
         const $contentCols = $wrapper.find(".k-grid-content   colgroup col");
-        const $headerCells = $wrapper.find(".k-grid-header-wrap tr:first th");
+        const $headerCells = $wrapper.find(".k-grid-header-wrap th[data-field]");
         const $rows = $wrapper.find(".k-grid-content tbody tr");
-        const columns = grid.columns;
+        const leafColumns = obtenerColumnasHoja(grid.columns);
+        const autoFitPorContenido = {
+            ContratoVendedor: true,
+            ContratoCorredor: true,
+            Vendedor: true,
+            Comercial: true,
+            Corredor: true,
+            Observacion: true
+        };
 
         state.columnWidths = []; // Resetear anchos guardados
 
         $headerCells.each(function (colIdx) {
-            const colDef = columns[colIdx];
-            const hasField = colDef && colDef.field && colDef.field !== "Select";
+            const colDef = leafColumns[colIdx] || {};
+            const field = colDef.field || $(this).attr("data-field");
+            const widthDefinido = parseInt(colDef.width, 10);
+            const widthActual = parseInt($headerCols.eq(colIdx).css("width"), 10);
+            let maxPx = Math.max(isNaN(widthDefinido) ? 0 : widthDefinido, isNaN(widthActual) ? 0 : widthActual, 60);
 
-            if (!hasField) {
-                // Columna de acciones o checkbox: respetar width original
-                const fixedW = (colDef && colDef.width) ? colDef.width : 40;
-                $headerCols.eq(colIdx).css("width", fixedW + "px");
-                $contentCols.eq(colIdx).css("width", fixedW + "px");
-                state.columnWidths.push(fixedW + "px");
-                return;
+            if (autoFitPorContenido[field]) {
+                // Medir header (negrita + espacio para icono de sort)
+                const headerText = $(this).find(".k-link").text().trim() || $(this).text().trim();
+                const widthTitulo = medirTexto(headerText, "bold 13px Arial") + 32;
+                maxPx = Math.max(maxPx, widthTitulo);
+
+                // Medir celdas de esa columna
+                $rows.each(function () {
+                    const cellPx = medirTexto($(this).find("td").eq(colIdx).text().trim(), "13px Arial") + 24;
+                    if (cellPx > maxPx) maxPx = cellPx;
+                });
             }
-
-            // Medir header (negrita + espacio para icono de sort)
-            const headerText = $(this).find(".k-link").text().trim() || $(this).text().trim();
-            let maxPx = medirTexto(headerText, "bold 13px Arial") + 32;
-
-            // Medir celdas de esa columna
-            $rows.each(function () {
-                const cellPx = medirTexto($(this).find("td").eq(colIdx).text().trim(), "13px Arial") + 24;
-                if (cellPx > maxPx) maxPx = cellPx;
-            });
-
-            maxPx = Math.max(maxPx, 60);
 
             $headerCols.eq(colIdx).css("width", maxPx + "px");
             $contentCols.eq(colIdx).css("width", maxPx + "px");
@@ -423,24 +438,148 @@ const GenerarConfirma = (() => {
                         </div>`,
                     width: 180, sortable: false, filterable: false
                 },
-                { field: "NegocioSAP", title: "Contrato", type: "string", headerAttributes: { title: "Contrato" } },
-                { field: "Material", title: "Material", type: "string", headerAttributes: { title: "Material" }, editable: false },
-                { field: "Version", title: "Versión", type: "number", headerAttributes: { title: "Versión" } },
-                { field: "FechaConfirmacion", title: "Fecha de confirmación cto", type: "date", headerAttributes: { title: "Fecha de confirmación cto" }, format: "{0:dd/MM/yyyy}" },
-                { field: "Moneda", title: "Moneda", type: "string", headerAttributes: { title: "Moneda" }, editable: false },
-                { field: "AperturaPrecio", title: "Importe Bonificación", headerAttributes: { title: "Importe Bonificación" }, sortable: false, filterable: false },
-                { field: "Precio", title: "Precio (base)", type: "number", headerAttributes: { title: "Precio (base)" }, format: "{0:#,##0.00}" },
-                { field: "ContratoVendedor", title: "Número Cto. Vendedor", type: "string", headerAttributes: { title: "Número Cto. Vendedor" } },
-                { field: "ContratoCorredor", title: "Número Cto. Corredor", type: "string", headerAttributes: { title: "Número Cto. Corredor" } },
-                { field: "Vendedor", title: "Vendedor", headerAttributes: { title: "Vendedor" } },
-                { field: "Corredor", title: "Corredor", headerAttributes: { title: "Corredor" } },
-                { field: "FechaGeneracion", title: "Fecha de Generación Boleto", type: "date", headerAttributes: { title: "Fecha de Generación Boleto" }, format: "{0:dd/MM/yyyy}" },
-                { field: "FechaAnulacion", title: "Fecha Anulación Boleto", type: "date", headerAttributes: { title: "Fecha Anulación Boleto" }, format: "{0:dd/MM/yyyy}" },
-                { field: "Estado_Version", title: "Estado Boleto en Data", type: "string", headerAttributes: { title: "Estado Boleto en Data" }, editable: false },
-                { field: "TipoNegocio", title: "Tipo de contrato", type: "string", headerAttributes: { title: "Tipo de contrato" }, editable: false },
-                { field: "TipoBoleto", title: "Tipo de Boleto", type: "string", headerAttributes: { title: "Tipo de Boleto" } },
-                { field: "Observacion", title: "Observacion", headerAttributes: { title: "Observacion" }, sortable: false, filterable: false },
-                { field: "Comercial", title: "Comercial", headerAttributes: { title: "Comercial" } }
+                {
+                    title: "Información del Boleto",
+                    headerAttributes: {
+                        style: "text-align:center;font-weight:bold;"
+                    },
+                    columns: [
+                        {
+                            field: "TipoBoleto",
+                            title: "Tipo de Boleto",
+                            type: "string",
+                            width: 120,
+                            headerAttributes: { title: "Tipo de Boleto" }
+                        },
+                        {
+                            field: "TipoNegocio",
+                            title: "Tipo de contrato",
+                            type: "string",
+                            width: 120,
+                            headerAttributes: { title: "Tipo de contrato" }, editable: false
+                        },
+                        {
+                            field: "Material",
+                            title: "Material",
+                            type: "string",
+                            width: 120,
+                            headerAttributes: { title: "Material" }, editable: false
+                        },
+                        {
+                            field: "Version",
+                            title: "Versión",
+                            type: "number",
+                            width: 80,
+                            headerAttributes: { title: "Versión" }
+                        },
+                        {
+                            field: "NegocioSAP",
+                            title: "Contrato",
+                            type: "string",
+                            width: 100,
+                            headerAttributes: { title: "Contrato" }
+                        },
+                        {
+                            field: "Moneda",
+                            title: "Moneda",
+                            type: "string",
+                            width: 80,
+                            headerAttributes: { title: "Moneda" }                        },
+                        {
+                            field: "AperturaPrecio",
+                            title: "Importe Bonificación",
+                            headerAttributes: { title: "Importe Bonificación" },
+                            width: 150,
+                        },
+                        {
+                            field: "Precio",
+                            title: "Precio (base)",
+                            type: "number",
+                            width: 100,
+                            headerAttributes: { title: "Precio (base)" },
+                            format: "{0:#,##0.00}"
+                        },
+                        {
+                            field: "FechaConfirmacion",
+                            title: "Fecha de Confirmación cto",
+                            type: "date",
+                            width: 200,
+                            headerAttributes: { title: "Fecha de confirmación cto" },
+                            format: "{0:dd/MM/yyyy}"
+                        },
+                        {
+                            field: "FechaGeneracion",
+                            title: "Fecha de Generación Boleto",
+                            type: "date",
+                            width: 200,
+                            headerAttributes: { title: "Fecha de Generación Boleto" },
+                            format: "{0:dd/MM/yyyy}"
+                        },
+                        {
+                            field: "FechaAnulacion",
+                            title: "Fecha Anulación Boleto",
+                            type: "date",
+                            width: 200,
+                            headerAttributes: { title: "Fecha Anulación Boleto" },
+                            format: "{0:dd/MM/yyyy}"
+                        },
+                        {
+                            field: "Estado_Version",
+                            title: "Estado Boleto en Data",
+                            type: "string",
+                            width: 200,
+                            headerAttributes: { title: "Estado Boleto en Data" },
+                        },
+                    ]
+                },
+                {
+                    title: "Datos Comerciales",
+                    headerAttributes: {
+                        style: "text-align:center;font-weight:bold;"
+                    },
+                    columns: [
+                        {
+                            field: "ContratoVendedor",
+                            title: "Número Cto. Vendedor",
+                            type: "string",
+                            width: 200,
+                            headerAttributes: { title: "Número Cto. Vendedor" }
+                        },
+                        {
+                            field: "ContratoCorredor",
+                            title: "Número Cto. Corredor",
+                            type: "string",
+                            width: 200,
+                            headerAttributes: { title: "Número Cto. Corredor" }
+                        },
+                        {
+                            field: "Vendedor",
+                            title: "Vendedor",
+                            width: 200,
+                            headerAttributes: { title: "Vendedor" }
+                        },
+                        {
+                            field: "Comercial",
+                            title: "Comercial",
+                            width: 200,
+                            headerAttributes: { title: "Comercial" }
+                        },
+                        {
+                            field: "Corredor",
+                            title: "Corredor",
+                            width: 200,
+                            headerAttributes: { title: "Corredor" }
+                        },
+                        {
+                            field: "Observacion",
+                            title: "Observacion",
+                            width: 200,
+                            headerAttributes: { title: "Observacion" },
+                            sortable: false,
+                            filterable: false
+                        },
+                    ]
+                }
             ],
             dataBound(e) {
                 autoFitColumnas(e.sender);

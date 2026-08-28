@@ -410,6 +410,7 @@
     <Compile Include="Managers\ControlDeBoletosManager.cs" />
     <Compile Include="Managers\ControlDeBoletosSAPManager.cs" />
     <Compile Include="Managers\ControlDeBoletosValidacionIAManager.cs" />
+    <Compile Include="Managers\EstadoBoletoVersionHelper.cs" />
     <Compile Include="Managers\CupoNoPropioManager.cs" />
     <Compile Include="Managers\FAQManager.cs" />
     <Compile Include="Managers\HabilitacionBoletoManager.cs" />

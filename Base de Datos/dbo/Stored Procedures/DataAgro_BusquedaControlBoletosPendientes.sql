@@ -1,8 +1,12 @@
-CREATE PROCEDURE dbo.DataAgro_BusquedaControlBoletosPendientes
+CREATE PROCEDURE [dbo].[DataAgro_BusquedaControlBoletosPendientes]
     @NegocioSAP      NVARCHAR(MAX) = NULL,  -- contratos SAP separados por ';'
     @MaterialId      INT           = NULL,
     @EstadoControlId INT           = NULL,
     @EsConfirma      BIT           = NULL,
+    @EsBoletoFisico  BIT           = NULL,
+    @EsCartaOferta   BIT           = NULL,
+    @EsSinBoleto     BIT           = NULL,
+    @EsNinguno       BIT           = NULL,
     @FechaCargaDesde DATETIME      = NULL,
     @FechaCargaHasta DATETIME      = NULL,
     @ProveedorId     INT           = NULL,
@@ -14,13 +18,21 @@ BEGIN
     SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
     -- Tabla temporal: contratos SAP buscados
-    CREATE TABLE #NegocioSAP (ContratoSAP NVARCHAR(50));
+    DECLARE @tbl_NegocioSAP Table (ContratoSAP NVARCHAR(50));
+
     IF @NegocioSAP IS NOT NULL AND LEN(LTRIM(RTRIM(@NegocioSAP))) > 0
-        INSERT INTO #NegocioSAP (ContratoSAP)
+        INSERT INTO @tbl_NegocioSAP (ContratoSAP)
         SELECT RIGHT('0000000000' + LTRIM(RTRIM(value)), 10)
         FROM STRING_SPLIT(@NegocioSAP, ';')
         WHERE LTRIM(RTRIM(value)) <> '';
-
+    
+    DECLARE @tbl_TipoBoletos Table (BoletoId int)
+    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsConfirma = 1 THEN 1 ELSE 0 END)
+    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsBoletoFisico = 1 THEN 2 ELSE 0 END)
+    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsCartaOferta = 1 THEN 4 ELSE 0 END)
+    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsSinBoleto = 1 THEN 5 ELSE 0 END)
+    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsNinguno = 1 THEN 3 ELSE 0 END)
+    DELETE FROM @tbl_TipoBoletos WHERE BoletoId = 0
     SELECT
         cb.Id,
         cb.NegocioId,
@@ -121,12 +133,13 @@ BEGIN
         -- Bloque NegocioSAP (tiene prioridad sobre el resto de filtros, igual que en EF)
         AND (
             @NegocioSAP IS NULL
-            OR n.ContratoSAP IN (SELECT ContratoSAP FROM #NegocioSAP)
+            OR n.ContratoSAP IN (SELECT ContratoSAP FROM @tbl_NegocioSAP)
         )
 
         -- Filtros opcionales (solo cuando NO se busca por SAP)
         AND (@NegocioSAP IS NOT NULL OR @MaterialId      IS NULL OR n.MaterialId      = @MaterialId)
-        AND (@NegocioSAP IS NOT NULL OR @EsConfirma      IS NULL OR cb.EsConfirma     = @EsConfirma)
+        AND (n.BoletoId IN (SELECT BoletoId FROM @tbl_TipoBoletos))
+
         AND (@NegocioSAP IS NOT NULL OR @FechaCargaDesde IS NULL OR cb.FechaCreacion >= @FechaCargaDesde)
         AND (@NegocioSAP IS NOT NULL OR @FechaCargaHasta IS NULL OR cb.FechaCreacion  < DATEADD(DAY, 1, CAST(@FechaCargaHasta AS DATE)))
         AND (@NegocioSAP IS NOT NULL OR @ProveedorId     IS NULL OR n.ProveedorId     = @ProveedorId)
