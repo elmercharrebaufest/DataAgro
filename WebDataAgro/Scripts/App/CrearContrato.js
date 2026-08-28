@@ -4105,6 +4105,7 @@ function AgregarCalidades() {
                         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica" ? 3 :
                             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
                                 $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Humedad" ||
+                                $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ||
                                 $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" || $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ? 2 : 0,
 
             Borrar: function () {
