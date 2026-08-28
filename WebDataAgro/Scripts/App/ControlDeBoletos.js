@@ -27,7 +27,12 @@ var ControlBoletos = (function () {
     let controlNegocioSAP = $("#frmPendienteControl #NegocioSAP");
     let controlFechaCargaDesde = $("#frmPendienteControl #fechaCargaDesde");
     let controlFechaCargaHasta = $("#frmPendienteControl #fechaCargaHasta");
+
     let controlEsConfirma = $("#frmPendienteControl #esConfirma");
+    let controlEsBoletoFisico = $("#frmPendienteControl #esBoletoFisico");
+    let controlEsCartaOferta = $("#frmPendienteControl #esCartaOferta");
+    let controlEsNinguno = $("#frmPendienteControl #esNinguno");
+    let controlEsSinBoleto = $("#frmPendienteControl #esSinBoleto");
 
     let controlFiltrarBoletos = $("#frmPendienteControl #filtrarBoletos");
     let controlLimpiarFiltros = $("#frmPendienteControl #limpiarFiltros");
@@ -168,6 +173,12 @@ var ControlBoletos = (function () {
             this.inicializarGrid();
 
             state.datosInicializados = true;
+            controlEsConfirma.prop('checked', true);
+            controlEsBoletoFisico.prop('checked', true);
+            controlEsCartaOferta.prop('checked', true);
+            controlEsSinBoleto.prop('checked', false);
+            controlEsNinguno.prop('checked', false);
+
         },
 
         cargarDatosIniciales: async function () {
@@ -266,6 +277,10 @@ var ControlBoletos = (function () {
                                         materialId: filtros.materialId,
                                         estadoControlId: filtros.estadoControlId,
                                         esConfirma: filtros.esConfirma,
+                                        esBoletoFisico: filtros.esBoletoFisico,
+                                        esCartaOferta: filtros.esCartaOferta,
+                                        esSinBoleto: filtros.esSinBoleto,
+                                        esNinguno: filtros.esNinguno,
                                         fechaCargaDesde: filtros.fechaCargaDesde,
                                         fechaCargaHasta: filtros.fechaCargaHasta,
                                         proveedor: filtros.proveedor,
@@ -470,13 +485,15 @@ var ControlBoletos = (function () {
         },
 
         obtenerFiltros: function () {
-
-
             return {
                 negocioSAP: controlNegocioSAP.val().trim() || null,
                 materialId: controlMaterial.val() || null,
                 estadoControlId: controlEstadoControl.val() || null,
                 esConfirma: controlEsConfirma.is(":checked"),
+                esBoletoFisico: controlEsBoletoFisico.is(":checked"),
+                esCartaOferta: controlEsCartaOferta.is(":checked"),
+                esSinBoleto: controlEsSinBoleto.is(":checked"),
+                esNinguno: controlEsNinguno.is(":checked"),
                 fechaCargaDesde: (function() { var dp = controlFechaCargaDesde.data("kendoDatePicker"); var v = dp ? dp.value() : null; return v ? v.toISOString() : null; })(),
                 fechaCargaHasta: (function() { var dp = controlFechaCargaHasta.data("kendoDatePicker"); var v = dp ? dp.value() : null; return v ? v.toISOString() : null; })(),
                 proveedor: controlProveedor.val() || null,

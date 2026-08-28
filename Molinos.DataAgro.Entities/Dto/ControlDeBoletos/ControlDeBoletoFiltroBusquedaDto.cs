@@ -13,6 +13,11 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public int? MaterialId { get; set; }
         public int? EstadoControlId { get; set; }
         public bool EsConfirma { get; set; }
+        public bool EsBoletoFisico { get; set; }
+        public bool EsCartaOferta { get; set; }
+        public bool EsSinBoleto { get; set; }
+        public bool EsNinguno { get; set; }
+
         public DateTime? FechaCargaDesde { get; set; }
         public DateTime? FechaCargaHasta { get; set; }
         public int? Proveedor { get; set; }

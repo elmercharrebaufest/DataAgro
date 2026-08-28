@@ -34,6 +34,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         filtros.EstadoControlId.HasValue ? (object)filtros.EstadoControlId.Value : DBNull.Value),
                     new SqlParameter("@EsConfirma",
                         filtros.EsConfirma ? (object)true : DBNull.Value),
+                    new SqlParameter("@EsBoletoFisico",
+                        filtros.EsBoletoFisico ? (object)true : DBNull.Value),
+                    new SqlParameter("@EsCartaOferta",
+                        filtros.EsCartaOferta ? (object)true : DBNull.Value),
+                    new SqlParameter("@EsSinBoleto",
+                        filtros.EsSinBoleto ? (object)true : DBNull.Value),
+                    new SqlParameter("@EsNinguno",
+                        filtros.EsNinguno ? (object)true : DBNull.Value),
                     new SqlParameter("@FechaCargaDesde",
                         filtros.FechaCargaDesde.HasValue ? (object)filtros.FechaCargaDesde.Value : DBNull.Value),
                     new SqlParameter("@FechaCargaHasta",
@@ -48,7 +56,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                 return contexto.Database
                     .SqlQuery<ControlDeBoletosConsultaDto>(
-                        "EXEC dbo.DataAgro_BusquedaControlBoletosPendientes @NegocioSAP, @MaterialId, @EstadoControlId, @EsConfirma, @FechaCargaDesde, @FechaCargaHasta, @ProveedorId, @BolsaId, @ComercialId",
+                        "EXEC dbo.DataAgro_BusquedaControlBoletosPendientes @NegocioSAP, @MaterialId, @EstadoControlId, @EsConfirma, @EsBoletoFisico, @EsCartaOferta, @EsSinBoleto, @EsNinguno, @FechaCargaDesde, @FechaCargaHasta, @ProveedorId, @BolsaId, @ComercialId",
                         parametros)
                     .ToList();
             }

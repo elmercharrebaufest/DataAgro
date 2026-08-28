@@ -441,8 +441,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var estado = ObtenerEstadoBoleto(new BasicoBoleto
                     {
+                        Id = item.NegocioId,
                         ContratoSAP = item.ContratoSAP,
                         NegocioSAP = item.ContratoSAP,
+                        BoletoId = item.TipoBoletoId,
                         Version = item.Version,
                         Estado_Version = "Pendiente"
                     });
@@ -1870,31 +1872,11 @@ namespace Molinos.DataAgro.Business.Managers
                     HttpRuntime.Cache.Insert(cacheKey, consultaBoleto, null,
                         DateTime.UtcNow.AddSeconds(30), System.Web.Caching.Cache.NoSlidingExpiration);
                 }
-                var version = Int32.Parse(consultaBoleto.Version);
-                if (version > boleto.Version)
-                {
-                    mensaje = "Anulado";
-                }
-                else if (version == boleto.Version)
-                {
-                    if (consultaBoleto.Anulado == "X")
-                    {
-                        mensaje = "Anulado";
-                    }
-                    else if (consultaBoleto.Generado == "X" && consultaBoleto.Anulado == "")
-                    {
-                        mensaje = "Vigente";
-                    }
-                    else
-                    {
-                        mensaje = "Pendiente";
-                    }
-                }
-                else if (version == 0 && consultaBoleto.Anulado == "" && consultaBoleto.Generado == "")
-                {
-                    mensaje = "Pendiente";
-                }
-                else
+
+                var resultadoVersion = EstadoBoletoVersionHelper.Evaluar(consultaBoleto, boleto.Version, mensaje);
+                mensaje = resultadoVersion.Estado;
+
+                if (resultadoVersion.TieneInconsistencia)
                 {
                     logger.Info($"Control de Boleto - Error al consultar el status del contrato SAP {boleto.NegocioSAP}, Las Versiones No Coinciden.");
                 }
@@ -1906,6 +1888,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return mensaje;
         }
+
         private static IQueryable<ControlDeBoletosConsultaDto> AplicarOrdenControlBoletos(IQueryable<ControlDeBoletosConsultaDto> query, List<ControlBoletosSortDescriptor> sort)
         {
             if (sort != null && sort.Any())
