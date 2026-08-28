@@ -715,7 +715,7 @@ function InicializarElementos() {
                 $("#campanaDiv").show();
                 $("#procedenciaDiv").show();
                 $("#procedenciaDiv").show();
-                if ($("#provinciaId").val() == "") {
+                if ($("#ProvinciaId").val() == "") {
                     obtenerLocalidadProvincia();
                 }
                 $("#clasificacionDiv").show();
@@ -3139,6 +3139,7 @@ function CargarDatosEditar(contrato, hijo) {
 
     contrato.Consignatario == true ? $("#consignatarioId").prop("checked", true) : $("#consignatarioId").prop("checked", false);
     if (contrato.LocalidadId !== null && contrato.LocalidadId !== "undefined" && contrato.ProvinciaId !== null && contrato.ProvinciaId !== "undefined") {
+        $("#ProvinciaId").val(contrato.ProvinciaId);
         $("#LocalidadCrearContrato").val(contrato.Localidad + "(" + contrato.Provincia + ")");
         HabilitarEstablecimiento();
     }

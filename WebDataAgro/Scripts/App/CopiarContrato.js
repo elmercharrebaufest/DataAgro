@@ -706,6 +706,9 @@ function ObtenerDatos(error) {
             obj.BoletoId = 5;
             obj.BolsaId = 0;
         }
+        else {
+            console.warn("Ningún Boleto tildado al guardar: se omite BoletoId (DAT-1265)."); // evita pisar el Boleto guardado sin dejar rastro
+        }
     }
 
     var proveedorId;

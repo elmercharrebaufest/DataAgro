@@ -894,7 +894,7 @@ function InicializarElementos() {
                 $("#campanaDiv").show();
                 $("#procedenciaDiv").show();
                 $("#procedenciaDiv").show();
-                if ($("#provinciaId").val() == "") {
+                if ($("#ProvinciaId").val() == "") {
                     obtenerLocalidadProvincia();
                 }
                 $("#clasificacionDiv").show();
@@ -4366,6 +4366,7 @@ function CargarDatosEditar(contrato, hijo) {
     contrato.PlanCanje == true ? $("#planCanjeId").prop("checked", true) : $("#planCanjeId").prop("checked", false);
     contrato.Consignatario == true ? $("#consignatarioId").prop("checked", true) : $("#consignatarioId").prop("checked", false);
     if (contrato.LocalidadId !== null && contrato.LocalidadId !== "undefined" && contrato.ProvinciaId !== null && contrato.ProvinciaId !== "undefined") {
+        $("#ProvinciaId").val(contrato.ProvinciaId);
         $("#LocalidadCrearContrato").val(contrato.Localidad + "(" + contrato.Provincia + ")");
         HabilitarEstablecimiento();
     }
@@ -4861,6 +4862,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#comisionAFavorListado").data("kendoDropDownList").value(contrato.ComisionAFavorId);
         $("#porcentajeComisionVentaId").data("kendoNumericTextBox").value(contrato.PorcentajeComisionVenta);
         if (contrato.ProcedenciaVentaId !== null && contrato.ProcedenciaVentaId !== "undefined" && contrato.ProvinciaVentaId !== null && contrato.ProvinciaVentaId !== "undefined") {
+            $("#ProvinciaVentaId").val(contrato.ProvinciaVentaId);
             $("#LocalidadVenta").val(contrato.LocalidadVenta + "(" + contrato.ProvinciaVenta + ")");
         }
         $("#creditoId").data("kendoNumericTextBox").value(contrato.CreditoDisponible);
