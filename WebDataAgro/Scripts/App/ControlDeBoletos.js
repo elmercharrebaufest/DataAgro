@@ -166,12 +166,18 @@ var ControlBoletos = (function () {
     return {
         init: async function () {
             if (state.datosInicializados) return;
+
+            controlEsConfirma.prop('checked', true);
+            controlEsBoletoFisico.prop('checked', true);
+            controlEsCartaOferta.prop('checked', true);
+            controlEsSinBoleto.prop('checked', false);
+            controlEsNinguno.prop('checked', false);
+
             this.inicializarFechas();
             await this.cargarDatosIniciales();
             controlEstadoControl.val(1).trigger('change');
             this.configurarEventos();
             this.inicializarGrid();
-
             state.datosInicializados = true;
             controlEsConfirma.prop('checked', true);
             controlEsBoletoFisico.prop('checked', true);
