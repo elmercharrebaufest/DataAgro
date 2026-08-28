@@ -795,12 +795,12 @@ function ObtenerDatos(error) {
             $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado 2" ||
             $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado" ||
             $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Humedad" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Materia Extraña" ||
             $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Bonif. SECO de 7% a 10% Por punto") {
             var err = [];
             if (viewModel.Calidades.length == 0 && (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2)) {
                 err = AgregarCalidades();
-            } else if ($("#valorEspecialesId").val() != "") {
-                LimpiarCalidades();
+            } else if (viewModel.Calidades.length == 0 && $("#valorEspecialesId").val() != "") {
                 err = AgregarCalidades();
             }
             if (ExistsErrorMessages(err)) {

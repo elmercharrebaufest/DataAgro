@@ -2115,13 +2115,11 @@ function CambioCalidades(calidades) {
             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
             $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial") {
             $(".calidad-no-grado").hide();
-            LimpiarCalidades();
         } else {
             $(".calidad-no-grado").show();
         }
     } else {
         $(".calidadesEspecialesDatos").hide();
-        LimpiarCalidades();
     }
 
     if (calidades !== undefined && calidades.length == 1) {
@@ -2276,6 +2274,16 @@ function windowsResize() {
  */
 function CargarCalidadPorMaterial(value) {
     ApiCacheManager.getCalidades(value, function (calidadGrano) {
+        // Guard anti race-condition: si mientras esperabamos la respuesta cambio el material,
+        // descartamos esta respuesta para no pisar EspecialesCombo ni las calidades ya cargadas
+        // durante la edicion con las del material anterior.
+        var ddlMaterial = $("#material").data("kendoDropDownList");
+        var currentMaterialId = ddlMaterial ? ddlMaterial.value() : value;
+        if (currentMaterialId !== undefined && currentMaterialId !== null
+            && currentMaterialId.toString() !== value.toString()) {
+            return;
+        }
+
         if ((($("#destinoId").data("kendoDropDownList").value() == "13" ||
             $("#destinoId").data("kendoDropDownList").value() == "6" ||
             $("#destinoId").data("kendoDropDownList").value() == "7") &&
@@ -2290,17 +2298,35 @@ function CargarCalidadPorMaterial(value) {
         }
         viewModel.set("EspecialesCombo", calidadGrano);
 
-        if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
-            $("#calidadesEspecialesId").data("kendoDropDownList").text("Fabrica");
-        } else if ($("#calidadesEspecialesId").data("kendoDropDownList") && (value === "2" || value === "1")) {
-            $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado");
-        } else {
-            $("#calidadesEspecialesId").data("kendoDropDownList").text("Camara");
+        // Defaults por material (segun especificacion de negocio):
+        //   MAIZ  (1) -> "Grado"
+        //   TRIGO (2) -> "Grado 2"
+        //   SOJA  (3) -> "Fabrica"
+        //   GIRASOL / GIRASOL_AO (4/5) -> "Camara"
+        // En modo CANJE el combo queda filtrado a Camara/Fabrica, por lo que si el material
+        // es de fabrica elegimos "Fabrica"; si no, "Camara".
+        var ddlCalidad = $("#calidadesEspecialesId").data("kendoDropDownList");
+        if (ddlCalidad) {
+            if (value === "1") {
+                ddlCalidad.text("Grado");
+            } else if (value === "2") {
+                ddlCalidad.text("Grado 2");
+            } else if (value === "3") {
+                ddlCalidad.text("Fabrica");
+            } else if ($("#canjeId").is(":checked")) {
+                var esFabrica = false;
+                for (var j = 0; j < calidadGrano.length; j++) {
+                    if (calidadGrano[j].Descripcion === "Fabrica") { esFabrica = true; break; }
+                }
+                ddlCalidad.text(esFabrica ? "Fabrica" : "Camara");
+            } else {
+                ddlCalidad.text("Camara");
+            }
         }
-        if ($("#material").val() == Materiales.TRIGO) {
-            $("#calidadesEspecialesId").data("kendoDropDownList").text("Grado 2");
+
+        if (viewModel.Calidades.length === 0) {
+            CambioCalidades();
         }
-        CambioCalidades();
     });
 }
 
