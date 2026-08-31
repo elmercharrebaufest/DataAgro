@@ -27,6 +27,8 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public DateTime FechaEnvioBolsa { get; set; }
 
         public DateTime FechaRecepBoleto { get; set; }
+        public DateTime FechaEnvioFisicoBolsa { get; set; }
+        public DateTime FechaRecepcionBoletoOriginal { get; set; }
 
         public DateTime FechaRecibFirma { get; set; }
 

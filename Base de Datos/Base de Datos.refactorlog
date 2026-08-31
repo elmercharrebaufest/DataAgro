@@ -1197,4 +1197,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="BoletoSapId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="c15d1da9-ab82-4e07-8cd1-297936340d28" ChangeDateTime="08/28/2026 21:53:50">
+    <Property Name="ElementName" Value="[dbo].[ControlDeBoletosSeguimiento].[FechaRecepcionOriginal]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ControlDeBoletosSeguimiento]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaEnvioFisicoBolsa" />
+  </Operation>
 </Operations>

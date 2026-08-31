@@ -37,6 +37,8 @@ var ControlDeBoletosSeguimiento = (function () {
     let controlFechaEnvioSellado;
     let controlRechazadoAfip;
     let controlObsCtrlBoleto, controlObsCtrlBoleto2;
+    let controlFechaEnvioFisicoBolsa;
+    let controlFechaRecepcionBoletoOriginal;
 
     function bindControls() {
         var $form = $("#accordionGestionBoleto #frmSeguimientoControlBoleto");
@@ -49,7 +51,8 @@ var ControlDeBoletosSeguimiento = (function () {
         controlRechazadoAfip = $form.find("#RechazadoAfip");
 
         controlFechaRecepcionBoleto = $form.find("#FechaRecepcionBoleto");
-
+        controlFechaEnvioFisicoBolsa = $form.find("#FechaEnvioFisicoBolsa");
+        controlFechaRecepcionBoletoOriginal = $form.find("#FechaRecepcionBoletoOriginal");
         controlFechaEnvioFirma = $form.find("#FechaEnvioFirma");
         controlFechaEnvioBolsa = $form.find("#FechaEnvioBolsa");
         controlFechaEnvioAfip = $form.find("#FechaEnvioAfip");
@@ -182,7 +185,9 @@ var ControlDeBoletosSeguimiento = (function () {
           controlFechaRecepcionFirma,
           controlFechaRecepcionBolsa,
           controlFechaRecepcionAfip,
-          controlFechaEnvioSellado
+          controlFechaEnvioSellado,
+          controlFechaEnvioFisicoBolsa,
+          controlFechaRecepcionBoletoOriginal
         ].forEach(function ($el) {
             if ($el && $el.length) {
                 aplicarMinimoDatePicker($el);
@@ -221,7 +226,9 @@ var ControlDeBoletosSeguimiento = (function () {
           controlFechaRecepcionFirma,
           controlFechaRecepcionBolsa,
           controlFechaRecepcionAfip,
-          controlFechaEnvioSellado
+          controlFechaEnvioSellado,
+          controlFechaEnvioFisicoBolsa,
+          controlFechaRecepcionBoletoOriginal
         ].forEach(function ($el) {
             if ($el && $el.length) {
                 inicializarDatePicker($el, $el.is(controlFechaRecepcionBoleto));
@@ -378,6 +385,7 @@ var ControlDeBoletosSeguimiento = (function () {
             BoletoSapCaracter: controlCaracterBoleto.val(),
             RechazadoAfip: rechazado ? "X" : "",
             FechaRecepcionBoleto: getKendoDateISO(controlFechaRecepcionBoleto),
+            FechaEnvioFisicoBolsa: getKendoDateISO(controlFechaEnvioFisicoBolsa),
             FechaEnvioFirma: getKendoDateISO(controlFechaEnvioFirma),
             FechaEnvioAfip: getKendoDateISO(controlFechaEnvioAfip),
             FechaEnvioBolsa: getKendoDateISO(controlFechaEnvioBolsa),
@@ -387,6 +395,7 @@ var ControlDeBoletosSeguimiento = (function () {
             FechaRecepcionBolsa: getKendoDateISO(controlFechaRecepcionBolsa),
 
             FechaEnvioSellado: getKendoDateISO(controlFechaEnvioSellado),
+            FechaRecepcionBoletoOriginal: getKendoDateISO(controlFechaRecepcionBoletoOriginal),
             ObsCtrlBoleto: controlObsCtrlBoleto.val(),
             ObsCtrlBoleto2: controlObsCtrlBoleto2.val()
         };
@@ -469,7 +478,9 @@ var ControlDeBoletosSeguimiento = (function () {
 
             setKendoDate(controlFechaRecepcionFirma, response.FechaRecepcionFirma);
             setKendoDate(controlFechaRecepcionBolsa, response.FechaRecepcionBolsa);
+            setKendoDate(controlFechaEnvioFisicoBolsa, response.FechaEnvioFisicoBolsa);
             setKendoDate(controlFechaRecepcionAfip, response.FechaRecepcionAfip);
+            setKendoDate(controlFechaRecepcionBoletoOriginal, response.FechaRecepcionBoletoOriginal);
 
             setKendoDate(controlFechaEnvioSellado, response.FechaEnvioSellado);
             state.seguimientoBoletoId = response.Id;
@@ -507,6 +518,8 @@ var ControlDeBoletosSeguimiento = (function () {
         setKendoDate(controlFechaRecepcionBolsa, null);
         setKendoDate(controlFechaRecepcionAfip, null);
         setKendoDate(controlFechaEnvioSellado, null);
+        setKendoDate(controlFechaEnvioFisicoBolsa, null);
+        setKendoDate(controlFechaRecepcionBoletoOriginal, null);
 
         actualizarMinimosFechas();
     }

@@ -691,7 +691,8 @@ namespace Molinos.DataAgro.Business.Managers
                 seguimientoControlDeBoletos.BolsaCompraNetId = controlDeBoletosSeguimiento.BolsaCompraNetId;
                 seguimientoControlDeBoletos.BolsaSellado = controlDeBoletosSeguimiento.BolsaSellado;
                 seguimientoControlDeBoletos.FechaRecepcionBoleto = controlDeBoletosSeguimiento.FechaRecepcionBoleto;
-
+                seguimientoControlDeBoletos.FechaEnvioFisicoBolsa = controlDeBoletosSeguimiento.FechaEnvioFisicoBolsa;
+                seguimientoControlDeBoletos.FechaRecepcionBoletoOriginal = controlDeBoletosSeguimiento.FechaRecepcionBoletoOriginal;
                 seguimientoControlDeBoletos.FechaEnvioFirma = controlDeBoletosSeguimiento.FechaEnvioFirma;
                 seguimientoControlDeBoletos.FechaEnvioBolsa = controlDeBoletosSeguimiento.FechaEnvioBolsa;
                 seguimientoControlDeBoletos.FechaEnvioAfip = controlDeBoletosSeguimiento.FechaEnvioAfip;
@@ -771,7 +772,7 @@ namespace Molinos.DataAgro.Business.Managers
                         FechaEnvioSellado   = string.Empty,
                         ObsCtrlBoleto       = string.Empty,
                         ObsCtrlBoleto2      = string.Empty,
-                        RechazadoAfip       = string.Empty
+                        RechazadoAfip       = string.Empty,
                     };
                     seguimientoControlBoletoAgent.RegistrarSeguimiento(seguimientoControlDeBoletos);
                     repositorio.Remover(seguimiento);
@@ -1570,6 +1571,8 @@ namespace Molinos.DataAgro.Business.Managers
                     BolsaCompraNetId = bolsa?.Id,
                     BolsaSellado = bolsa?.CodigoSap ?? string.Empty,
                     FechaRecepcionBoleto = boleto.FechaRecepBoleto,
+                    FechaEnvioFisicoBolsa = boleto?.FechaEnvioFisicoBolsa,
+                    FechaRecepcionBoletoOriginal = boleto?.FechaRecepcionBoletoOriginal,
                     FechaEnvioFirma = boleto.FechaEnviadoFirma,
                     FechaEnvioBolsa = boleto.FechaEnvioBolsa,
                     FechaEnvioAfip = boleto.FechaEnvioAfip,
@@ -1601,6 +1604,10 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (boleto.FechaRecepBoleto.HasValue)
                     seguimiento.FechaRecepcionBoleto = boleto.FechaRecepBoleto;
+                if (boleto.FechaEnvioFisicoBolsa.HasValue)
+                    seguimiento.FechaEnvioFisicoBolsa = boleto.FechaEnvioFisicoBolsa;
+                if (boleto.FechaRecepcionBoletoOriginal.HasValue)
+                    seguimiento.FechaRecepcionBoletoOriginal = boleto.FechaRecepcionBoletoOriginal; 
                 if (boleto.FechaEnviadoFirma.HasValue)
                     seguimiento.FechaEnvioFirma = boleto.FechaEnviadoFirma;
                 if (boleto.FechaEnvioBolsa.HasValue)
@@ -1660,20 +1667,21 @@ namespace Molinos.DataAgro.Business.Managers
                 var pre = repositorio.Obtener<ControlDeBoletosPreCertificacion>(x => x.ControlDeBoletosId == boleto.ControlDeBoletosId && x.TipoOblea.Codigo == "O");
                 if (pre == null)
                 {
-                    pre = new ControlDeBoletosPreCertificacion()
-                    {
-                        ControlDeBoletosId = boleto.ControlDeBoletosId,
-                        Oblea = boleto.Oblea,
-                        FechaCertificacion = boleto.FechaCertificacion,
-                        FechaVencimiento = boleto.FechaVencimientoCertificacion,
-                        BolsaCompraNetId = bolsa?.Id ?? 0,
-                        TipoObleaId = tipoObleaOId,
-                        Rechazado = string.Empty,
-                        FechaCreacion = DateTime.Now,
-                    };
-                    repositorio.Agregar(pre);
-                    repositorio.GuardarCambios();
                     return resultado;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(boleto.Oblea) && !boleto.FechaCertificacion.HasValue && !boleto.FechaVencimientoCertificacion.HasValue && boleto.BolsaCompraNetId != null)
+                    {
+                        pre.ControlDeBoletosId = boleto.ControlDeBoletosId;
+                        pre.Oblea = boleto.Oblea;
+                        pre.FechaCertificacion = boleto.FechaCertificacion;
+                        pre.FechaVencimiento = boleto.FechaVencimientoCertificacion;
+                        pre.BolsaCompraNetId = bolsa?.Id ?? 0;
+                        pre.FechaModificacion = DateTime.Now;
+                        repositorio.GuardarCambios();
+                        return resultado;
+                    }
                 }
 
                 var ahora = DateTime.Now;
@@ -1958,7 +1966,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Bolsa = bolsa,
                 BolsaSellado = controlDeBoletosDatosSeguimiento.BolsaSellado,
                 Contrato = contrato,
-                FecAcopio = string.Empty,
+                FecAcopio = controlDeBoletosDatosSeguimiento.FechaRecepcionBoletoOriginal?.ToString("yyyy-MM-dd"),
                 Fecha = ahora.ToString("yyyy-MM-dd"),
                 Hora = ahora.ToString("HH:mm:ss"),
                 TipoBoleto = controlDeBoletosDatosSeguimiento.BoletoSapCaracter,
@@ -2000,6 +2008,8 @@ namespace Molinos.DataAgro.Business.Managers
                    !string.IsNullOrWhiteSpace(dto.BolsaSellado) ||
                    !string.IsNullOrWhiteSpace(dto.BoletoSapCaracter) ||
                    dto.FechaRecepcionBoleto.HasValue ||
+                   dto.FechaRecepcionBoletoOriginal.HasValue ||
+                   dto.FechaEnvioFisicoBolsa.HasValue ||
                    dto.FechaEnvioFirma.HasValue ||
                    dto.FechaEnvioBolsa.HasValue ||
                    dto.FechaEnvioAfip.HasValue ||
@@ -2019,6 +2029,8 @@ namespace Molinos.DataAgro.Business.Managers
             entidad.BolsaCompraNet = dto.BolsaCompraNetId != null ? repositorio.Obtener<BolsaCompraNet>(dto.BolsaCompraNetId.Value) : null;
             entidad.BolsaSellado = dto.BolsaSellado;
             entidad.FechaRecepcionBoleto = dto.FechaRecepcionBoleto;
+            entidad.FechaEnvioFisicoBolsa = dto.FechaEnvioFisicoBolsa;
+            entidad.FechaRecepcionBoletoOriginal = dto.FechaRecepcionBoletoOriginal;
             entidad.FechaEnvioFirma = dto.FechaEnvioFirma;
             entidad.FechaEnvioBolsa = dto.FechaEnvioBolsa;
             entidad.FechaEnvioAfip = dto.FechaEnvioAfip;

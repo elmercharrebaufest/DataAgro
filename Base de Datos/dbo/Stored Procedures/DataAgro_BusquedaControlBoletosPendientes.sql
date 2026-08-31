@@ -27,12 +27,26 @@ BEGIN
         WHERE LTRIM(RTRIM(value)) <> '';
     
     DECLARE @tbl_TipoBoletos Table (BoletoId int)
-    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsConfirma = 1 THEN 1 ELSE 0 END)
-    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsBoletoFisico = 1 THEN 2 ELSE 0 END)
-    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsCartaOferta = 1 THEN 4 ELSE 0 END)
-    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsSinBoleto = 1 THEN 5 ELSE 0 END)
-    INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsNinguno = 1 THEN 3 ELSE 0 END)
-    DELETE FROM @tbl_TipoBoletos WHERE BoletoId = 0
+
+
+    IF EXISTS (SELECT 1 FROM @tbl_NegocioSAP)
+       BEGIN
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(1)
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(2)
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(4)
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(5)
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(3)
+       END
+       ELSE
+       BEGIN
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsConfirma = 1 THEN 1 ELSE 0 END)
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsBoletoFisico = 1 THEN 2 ELSE 0 END)
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsCartaOferta = 1 THEN 4 ELSE 0 END)
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsSinBoleto = 1 THEN 5 ELSE 0 END)
+            INSERT INTO @tbl_TipoBoletos (BoletoId)VALUES(CASE WHEN @EsNinguno = 1 THEN 3 ELSE 0 END)
+            DELETE FROM @tbl_TipoBoletos WHERE BoletoId = 0
+       END
+
     SELECT
         cb.Id,
         cb.NegocioId,

@@ -39,7 +39,9 @@ BEGIN
         seg.FechaRecepcionFirma AS FechaRecibFirma,
         seg.FechaRecepcionBolsa AS FechaVueltaBolsa,
         seg.FechaRecepcionAfip AS FechaVueltaAfip,
-        seg.FechaEnvioSellado
+        seg.FechaEnvioSellado,
+        seg.FechaEnvioFisicoBolsa AS FechaEnvioFisicoBolsa,
+        seg.FechaRecepcionBoletoOriginal AS FechaRecepcionBoletoOriginal
     FROM ControlDeBoletos cb
     INNER JOIN Negocio n ON n.Id = cb.NegocioId
     INNER JOIN ControlDeBoletosSeguimiento seg ON seg.ControlDeBoletosId = cb.Id

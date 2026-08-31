@@ -371,7 +371,9 @@ var ControlBoletos = (function () {
             "FechaVueltaAfip",
             "FechaEnvioSellado",
             "FechaCertificacion",
-            "FechaVencimientoCertificacion"
+            "FechaVencimientoCertificacion",
+            "FechaEnvioFisicoBolsa",
+            "FechaRecepcionBoletoOriginal"
         ].indexOf(field) >= 0;
     }
 
@@ -1589,6 +1591,8 @@ var ControlBoletos = (function () {
                                         FechaCertificacion: { type: "date" },
                                         FechaVencimientoCertificacion: { type: "date" },
                                         FechaRecepBoleto: { type: "date" },
+                                        FechaRecepcionBoletoOriginal: { type: "date" },
+                                        FechaEnvioFisicoBolsa: { type: "date" },
                                         FechaEnviadoFirma: { type: "date" },
                                         FechaEnvioBolsa: { type: "date" },
                                         FechaEnvioAfip: { type: "date" },
@@ -1662,6 +1666,24 @@ var ControlBoletos = (function () {
                                 format: "{0:dd/MM/yyyy}",
                                 template: "#= formatearFecha(FechaRecepBoleto) #",
                                 editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaRecepBoleto"); },
+                                editor: dateCellEditor
+                            },
+                            {
+                                field: "FechaRecepcionBoletoOriginal",
+                                title: "Fecha Recepción Boleto Original",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaRecepcionBoletoOriginal) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaRecepcionBoletoOriginal"); },
+                                editor: dateCellEditor
+                            },
+                            {
+                                field: "FechaEnvioFisicoBolsa",
+                                title: "Fecha Envío Físico Bolsa",
+                                width: 200,
+                                format: "{0:dd/MM/yyyy}",
+                                template: "#= formatearFecha(FechaEnvioFisicoBolsa) #",
+                                editable: function (dataItem) { return !esCampoBloqueadoPorFila(dataItem, "FechaEnvioFisicoBolsa"); },
                                 editor: dateCellEditor
                             },
                             {

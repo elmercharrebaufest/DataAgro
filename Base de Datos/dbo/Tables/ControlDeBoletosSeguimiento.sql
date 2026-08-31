@@ -7,6 +7,8 @@ CREATE TABLE [dbo].[ControlDeBoletosSeguimiento]
     BoletoSapCaracter VARCHAR(20) NULL, 
     BolsaSellado VARCHAR(100) NULL, 
     [FechaRecepcionBoleto] DATETIME NULL,
+    [FechaEnvioFisicoBolsa] DATETIME NULL,
+    [FechaRecepcionBoletoOriginal] DATETIME NULL,
     [FechaEnvioFirma] DATETIME NULL,
     [FechaEnvioBolsa] DATETIME NULL,
     [FechaEnvioAfip] DATETIME NULL,

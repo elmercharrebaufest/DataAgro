@@ -36,6 +36,8 @@ namespace Molinos.DataAgro.Entities.Dto.ControlDeBoletos
         public string BolsaSellado { get; set; }
         public int? SeguimientoBoletoId { get; set; }
         public DateTime? FechaRecepBoleto { get; set; }
+        public DateTime? FechaEnvioFisicoBolsa { get; set; }
+        public DateTime? FechaRecepcionBoletoOriginal { get; set; }
         public DateTime? FechaEnviadoFirma { get; set; }
         public DateTime? FechaEnvioBolsa { get; set; }
         public DateTime? FechaEnvioAfip { get; set; }
