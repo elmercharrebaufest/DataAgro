@@ -3373,19 +3373,27 @@ function CargarCalidadPorMaterial(value) {
         }
         viewModel.set("EspecialesCombo", calidadGrano);
 
-        // El texto por defecto del combo debe reflejar SIEMPRE la calidad base del material,
-        // tanto al crear como al editar (donde viewModel.Calidades ya trae filas guardadas).
+        // El texto por defecto del combo debe reflejar la calidad base del material SOLO al crear.
+        // En edición, si viewModel.Calidades ya trae filas guardadas, respetamos la calidad del contrato
+        // (CalidadEspecialDesc de la primera fila) para no pisar el texto seteado en CargarDatosEditar.
         var ddlCalidad = $("#calidadesEspecialesId").data("kendoDropDownList");
         if (ddlCalidad) {
-            if (value === "3") {
-                ddlCalidad.text("Fabrica");
-            } else if (value === "2" || value === "1") {
-                ddlCalidad.text("Grado");
+            if (viewModel.Calidades && viewModel.Calidades.length > 0) {
+                var descCalidadContrato = viewModel.Calidades[0].CalidadEspecialDesc;
+                if (descCalidadContrato != null && descCalidadContrato !== "") {
+                    ddlCalidad.text(descCalidadContrato);
+                }
             } else {
-                ddlCalidad.text("Camara");
-            }
-            if ($("#material").val() == Materiales.TRIGO) {
-                ddlCalidad.text("Grado 2");
+                if (value === "3") {
+                    ddlCalidad.text("Fabrica");
+                } else if (value === "2" || value === "1") {
+                    ddlCalidad.text("Grado");
+                } else {
+                    ddlCalidad.text("Camara");
+                }
+                if ($("#material").val() == Materiales.TRIGO) {
+                    ddlCalidad.text("Grado 2");
+                }
             }
         }
 
@@ -4689,9 +4697,11 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $(".calidadesEspecialesDatos").hide();
     }
-    if (contrato.Calidades !== null) {
-        var descripcion = contrato.Calidades.length > 0 ? contrato.Calidades[0].CalidadEspecialDesc : contrato.StandardDeCalidadDescripcion;
-        if (descripcion != null) $("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
+    if (contrato.Calidades !== null && contrato.Calidades.length > 0) {
+        var descripcion = contrato.Calidades[0].CalidadEspecialDesc;
+        if (descripcion != null && descripcion !== "") {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
+        }
         CambioCalidades(contrato.Calidades);
         $("#zonasGirasolAltoId").data("kendoDropDownList").value(contrato.ZonaId);
     }
