@@ -1314,7 +1314,7 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
             title: "Precio",
             width: 100,
             template: function (dataItem) {
-              return kendo.toString(dataItem.Precio, "n0");
+              return kendo.toString(dataItem.Precio, "n2", "es-AR");
             },
           },
           {
@@ -1322,10 +1322,10 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
             title: "Toneladas",
             width: 150,
             template: function (dataItem) {
-              return kendo.toString(dataItem.CantidadTotal, "n0");
+              return kendo.toString(dataItem.CantidadTotal, "n0", "es-AR");
             },
             aggregates: ["sum"],
-            footerTemplate: '#=kendo.toString(sum, "n0")#',
+            footerTemplate: '#=kendo.toString(sum, "n0", "es-AR")#',
           },
         ],
       },
@@ -1386,7 +1386,7 @@ function crearGrillaFijacionesPorMes(href, grilla) {
             title: "Precio",
             width: 100,
             template: function (dataItem) {
-              return kendo.toString(dataItem.Precio, "n0");
+              return kendo.toString(dataItem.Precio, "n2", "es-AR");
             },
           },
           {
@@ -1394,10 +1394,10 @@ function crearGrillaFijacionesPorMes(href, grilla) {
             title: "Toneladas",
             width: 150,
             template: function (dataItem) {
-              return kendo.toString(dataItem.CantidadTotal, "n0");
+              return kendo.toString(dataItem.CantidadTotal, "n0", "es-AR");
             },
             aggregates: ["sum"],
-            footerTemplate: '#=kendo.toString(sum, "n0")#',
+            footerTemplate: '#=kendo.toString(sum, "n0", "es-AR")#',
           },
         ],
       },
@@ -1776,4 +1776,125 @@ function setearValoresComboDeInicio() {
 
 function getVerFijaciones() {
   return $("#verFijaciones").is(":checked") ? "True" : "False";
+}
+
+// ============================================================
+// DEBUG: Datos falsos para visualizar las 3 grillas de fijaciones.
+// Uso desde la consola del navegador (con el modal de fijaciones abierto):
+//     MostrarDatosFalsosFijaciones();
+// Requiere que en el DOM existan: #grillaFijacionCorta, #grillaFijacionLarga
+// y #grillaFijacionesPorMes.
+// ============================================================
+function MostrarDatosFalsosFijaciones() {
+  var hoy = new Date();
+  function fmt(d) {
+    var dd = ("0" + d.getDate()).slice(-2);
+    var mm = ("0" + (d.getMonth() + 1)).slice(-2);
+    return dd + "/" + mm + "/" + d.getFullYear();
+  }
+  function sumarDias(base, dias) {
+    var d = new Date(base.getTime());
+    d.setDate(d.getDate() + dias);
+    return d;
+  }
+  var fechaOp = fmt(sumarDias(hoy, -10));
+
+  var itemsFalsos = [
+    // CORTAS (<=31 días)
+    { TipoNegocioId: 3, HastaFijacion: fmt(sumarDias(hoy, 5)),  FechaOperacion: fechaOp, Moneda: "ARS", Precio: 490000, CantidadD: 120 },
+    { TipoNegocioId: 3, HastaFijacion: fmt(sumarDias(hoy, 5)),  FechaOperacion: fechaOp, Moneda: "ARS", Precio: 495000, CantidadD: 80  },
+    { TipoNegocioId: 3, HastaFijacion: fmt(sumarDias(hoy, 15)), FechaOperacion: fechaOp, Moneda: "USD", Precio: 285,    CantidadD: 200 },
+    { TipoNegocioId: 3, HastaFijacion: fmt(sumarDias(hoy, 20)), FechaOperacion: fechaOp, Moneda: "ARS", Precio: 502000, CantidadD: 150 },
+    // LARGAS (>31 días)
+    { TipoNegocioId: 3, HastaFijacion: fmt(sumarDias(hoy, 45)),  FechaOperacion: fechaOp, Moneda: "USD", Precio: 292,    CantidadD: 300 },
+    { TipoNegocioId: 3, HastaFijacion: fmt(sumarDias(hoy, 60)),  FechaOperacion: fechaOp, Moneda: "ARS", Precio: 510000, CantidadD: 250 },
+    { TipoNegocioId: 3, HastaFijacion: fmt(sumarDias(hoy, 90)),  FechaOperacion: fechaOp, Moneda: "USD", Precio: 305,    CantidadD: 180 },
+    { TipoNegocioId: 3, HastaFijacion: fmt(sumarDias(hoy, 120)), FechaOperacion: fechaOp, Moneda: "ARS", Precio: 525000, CantidadD: 400 },
+    { TipoNegocioId: 3, HastaFijacion: fmt(sumarDias(hoy, 120)), FechaOperacion: fechaOp, Moneda: "ARS", Precio: 530000, CantidadD: 100 },
+    // No fijación -> se descarta
+    { TipoNegocioId: 1, HastaFijacion: fmt(sumarDias(hoy, 10)), FechaOperacion: fechaOp, Moneda: "ARS", Precio: 999999, CantidadD: 500 },
+  ];
+
+  var jsonD = { items: itemsFalsos.filter(function (el) { return el.TipoNegocioId == 3; }) };
+
+  var dataFijLargas = jsonD.items.filter(function (el) {
+    return DiferenciaFechasEnDias(el.HastaFijacion, el.FechaOperacion) > 31;
+  });
+  var dataFijCortas = jsonD.items.filter(function (el) {
+    return DiferenciaFechasEnDias(el.HastaFijacion, el.FechaOperacion) <= 31;
+  });
+
+  var cmpPrecio = function (a, b) {
+    return parseFloat(a.Precio) > parseFloat(b.Precio) ? -1
+         : parseFloat(b.Precio) > parseFloat(a.Precio) ? 1 : 0;
+  };
+  dataFijLargas.sort(cmpPrecio);
+  dataFijCortas.sort(cmpPrecio);
+
+  function agrupar(arr) {
+    var acc = {}; var out = [];
+    arr.reduce(function (res, value) {
+      var k = value.HastaFijacion + value.Moneda;
+      if (!res[k]) {
+        res[k] = {
+          CantidadTotal: 0,
+          HastaFijacion: value.HastaFijacion,
+          Moneda: value.Moneda,
+          Precio: value.Precio,
+          Cantidad: value.CantidadD,
+        };
+        out.push(res[k]);
+      }
+      res[k].CantidadTotal += value.CantidadD;
+      return res;
+    }, acc);
+    return out;
+  }
+
+  var dFijCortas = agrupar(dataFijCortas);
+  var dFijLargas = agrupar(dataFijLargas);
+
+  crearGrillaFijacionLargaCorta(
+    JSON.stringify({ items: dFijCortas, total: dFijCortas.length }),
+    "grillaFijacionCorta"
+  );
+  crearGrillaFijacionLargaCorta(
+    JSON.stringify({ items: dFijLargas, total: dFijLargas.length }),
+    "grillaFijacionLarga"
+  );
+
+  var dFijPorMes = [];
+  jsonD.items.reduce(function (res, value) {
+    var mesAnio = MesAnioDesdeFecha(value.HastaFijacion);
+    var key = mesAnio + value.Moneda;
+    if (!res[key]) {
+      res[key] = {
+        MesAnio: mesAnio,
+        Moneda: value.Moneda,
+        CantidadTotal: 0,
+        PrecioPonderadoAcum: 0,
+        Precio: 0,
+        Orden: OrdenMesAnio(value.HastaFijacion),
+      };
+      dFijPorMes.push(res[key]);
+    }
+    res[key].CantidadTotal += value.CantidadD;
+    res[key].PrecioPonderadoAcum += parseFloat(value.Precio) * value.CantidadD;
+    return res;
+  }, {});
+  dFijPorMes.forEach(function (item) {
+    item.Precio = item.CantidadTotal > 0
+      ? item.PrecioPonderadoAcum / item.CantidadTotal
+      : 0;
+  });
+  dFijPorMes.sort(function (a, b) { return a.Orden - b.Orden; });
+
+  crearGrillaFijacionesPorMes(
+    JSON.stringify({ items: dFijPorMes, total: dFijPorMes.length }),
+    "grillaFijacionesPorMes"
+  );
+
+  console.log("[MOCK] Fijaciones Cortas:", dFijCortas);
+  console.log("[MOCK] Fijaciones Largas:", dFijLargas);
+  console.log("[MOCK] Fijaciones por Mes:", dFijPorMes);
 }
