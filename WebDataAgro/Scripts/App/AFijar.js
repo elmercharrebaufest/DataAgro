@@ -2307,20 +2307,27 @@ function CargarCalidadPorMaterial(value) {
         // es de fabrica elegimos "Fabrica"; si no, "Camara".
         var ddlCalidad = $("#calidadesEspecialesId").data("kendoDropDownList");
         if (ddlCalidad) {
-            if (value === "1") {
-                ddlCalidad.text("Grado");
-            } else if (value === "2") {
-                ddlCalidad.text("Grado 2");
-            } else if (value === "3") {
-                ddlCalidad.text("Fabrica");
-            } else if ($("#canjeId").is(":checked")) {
-                var esFabrica = false;
-                for (var j = 0; j < calidadGrano.length; j++) {
-                    if (calidadGrano[j].Descripcion === "Fabrica") { esFabrica = true; break; }
+            if (viewModel.Calidades && viewModel.Calidades.length > 0) {
+                var descCalidadContrato = viewModel.Calidades[0].CalidadEspecialDesc;
+                if (descCalidadContrato != null && descCalidadContrato !== "") {
+                    ddlCalidad.text(descCalidadContrato);
                 }
-                ddlCalidad.text(esFabrica ? "Fabrica" : "Camara");
             } else {
-                ddlCalidad.text("Camara");
+                if (value === "1") {
+                    ddlCalidad.text("Grado");
+                } else if (value === "2") {
+                    ddlCalidad.text("Grado 2");
+                } else if (value === "3") {
+                    ddlCalidad.text("Fabrica");
+                } else if ($("#canjeId").is(":checked")) {
+                    var esFabrica = false;
+                    for (var j = 0; j < calidadGrano.length; j++) {
+                        if (calidadGrano[j].Descripcion === "Fabrica") { esFabrica = true; break; }
+                    }
+                    ddlCalidad.text(esFabrica ? "Fabrica" : "Camara");
+                } else {
+                    ddlCalidad.text("Camara");
+                }
             }
         }
 
@@ -3363,9 +3370,11 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $(".calidadesEspecialesDatos").hide();
     }
-    if (contrato.Calidades !== null) {
-        var descripcion = contrato.Calidades.length > 0 ? contrato.Calidades[0].CalidadEspecialDesc : contrato.StandardDeCalidadDescripcion;
-        if (descripcion != null) $("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
+    if (contrato.Calidades !== null && contrato.Calidades.length > 0) {
+        var descripcion = contrato.Calidades[0].CalidadEspecialDesc;
+        if (descripcion != null && descripcion !== "") {
+            $("#calidadesEspecialesId").data("kendoDropDownList").text(descripcion);
+        }
         CambioCalidades(contrato.Calidades);
         $("#zonasGirasolAltoId").data("kendoDropDownList").value(contrato.ZonaId);
     }
