@@ -109,6 +109,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var fechaDesde = ParsearFecha(ObtenerValor(fila, "Fecha Desde"));
                 var fechaHasta = ParsearFecha(ObtenerValor(fila, "Fecha Hasta"));
+                var fechaHastaContra = ParsearFecha(ObtenerValor(fila, "Fecha Hasta Contra", "Fecha Hasta Contrato")) ?? fechaHasta;
                 if (fechaDesde.HasValue)
                 {
                     fechaDesdeMin = Min(fechaDesdeMin, fechaDesde.Value);
@@ -120,10 +121,6 @@ namespace Molinos.DataAgro.Business.Managers
                     fechaHastaMax = Max(fechaHastaMax, fechaHasta.Value);
                 }
 
-                if (fechaHasta.HasValue && fechaHasta.Value.Date < fecha.Date)
-                {
-                    continue;
-                }
                 if (fechaDesde.HasValue && fechaDesde.Value.Date > fecha.Date)
                 {
                     continue;
@@ -147,6 +144,7 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaContrato = FormatearFecha(ParsearFecha(ObtenerValor(fila, "Fecha"))),
                     FechaDesde = FormatearFecha(fechaDesde),
                     FechaHasta = FormatearFecha(fechaHasta),
+                    FechaHastaContra = FormatearFecha(fechaHastaContra),
                     Cuit = ObtenerValor(fila, "CUIT Proveedor"),
                     Proveedor = ObtenerValor(fila, "Descripción Proveedor"),
                     Corredor = ObtenerValor(fila, "Descripción Corredor"),

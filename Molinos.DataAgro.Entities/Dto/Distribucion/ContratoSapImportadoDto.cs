@@ -15,6 +15,7 @@ namespace Molinos.DataAgro.Entities.Dto.Distribucion
         public string FechaContrato { get; set; }
         public string FechaDesde { get; set; }
         public string FechaHasta { get; set; }
+        public string FechaHastaContra { get; set; }
         public string Cuit { get; set; }
         public string Proveedor { get; set; }
         public string Corredor { get; set; }

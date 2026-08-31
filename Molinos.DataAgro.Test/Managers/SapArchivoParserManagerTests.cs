@@ -55,6 +55,28 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
+        public void ParsearArchivo_ExcluyeSoloContratosFuturosYUsaFechaHastaContraComoFallback()
+        {
+            var contenido = string.Join("\n", new[]
+            {
+                "Tipo\tDescripción Centro\tDescripción del Material\tKilos a recibir total\tCUIT Proveedor\tDescripción Cl.Contrato\tCosecha\tFecha Desde\tFecha Hasta\tFecha Hasta Contra\tFecha\tNumero\tDescripción Proveedor\tDescripción Corredor\tClasificación\tSust.\tEPA\tValor\tMoneda",
+                "CTO\tPlanta San Lorenzo\tSoja Poroto\t900.000\t20-12345678-9\tFijo\t25-26\t01.01.2026\t10.06.2026\t15.06.2026\t15.01.2026\t0004500012345\tAGRO S.A.\t\tACOPIADOR\t\t\t450000\tUSD",
+                "CTO\tPlanta San Lorenzo\tSoja Poroto\t900.000\t20-12345678-8\tFijo\t25-26\t15.06.2026\t30.06.2026\t30.06.2026\t15.01.2026\t0004500012346\tAGRO B\t\tACOPIADOR\t\t\t450000\tUSD",
+                "CTO\tPlanta San Lorenzo\tSoja Poroto\t900.000\t20-12345678-7\tFijo\t25-26\t01.01.2026\t30.06.2026\t\t15.01.2026\t0004500012347\tAGRO C\t\tACOPIADOR\t\t\t450000\tUSD"
+            });
+
+            var bytes = Encoding.Unicode.GetPreamble().Concat(Encoding.Unicode.GetBytes(contenido)).ToArray();
+            using (var stream = new MemoryStream(bytes))
+            {
+                var resultado = target.ParsearArchivo(stream, ".tsv", new DateTime(2026, 6, 11));
+
+                Assert.That(resultado.Contratos.Count, Is.EqualTo(2));
+                Assert.That(resultado.Contratos.Select(x => x.NumeroSAP), Is.EquivalentTo(new[] { "4500012345", "4500012347" }));
+                Assert.That(resultado.Contratos.Single(x => x.NumeroSAP == "4500012347").FechaHastaContra, Is.EqualTo("2026-06-30"));
+            }
+        }
+
+        [Test]
         public void ParsearArchivo_SinColumnaTipo_LanzaInvalidOperationException()
         {
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes("Descripción Centro\tDescripción\nPlanta San Lorenzo\tDato")))

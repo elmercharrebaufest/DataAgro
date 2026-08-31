@@ -261,7 +261,7 @@ namespace Molinos.DataAgro.Business.Managers
         private static bool CumpleFiltro(ContratoSapImportadoDto contrato, DateTime? fechaDesdeMin, DateTime? fechaDesdeMax, DateTime? fechaHastaMin, DateTime? fechaHastaMax)
         {
             var fechaDesde = ParsearFecha(contrato.FechaDesde);
-            var fechaHasta = ParsearFecha(contrato.FechaHasta);
+            var fechaHasta = ParsearFecha(contrato.FechaHastaContra) ?? ParsearFecha(contrato.FechaHasta);
             if (fechaDesdeMin.HasValue && fechaDesde.HasValue && fechaDesde.Value < fechaDesdeMin.Value)
             {
                 return false;

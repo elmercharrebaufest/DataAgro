@@ -1,0 +1,84 @@
+{
+  "jiraKey": "MOA-1816",
+  "slug": "CambiosFormulario",
+  "estado": "in_progress",
+  "traceability": [
+    {
+      "requirement": "R1",
+      "type": "manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "WebDataAgro/Views/Distribucion/Index.cshtml",
+        "WebDataAgro/Scripts/Distribucion/distribucion-cupos.js"
+      ]
+    },
+    {
+      "requirement": "R2",
+      "type": "manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "WebDataAgro/Views/Distribucion/Index.cshtml",
+        "WebDataAgro/Scripts/Distribucion/distribucion-cupos.js"
+      ]
+    },
+    {
+      "requirement": "R3",
+      "type": "manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "WebDataAgro/Scripts/Distribucion/distribucion-cupos.js"
+      ]
+    },
+    {
+      "requirement": "R4",
+      "type": "manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "WebDataAgro/Scripts/Distribucion/distribucion-cupos.js"
+      ]
+    },
+    {
+      "requirement": "R5",
+      "type": "manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "WebDataAgro/Views/Distribucion/Index.cshtml"
+      ]
+    },
+    {
+      "requirement": "R6",
+      "type": "manual",
+      "artifacts": [
+        "WebDataAgro/Views/Distribucion/Index.cshtml",
+        "WebDataAgro/Scripts/Distribucion/distribucion-cupos.js"
+      ]
+    }
+  ],
+  "qaManualPending": [
+    {
+      "requirement": "R1",
+      "description": "Validar en navegador que los contratos vencidos ya no queden excluidos y que solo siga faltando la restricción de contratos aún no iniciados.",
+      "signOff": null
+    },
+    {
+      "requirement": "R2",
+      "description": "Validar en el archivo de muestra que el rango use Fecha Hasta Contra con fallback a Fecha Hasta y que los contratos con datos heterogéneos se calculen correctamente.",
+      "signOff": null
+    },
+    {
+      "requirement": "R4",
+      "description": "Confirmar que el ordenamiento no cambia de criterio y sigue usando Fecha Hasta como desempate.",
+      "signOff": null
+    },
+    {
+      "requirement": "R5",
+      "description": "Confirmar que el panel de diagnóstico sigue mostrando el rango de Fecha Hasta como referencia visual y no se rompe la UI del formulario.",
+      "signOff": null
+    },
+    {
+      "requirement": "R6",
+      "description": "Validar en la vista real del proyecto que la corrección quedó aplicada en el formulario actual de la solución y no solo en el adjunto HTML del issue.",
+      "signOff": null
+    }
+  ]
+}

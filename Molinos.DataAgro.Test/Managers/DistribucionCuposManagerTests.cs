@@ -80,6 +80,65 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
+        public void Calcular_UsaFechaHastaContraConFallbackCuandoHayFiltroDeFechas()
+        {
+            var request = new DistribucionCuposRequestDto
+            {
+                Fecha = "2026-06-11",
+                Contratos = new List<ContratoSapImportadoDto>
+                {
+                    new ContratoSapImportadoDto
+                    {
+                        Numero = "4500012345",
+                        NumeroSAP = "4500012345",
+                        Cuit = "20-12345678-9",
+                        Material = "Soja Poroto",
+                        Kg = 300000m,
+                        DescCl = "Fijo",
+                        OpType = "acopiador",
+                        Proveedor = "Proveedor",
+                        Rank = 3,
+                        PriceRank = 0,
+                        FechaContrato = "2026-01-15",
+                        FechaDesde = "2026-01-01",
+                        FechaHasta = "2026-06-30",
+                        FechaHastaContra = "2026-06-15"
+                    },
+                    new ContratoSapImportadoDto
+                    {
+                        Numero = "4500012346",
+                        NumeroSAP = "4500012346",
+                        Cuit = "20-12345678-8",
+                        Material = "Soja Poroto",
+                        Kg = 300000m,
+                        DescCl = "Fijo",
+                        OpType = "productor",
+                        Proveedor = "Proveedor",
+                        Rank = 3,
+                        PriceRank = 0,
+                        FechaContrato = "2026-01-15",
+                        FechaDesde = "2026-06-12",
+                        FechaHasta = "2026-06-30",
+                        FechaHastaContra = "2026-06-30"
+                    }
+                },
+                LimitesPorMaterial = new Dictionary<string, int> { { "Soja Poroto", 50 } },
+                Configuracion = new DistribucionConfigDto
+                {
+                    HabilitarFiltroFechas = true,
+                    FiltroFechaDesdeMin = "2026-01-01",
+                    FiltroFechaDesdeMax = "2026-12-31",
+                    FiltroFechaHastaMin = "2026-06-10",
+                    FiltroFechaHastaMax = "2026-06-15"
+                }
+            };
+
+            var resultado = target.Calcular(request);
+
+            Assert.That(resultado.Resultados.Select(x => x.NumeroSAP), Is.EquivalentTo(new[] { "4500012345" }));
+        }
+
+        [Test]
         public void Calcular_MaterialSinLimite_MarcaSinTope()
         {
             var request = new DistribucionCuposRequestDto
