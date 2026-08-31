@@ -1314,7 +1314,7 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
             title: "Precio",
             width: 100,
             template: function (dataItem) {
-              return kendo.toString(dataItem.Precio, "n0");
+              return kendo.toString(dataItem.Precio, "n2", "es-AR");
             },
           },
           {
@@ -1322,10 +1322,10 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
             title: "Toneladas",
             width: 150,
             template: function (dataItem) {
-              return kendo.toString(dataItem.CantidadTotal, "n0");
+              return kendo.toString(dataItem.CantidadTotal, "n0", "es-AR");
             },
             aggregates: ["sum"],
-            footerTemplate: '#=kendo.toString(sum, "n0")#',
+            footerTemplate: '#=kendo.toString(sum, "n0", "es-AR")#',
           },
         ],
       },
@@ -1386,7 +1386,7 @@ function crearGrillaFijacionesPorMes(href, grilla) {
             title: "Precio",
             width: 100,
             template: function (dataItem) {
-              return kendo.toString(dataItem.Precio, "n0");
+              return kendo.toString(dataItem.Precio, "n2", "es-AR");
             },
           },
           {
@@ -1394,10 +1394,10 @@ function crearGrillaFijacionesPorMes(href, grilla) {
             title: "Toneladas",
             width: 150,
             template: function (dataItem) {
-              return kendo.toString(dataItem.CantidadTotal, "n0");
+              return kendo.toString(dataItem.CantidadTotal, "n0", "es-AR");
             },
             aggregates: ["sum"],
-            footerTemplate: '#=kendo.toString(sum, "n0")#',
+            footerTemplate: '#=kendo.toString(sum, "n0", "es-AR")#',
           },
         ],
       },
