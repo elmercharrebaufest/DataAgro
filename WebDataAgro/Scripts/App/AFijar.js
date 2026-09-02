@@ -2311,7 +2311,12 @@ function CargarCalidadPorMaterial(value) {
                 var descCalidadContrato = viewModel.Calidades[0].CalidadEspecialDesc;
                 if (descCalidadContrato != null && descCalidadContrato !== "") {
                     ddlCalidad.text(descCalidadContrato);
-                }
+                } else if  (contratoEdit
+                && contratoEdit.StandardDeCalidadDescripcion != null
+                && contratoEdit.StandardDeCalidadDescripcion !== "") {
+                // En edicion sin calidades especiales, usamos la descripcion base del contrato
+                // (Camara / Fabrica / Grado 2) para no caer al default por material.
+                ddlCalidad.text(contratoEdit.StandardDeCalidadDescripcion);
             } else {
                 if (value === "1") {
                     ddlCalidad.text("Grado");
