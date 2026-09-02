@@ -2305,33 +2305,32 @@ function CargarCalidadPorMaterial(value) {
         //   GIRASOL / GIRASOL_AO (4/5) -> "Camara"
         // En modo CANJE el combo queda filtrado a Camara/Fabrica, por lo que si el material
         // es de fabrica elegimos "Fabrica"; si no, "Camara".
+        // El texto por defecto del combo debe reflejar la calidad base del material SOLO al crear.
+        // En edición, si viewModel.Calidades ya trae filas guardadas, respetamos la calidad del contrato
+        // (CalidadEspecialDesc de la primera fila) para no pisar el texto seteado en CargarDatosEditar.
         var ddlCalidad = $("#calidadesEspecialesId").data("kendoDropDownList");
         if (ddlCalidad) {
             if (viewModel.Calidades && viewModel.Calidades.length > 0) {
                 var descCalidadContrato = viewModel.Calidades[0].CalidadEspecialDesc;
                 if (descCalidadContrato != null && descCalidadContrato !== "") {
                     ddlCalidad.text(descCalidadContrato);
-                } else if  (contratoEdit
+                }
+            } else if (contratoEdit
                 && contratoEdit.StandardDeCalidadDescripcion != null
                 && contratoEdit.StandardDeCalidadDescripcion !== "") {
                 // En edicion sin calidades especiales, usamos la descripcion base del contrato
                 // (Camara / Fabrica / Grado 2) para no caer al default por material.
                 ddlCalidad.text(contratoEdit.StandardDeCalidadDescripcion);
             } else {
-                if (value === "1") {
-                    ddlCalidad.text("Grado");
-                } else if (value === "2") {
-                    ddlCalidad.text("Grado 2");
-                } else if (value === "3") {
+                if (value === "3") {
                     ddlCalidad.text("Fabrica");
-                } else if ($("#canjeId").is(":checked")) {
-                    var esFabrica = false;
-                    for (var j = 0; j < calidadGrano.length; j++) {
-                        if (calidadGrano[j].Descripcion === "Fabrica") { esFabrica = true; break; }
-                    }
-                    ddlCalidad.text(esFabrica ? "Fabrica" : "Camara");
+                } else if (value === "2" || value === "1") {
+                    ddlCalidad.text("Grado");
                 } else {
                     ddlCalidad.text("Camara");
+                }
+                if ($("#material").val() == Materiales.TRIGO) {
+                    ddlCalidad.text("Grado 2");
                 }
             }
         }
