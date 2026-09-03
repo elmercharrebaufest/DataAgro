@@ -371,7 +371,6 @@
     <Content Include="Content\altaMasivaCupos.css" />
     <Content Include="Content\control-boletos.css" />
     <Content Include="Content\control-boletos-contrato.css" />
-    <Content Include="REGENERACION_ARCHIVOS_RESUMEN.txt" />
     <Content Include="Scripts\App\AltaMasivaCupos.js" />
     <Content Include="Scripts\App\CambioDePerfil.js" />
     <Content Include="Scripts\App\ContactoComercialAuditoria.js" />
@@ -389,7 +388,6 @@
     <Content Include="Scripts\App\ValidacionBoletoIA.js" />
     <Content Include="Scripts\App\ValidacionBoletoIACargarContrato.js" />
     <Content Include="Scripts\App\ValidacionBoletoIAResultados.js" />
-    <Content Include="SOLUCION_CODIFICACION.txt" />
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Home\CambioDePerfil.cshtml" />
     <Content Include="Views\ControlDeBoletos\Index.cshtml" />
