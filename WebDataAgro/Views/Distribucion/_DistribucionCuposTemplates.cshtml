@@ -1,0 +1,144 @@
+<script id="tmpl-pct-row" type="text/x-kendo-template">
+    <div class="pct-row">
+        <div class="pct-nm">#= iconHtml #</div>
+        <input class="pct-inp" type="number" min="0" max="100" step="1" value="#= value #" data-kind="#= kind #" data-key="#= key #">
+        <span class="pct-sym">%</span>
+    </div>
+</script>
+
+<script id="tmpl-day-badge" type="text/x-kendo-template">
+    <span class="day-badge">Día #= index + 1 #: #= label #</span>
+</script>
+
+<script id="tmpl-res-tab" type="text/x-kendo-template">
+    <div class="tab#= active ? ' active' : '' #" data-target="#= id #">#= iconHtml ##= label #</div>
+</script>
+
+<script id="tmpl-res-tab-content" type="text/x-kendo-template">
+    <div class="tc#= active ? ' active' : '' #" id="tab-#= id #"></div>
+</script>
+
+<script id="tmpl-date-filter-ui" type="text/x-kendo-template">
+    <div class="grid-2col mb-14">
+      <div>
+        <div class="section-caption-upper">RANGOS EN EL ARCHIVO</div>
+        <div class="stats-box">
+          <div class="sb-hdr sb-hdr-op">📅 Fechas de contratos CTO vigentes</div>
+          <div id="grid-dates"></div>
+        </div>
+      </div>
+      <div>
+        <div class="toggle-row">
+          <label class="toggle"><input type="checkbox" id="chk-date" onchange="onToggleDate()" #= enabled ? 'checked' : '' #><span class="slider"></span></label>
+          <label for="chk-date">Filtrar contratos por rango de fechas</label>
+        </div>
+        <div id="date-filter-wrap" class="#= enabled ? '' : 'hidden' #">
+          <div class="al al-p mb-10"><span class="ico">💡</span><div>Incluí solo contratos dentro de los rangos de fecha indicados. Dejá en blanco los campos que no querés restringir. Se aplica <em>además</em> del filtro automático de vigencia.</div></div>
+          <div class="grid-gap-8">
+            <div class="filter-title">Fecha Desde del contrato</div>
+            <div class="grid-2col-gap8">
+              <div><label class="field-label">No anterior a</label><input type="date" id="df-fdMin" class="input-ui w-100" value="#= dateFilter.fdMin || '' #" onchange="onDateFilterChange()"></div>
+              <div><label class="field-label">No posterior a</label><input type="date" id="df-fdMax" class="input-ui w-100" value="#= dateFilter.fdMax || '' #" onchange="onDateFilterChange()"></div>
+            </div>
+            <div class="filter-title mt-8">Fecha Hasta del contrato</div>
+            <div class="grid-2col-gap8">
+              <div><label class="field-label">No anterior a</label><input type="date" id="df-fhMin" class="input-ui w-100" value="#= dateFilter.fhMin || '' #" onchange="onDateFilterChange()"></div>
+              <div><label class="field-label">No posterior a</label><input type="date" id="df-fhMax" class="input-ui w-100" value="#= dateFilter.fhMax || '' #" onchange="onDateFilterChange()"></div>
+            </div>
+          </div>
+        </div>
+        <div id="date-filter-off" class="al al-w mt-8 #= enabled ? 'hidden' : '' #"><span class="ico">⚪</span>Sin filtro de fechas adicional. Se incluyen todos los contratos vigentes.</div>
+      </div>
+    </div>
+</script>
+
+<script id="tmpl-prices-sust-ui" type="text/x-kendo-template">
+    <div class="grid-2col mb-14">
+      <div>
+        <div class="section-caption-upper">CONTRATOS SUSTENTABLES EN EL ARCHIVO</div>
+        <div class="stats-box">
+          <div class="sb-hdr sb-hdr-sust">🌱 Sust. / EPA</div>
+          <div id="grid-sust"></div>
+        </div>
+      </div>
+      <div>
+        <div class="toggle-row">
+          <label class="toggle"><input type="checkbox" id="chk-sust" onchange="S.sustainFirst=this.checked" #= sustainFirst ? 'checked' : '' #><span class="slider"></span></label>
+          <label for="chk-sust">🌱 Priorizar contratos sustentables</label>
+        </div>
+        <div class="al al-t mt-8"><span class="ico">ℹ️</span><div>Dentro de cada clase de prioridad, los contratos con <strong>Sust.=X</strong> o <strong>EPA=X</strong> se asignarán antes que los no sustentables.</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="toggle-row">
+        <label class="toggle"><input type="checkbox" id="chk-prices" onchange="onTogglePrices()" #= pricesEnabled ? 'checked' : '' #><span class="slider"></span></label>
+        <label for="chk-prices">💰 Priorizar contratos Fijo/Hijo por precio de referencia</label>
+      </div>
+      <div id="prices-wrap" class="#= pricesEnabled ? '' : 'hidden' #">
+        <div class="al al-p mb-10"><span class="ico">💡</span><div>Los contratos <strong>Fijo</strong> y <strong>Contrato Hijo</strong> con precio ≥ precio de referencia se asignarán antes que los de precio menor o sin precio. Si no se ingresa precio de referencia, todos los contratos con precio se priorizan sobre los sin precio.</div></div>
+        <div id="grid-prices"></div>
+      </div>
+      <div id="prices-off" class="al al-w mt-8 #= pricesEnabled ? 'hidden' : '' #"><span class="ico">⚪</span>Sin priorización por precio de referencia (contratos Fijo/Hijo con precio se asignan antes que sin precio). Activá para definir un umbral por material.</div>
+    </div>
+</script>
+
+<script id="tmpl-output-tab" type="text/x-kendo-template">
+    <div class="al al-t"><span class="ico">✅</span><div>Tabla para cargar en SAP: <strong>FechaSugerida / CantidadDeCupos / ContratoSAP</strong>. Solo contratos con cupos asignados.</div></div>
+    <div class="sb-row"><input type="text" placeholder="Buscar contrato, CUIT, proveedor…" oninput="filterGrid('grid-out',this.value)"><span class="search-meta">#= rows.length # líneas</span></div>
+    # if (!rows.length) { #
+      <div class="al al-w"><span class="ico">⚠️</span>No hay contratos con cupos asignados.</div>
+    # } else { #
+      <div id="grid-out"></div>
+      <div class="totals-box"><strong>Totales:</strong>
+      # for (var i = 0; i < totals.length; i++) { var total = totals[i]; #
+        <span><span class="mini-dot-sm #= total.color #"></span>#= total.material #<strong>: #= total.cupos # cupos</strong> (#= total.tons # t)</span>
+      # } #
+      </div>
+    # } #
+</script>
+
+<script id="tmpl-resumen-tab" type="text/x-kendo-template">
+    <div class="grid-auto-265">
+        # for (var i = 0; i < cards.length; i++) { var card = cards[i]; #
+        <div class="summary-card">
+          <div class="summary-card-hdr #= card.colorClass #">#= card.material #</div>
+          <div class="summary-card-body">
+            <table class="summary-table">
+              <tr><td class="summary-label">Tope diario</td><td class="text-right summary-val">#= card.limit # cupos</td></tr>
+              <tr><td class="summary-label">Cupos asignados</td><td class="text-right summary-val txt-teal">#= card.assigned #</td></tr>
+              <tr><td class="summary-label">Sin asignar</td><td class="text-right #= card.remaining > 0 ? 'txt-gold' : 'summary-val-rem' #">#= card.remaining #</td></tr>
+              <tr><td class="summary-label">Cubiertos por CCPP</td><td class="text-right txt-teal">#= card.covered #</td></tr>
+              # if (card.blocked > 0) { #
+                <tr><td class="summary-label">Bloqueados por filtros</td><td class="text-right txt-purple">#= card.blocked #</td></tr>
+              # } #
+            </table>
+          </div>
+        </div>
+        # } #
+    </div>
+    <div class="summary-box"><div class="summary-box-title">📈 Estadísticas de contratos</div><div class="grid-auto-140">
+      # for (var i = 0; i < stats.length; i++) { var stat = stats[i]; #
+      <div class="summary-stat"><div class="summary-stat-value #= stat.cls #">#= stat.value #</div><div class="summary-stat-label">#= stat.label #</div></div>
+      # } #
+    </div></div>
+</script>
+
+<script id="tmpl-mat-tab" type="text/x-kendo-template">
+    <div class="sg">
+      <div class="sc sc-g"><div class="lb">Tope diario</div><div class="vl">#= toLocaleNumber(limit) #</div><div class="sb">cupos</div></div>
+      <div class="sc sc-t"><div class="lb">Asignados</div><div class="vl">#= toLocaleNumber(assigned) #</div><div class="sb">#= toLocaleNumber(assigned * 30) # t</div></div>
+      <div class="sc sc-gl"><div class="lb">Sin asignar</div><div class="vl">#= toLocaleNumber(remaining) #</div><div class="sb">cupos remanentes</div></div>
+      <div class="sc sc-o"><div class="lb">CCPP material</div><div class="vl">#= toLocaleNumber(ccppCupos) #</div><div class="sb">#= toLocaleNumber(ccppTon) # t</div></div>
+    </div>
+    <div class="sb-row"><input type="text" placeholder="Buscar…" oninput="filterGrid('#= gridId #',this.value)"><span class="search-meta">#= rows.length # contratos</span></div>
+    <div id="#= gridId #"></div>
+</script>
+
+<script id="tmpl-breakdown-tab" type="text/x-kendo-template">
+    <h3 class="breakdown-title">📊 Distribución real de cupos asignados por #= title #</h3>
+    <div id="#= summaryGridId #" class="mb-14"></div>
+    # for (var i = 0; i < groups.length; i++) { var group = groups[i]; #
+      <h4 class="breakdown-subtitle">#= group.label # — #= group.count # contratos</h4>
+      <div id="#= group.gridId #" class="mb-14"></div>
+    # } #
+</script>

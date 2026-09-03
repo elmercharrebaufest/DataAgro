@@ -1,0 +1,24 @@
+<!-- ══ PASO 3: RESULTADO ══ -->
+<div class="card hidden" id="card-results">
+  <div class="ch teal"><span>📋</span><h2>Resultado de la distribución</h2>
+    <span id="res-badge" class="res-badge"></span>
+  </div>
+  <div class="cb p-0">
+    <div class="tabs" id="res-tabs"></div>
+    <div id="res-contents"></div>
+  </div>
+</div>
+
+<!-- ══ EXPORTAR ══ -->
+<div class="card hidden" id="card-export">
+  <div class="ch green"><span>💾</span><h2>Exportar</h2></div>
+  <div class="cb">
+    <div class="brow">
+      <button id="btn-exportar" class="btn btn-gold" onclick="exportExcel()" disabled>⬇️ Descargar Excel (.xlsx)</button>
+      <button id="btn-procesar-dataagro" class="btn btn-g" onclick="procesarEnDataAgro()" disabled>⚡ Procesar en DataAgro</button>
+      <button id="btn-copiar" class="btn btn-out" onclick="copyOutput()" disabled>📋 Copiar tabla de cupos</button>
+    </div>
+    <p class="fn">El Excel incluye la hoja "Cupos" (FechaSugerida / CantidadDeCupos / ContratoSAP), resumen por material, y detalle completo con columnas de tipo de operador y clase de contrato.</p>
+  </div>
+</div>
+

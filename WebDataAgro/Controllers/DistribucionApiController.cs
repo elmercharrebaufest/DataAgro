@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Dto.Distribucion;
+using Molinos.DataAgro.Entities.Dto.Distribucion;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Newtonsoft.Json;
@@ -80,6 +80,7 @@ namespace WebDataAgro.Controllers
         {
             try
             {
+                List<string> errores = new List<string>();
                 var request = LeerJsonBody<ProcesarEnDataAgroRequestDto>();
                 if (request == null || request.Sap == null || !request.Sap.Any())
                 {
@@ -99,8 +100,14 @@ namespace WebDataAgro.Controllers
 
                 var dataSet = new DataSet();
                 dataSet.Tables.Add(dataTable);
-                var resume = cupoManager.AltaMasivaSugerenciaCuposV2(dataSet);
-                return Json(new { resultado = true, resume = resume, mensaje = "Cupos procesados correctamente" });
+                var resultado = cupoManager.AltaMasivaSugerenciaCuposV2(dataSet);
+                if (resultado.Count != 0 && resultado.First().IsFatal == true)
+                {
+                    errores.Add("Ninguno de los contratos ingresados existe en la base.");
+                    return Json(new { Resume = errores, Resultado = false });
+                }
+
+                return Json(new { resultado = true, resume = resultado, mensaje = "Cupos procesados correctamente" });
             }
             catch (Exception ex)
             {

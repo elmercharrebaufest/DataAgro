@@ -334,15 +334,74 @@ function readJson(response) {
 }
 
 function apiMessage(data, fallback) {
+  const resume = pick(data, 'resume', 'Resume');
+  if (Array.isArray(resume) && resume.length) {
+    const items = resume.map(function (item) {
+      if (typeof item === 'string') {
+        return item;
+      }
+      if (item && typeof item === 'object') {
+        return pick(item, 'message', 'mensaje', 'error', 'descripcion') || JSON.stringify(item);
+      }
+      return String(item || '');
+    }).filter(function (item) { return !!item; });
+    if (items.length) {
+      return items.join('\n');
+    }
+  }
+  if (typeof resume === 'string' && resume.trim()) {
+    return resume;
+  }
   return pick(data, 'error', 'mensaje', 'message') || fallback;
 }
 
+function ensureToastHost() {
+  let host = document.getElementById('dc-toast-host');
+  if (!host) {
+    host = document.createElement('div');
+    host.id = 'dc-toast-host';
+    host.setAttribute('aria-live', 'polite');
+    host.setAttribute('aria-atomic', 'true');
+    document.body.appendChild(host);
+  }
+  return host;
+}
+
+function showToast(message, kind) {
+  const normalized = kind === 'error' ? 'error' : 'success';
+  const text = message || (normalized === 'success' ? 'Operación realizada correctamente.' : 'Ocurrió un error inesperado.');
+
+  if (typeof MensErr === 'function' && normalized === 'error') {
+    MensErr(text);
+    return;
+  }
+
+  if (typeof MensInfo === 'function' && normalized === 'success') {
+    MensInfo(text);
+    return;
+  }
+
+  const host = ensureToastHost();
+  const toast = document.createElement('div');
+  toast.className = 'dc-toast dc-toast-' + normalized;
+  toast.textContent = text;
+  host.appendChild(toast);
+  window.setTimeout(function () {
+    toast.classList.add('dc-toast-hide');
+    window.setTimeout(function () {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 260);
+  }, 3200);
+}
+
 function showError(message) {
-  alert(message || 'Ocurrió un error inesperado.');
+  showToast(message, 'error');
 }
 
 function showSuccess(message) {
-  alert(message || 'Operación realizada correctamente.');
+  showToast(message, 'success');
 }
 
 function setCalcLoading(isLoading) {
@@ -688,18 +747,22 @@ function renderDataGrid(elementId, rows, columns, options) {
   if (!element.length) {
     return null;
   }
-  const existing = element.data('kendoGrid');
-  if (existing) {
-    existing.setOptions({ columns: columns });
-    existing.dataSource.data(rows);
-    return existing;
-  }
-  const config = Object.assign({
+
+  const baseConfig = {
     dataSource: { data: rows },
     scrollable: false,
     sortable: true,
     columns: columns
-  }, options || {});
+  };
+  const config = Object.assign(baseConfig, options || {});
+  const existing = element.data('kendoGrid');
+
+  if (existing) {
+    existing.setOptions(config);
+    existing.dataSource.data(rows);
+    return existing;
+  }
+
   return element.kendoGrid(config).data('kendoGrid');
 }
 
@@ -1659,7 +1722,8 @@ async function procesarEnDataAgro() {
       body: JSON.stringify({ sap: sapData })
     });
     const data = await readJson(response);
-    if (!response.ok || !data.resultado) {
+    const ok = response.ok && data && (data.resultado === true || data.Resultado === true);
+    if (!ok) {
       throw new Error(apiMessage(data, 'Error al procesar en DataAgro.'));
     }
     showSuccess('✅ Cupos enviados a DataAgro correctamente');
