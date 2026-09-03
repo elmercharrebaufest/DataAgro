@@ -371,7 +371,6 @@
     <Content Include="Content\altaMasivaCupos.css" />
     <Content Include="Content\control-boletos.css" />
     <Content Include="Content\control-boletos-contrato.css" />
-    <Content Include="DocumentacionCopilot\CompraNet\DAT-1266_Analisis_CalidadesInnecesarias.sql" />
     <Content Include="REGENERACION_ARCHIVOS_RESUMEN.txt" />
     <Content Include="Scripts\App\AltaMasivaCupos.js" />
     <Content Include="Scripts\App\CambioDePerfil.js" />
@@ -401,7 +400,6 @@
     <Content Include="Views\ControlDeBoletos\_SeguimientoControlBoleto.cshtml" />
     <Content Include="Views\ControlDeBoletos\SeguimientoBoletos.cshtml" />
     <Content Include="Views\ControlDeBoletos\ModificacionMasivaBoletos.cshtml" />
-    <Content Include="MEJORAS_HOMECONTROLLER.md" />
     <Content Include="Views\ContactoComercialAuditoria\Index.cshtml" />
     <Compile Include="Controllers\ContactoComercialAuditoriaController.cs" />
     <Compile Include="Controllers\ControlDeBoletosController.cs" />
@@ -3197,18 +3195,6 @@
     <Content Include="Views\ControlDeBoletos\_GestionControlBoleto.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\00_COMIENZA_AQUI.md" />
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\ANALISIS_OBTENER_NEGOCIOS.md" />
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\ENTREGA_FINAL.md" />
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\ESQUEMA_VISUAL_FLUJO.md" />
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\INDICE_RAPIDO.md" />
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\MAPA_DE_NAVEGACION.md" />
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\README_DOCUMENTACION.md" />
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\RECOMENDACIONES_METODO_MANUAL.md" />
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\REFERENCIA_RAPIDA.md" />
-    <Content Include="DocumentacionCopilot\SugerenciaDeCupos\RESUMEN_EJECUTIVO.md" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\ValidacionBoletoIA\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -3220,25 +3206,10 @@
     <Content Include="Views\ValidacionBoletoIA\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DocumentacionCopilot\API Boletos IA\API_VALIDACION_BOLETOS_IA_DOCUMENTACION.md" />
     <Content Include="Views\ValidacionBoletoIA\_ResultadoBoletosValidacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ValidacionBoletoIA\_CargarBoletosValidacion.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DocumentacionCopilot\MATBA_Primary\MATBA.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DocumentacionCopilot\Localidades\Localidad_SAP_Confirma.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DocumentacionCopilot\Jobs\Jobs_Hangfire_ventana_Sab22h_Dom06h.md" />
-    <Content Include="DocumentacionCopilot\Jobs\Resumen_Gerencial_Apagado_Server_Sab22h_Dom06h.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DocumentacionCopilot\CompraNet\DAT-1264-No_trae_cosecha_guardada.md" />
-    <Content Include="DocumentacionCopilot\CompraNet\DAT-1265-No_carga_Procedencia_ni_Boleto.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
