@@ -139,6 +139,90 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
+        public void Calcular_AplicaCuotaClase()
+        {
+            var request = new DistribucionCuposRequestDto
+            {
+                Fecha = "2026-06-11",
+                Contratos = new List<ContratoSapImportadoDto>
+                {
+                    CrearContrato("4500012345", "20-12345678-9", "Soja Poroto", 300000m, "Fijo", "acopiador"),
+                    CrearContrato("4500012346", "20-12345678-8", "Soja Poroto", 300000m, "Fijo", "acopiador"),
+                    CrearContrato("4500012347", "20-12345678-7", "Soja Poroto", 300000m, "Préstamo", "productor")
+                },
+                LimitesPorMaterial = new Dictionary<string, int> { { "Soja Poroto", 20 } },
+                Configuracion = new DistribucionConfigDto
+                {
+                    AplicarCuotaClase = true,
+                    CuotasPorClase = new Dictionary<string, int>
+                    {
+                        { "Fijo", 40 },
+                        { "Préstamo", 60 }
+                    }
+                }
+            };
+
+            var resultado = target.Calcular(request);
+            var cuposFijo = resultado.Resultados.Where(x => x.Clase == "Fijo").Sum(x => x.CuposAsignados);
+            Assert.That(cuposFijo, Is.LessThanOrEqualTo(8));
+        }
+
+        [Test]
+        public void Calcular_OrdenamientoUsaFechaHastaYNoFechaHastaContra()
+        {
+            var request = new DistribucionCuposRequestDto
+            {
+                Fecha = "2026-06-11",
+                Contratos = new List<ContratoSapImportadoDto>
+                {
+                    new ContratoSapImportadoDto
+                    {
+                        Numero = "4500012346",
+                        NumeroSAP = "4500012346",
+                        Cuit = "20-12345678-8",
+                        Material = "Soja Poroto",
+                        Kg = 300000m,
+                        DescCl = "Fijo",
+                        OpType = "acopiador",
+                        Proveedor = "Proveedor B",
+                        Rank = 3,
+                        PriceRank = 0,
+                        FechaContrato = "2026-01-15",
+                        FechaDesde = "2026-01-01",
+                        FechaHasta = "2026-06-30",
+                        FechaHastaContra = "2026-06-10"
+                    },
+                    new ContratoSapImportadoDto
+                    {
+                        Numero = "4500012345",
+                        NumeroSAP = "4500012345",
+                        Cuit = "20-12345678-9",
+                        Material = "Soja Poroto",
+                        Kg = 300000m,
+                        DescCl = "Fijo",
+                        OpType = "acopiador",
+                        Proveedor = "Proveedor A",
+                        Rank = 3,
+                        PriceRank = 0,
+                        FechaContrato = "2026-01-15",
+                        FechaDesde = "2026-01-01",
+                        FechaHasta = "2026-06-10",
+                        FechaHastaContra = "2026-06-30"
+                    }
+                },
+                LimitesPorMaterial = new Dictionary<string, int> { { "Soja Poroto", 50 } },
+                Configuracion = new DistribucionConfigDto()
+            };
+
+            var resultado = target.Calcular(request);
+
+            // El contrato 4500012345 tiene FechaHasta más temprana (2026-06-10) aunque su
+            // FechaHastaContra sea más tardía; debe seguir ordenado primero, confirmando que
+            // el desempate sigue usando FechaHasta y no FechaHastaContra (MOA-1816 R4).
+            Assert.That(resultado.Resultados.Select(x => x.NumeroSAP), Is.EqualTo(new[] { "4500012345", "4500012346" }));
+        }
+
+        [Test]
         public void Calcular_MaterialSinLimite_MarcaSinTope()
         {
             var request = new DistribucionCuposRequestDto

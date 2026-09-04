@@ -389,5 +389,7 @@
     <Compile Include="Managers\DistribucionCuposManagerTests.cs" />
     <Compile Include="Managers\ConfiguracionDistribucionManagerTests.cs" />
     <Compile Include="Controllers\DistribucionApiControllerTest.cs" />
+    <Compile Include="Controllers\ContratosApiControllerTest.cs" />
+    <Compile Include="Controllers\ConfiguracionDistribucionControllerTest.cs" />
   </ItemGroup>
 </Project>

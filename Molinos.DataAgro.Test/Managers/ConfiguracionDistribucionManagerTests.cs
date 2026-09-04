@@ -64,6 +64,23 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
         [Test]
+        public void GuardarConfiguracion_CuotasClaseSuperanCien_LanzaArgumentException()
+        {
+            var dto = new ConfiguracionDistribucionDto
+            {
+                CuitMaxPct = 0.30m,
+                CuotasPorClase = new Dictionary<string, int>
+                {
+                    { "Fijo", 70 },
+                    { "Préstamo", 50 }
+                }
+            };
+
+            var ex = Assert.Throws<ArgumentException>(() => target.GuardarConfiguracion(dto));
+            Assert.That(ex.Message, Does.Contain("clase"));
+        }
+
+        [Test]
         public void GuardarConfiguracion_ActualizaUltimaActualizacionYPersiste()
         {
             var entity = new ConfiguracionesDistribucionPlanta { Id = 1, PlantaCodigo = "SL" };
