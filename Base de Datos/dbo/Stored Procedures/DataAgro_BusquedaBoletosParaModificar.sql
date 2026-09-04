@@ -4,12 +4,20 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    ;WITH ContratosFiltro AS
+    DECLARE @tbl_ContratosSAP TABLE
     (
-        SELECT LTRIM(RTRIM(value)) AS ContratoSAP
+        ContratoSAP NVARCHAR(50)
+    );
+
+    IF @ContratoSAP IS NOT NULL 
+       AND LEN(LTRIM(RTRIM(@ContratoSAP))) > 0
+    BEGIN
+        INSERT INTO @tbl_ContratosSAP (ContratoSAP)
+        SELECT RIGHT('0000000000' + LTRIM(RTRIM(value)), 10)
         FROM STRING_SPLIT(@ContratoSAP, ';')
-        WHERE LTRIM(RTRIM(value)) <> ''
-    )
+        WHERE LTRIM(RTRIM(value)) <> '';
+    END
+
     SELECT
         cb.Id AS ControlDeBoletosId,
         cb.NegocioId,
@@ -52,7 +60,7 @@ BEGIN
     LEFT JOIN BolsaCompraNet bolsaPre ON bolsaPre.Id = pre.BolsaCompraNetId
     WHERE EXISTS (
                 SELECT 1
-                FROM ContratosFiltro f
+                FROM @tbl_ContratosSAP f
                 WHERE f.ContratoSAP = n.ContratoSAP
             )
     ORDER BY cb.Id;

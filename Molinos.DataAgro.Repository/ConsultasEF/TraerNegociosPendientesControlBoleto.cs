@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             )
                            )
                         && n.FechaConfirmadoSAP >= fechaLimite
+                        && n.ContratoMadre.Length == 0
                         && !controles.Any(cb => cb.NegocioId == n.Id))
                     .Select(n => n.Id)
                     .ToList();

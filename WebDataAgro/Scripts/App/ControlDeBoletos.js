@@ -35,6 +35,8 @@ var ControlBoletos = (function () {
     let controlEsSinBoleto = $("#frmPendienteControl #esSinBoleto");
 
     let controlFiltrarBoletos = $("#frmPendienteControl #filtrarBoletos");
+    let controlAgregarContratoHijo = $("#frmPendienteControl #agregarContratoHijo");
+
     let controlLimpiarFiltros = $("#frmPendienteControl #limpiarFiltros");
     let controlExportarExcel = $("#frmPendienteControl #exportarExcel");
 
@@ -239,7 +241,11 @@ var ControlBoletos = (function () {
                 .on("click", function () {
                     self.filtrarBoletos();
                 });
-
+            controlAgregarContratoHijo
+                .off("click")
+                .on("click", function () {
+                    self.agregarContratoHijo();
+                });
             controlLimpiarFiltros
                 .off("click")
                 .on("click", function () {
@@ -546,7 +552,9 @@ var ControlBoletos = (function () {
                 this.inicializarGrid();
             }
         },
-
+        agregarContratoHijo: function () {
+            ControlDeBoletosBuscarContratosHijo.abrir();
+        },
         limpiarFiltros: function () {
             controlNegocioSAP.val("");
             controlMaterial.val("");

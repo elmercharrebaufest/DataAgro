@@ -372,6 +372,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var negociosSolicitados = repositorio.Listar<Negocio>(x =>
                     contratosNegocioSap.Contains(x.ContratoSAP) &&
                     x.ConfirmadoSAP.HasValue &&
+                    x.ContratoMadre.Length == 0 &&
                     x.FechaConfirmadoSAP.HasValue).ToList();
 
                 if (negociosSolicitados.Count > 0)
@@ -1863,6 +1864,116 @@ namespace Molinos.DataAgro.Business.Managers
         }
         #endregion
 
+        #region Agregar Contrato Hijo
+        public List<ControlDeBoletosDatosContratoHijoDto> ListarContratosHijos(string ContratosSAP)
+        {
+            var listaDatosContratos = new List<ControlDeBoletosDatosContratoHijoDto>();
+            if (string.IsNullOrWhiteSpace(ContratosSAP))
+            {
+                return listaDatosContratos;
+            }
+
+            var filtroContratos = ContratosSAP
+                .Split(';')
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim().PadLeft(10, '0'))
+                .Distinct()
+                .ToList();
+
+            if (!filtroContratos.Any())
+            {
+                return listaDatosContratos;
+            }
+
+            var listaContratos = repositorio.Listar<Negocio>(x => filtroContratos.Contains(x.ContratoSAP) && x.ContratoMadre.Length > 0);
+            if (listaContratos == null || !listaContratos.Any())
+            {
+                return listaDatosContratos;
+            }
+
+            var negocioIds = listaContratos.Select(x => x.Id).Distinct().ToList();
+
+            var confirmasPorNegocio = repositorio.Listar<Confirma>(x => negocioIds.Contains(x.NegocioId))
+                .GroupBy(x => x.NegocioId)
+                .ToDictionary(x => x.Key, x => x.OrderByDescending(y => y.Version).FirstOrDefault());
+
+            var boletosPorNegocio = repositorio.Listar<Boleto>(x => negocioIds.Contains(x.NegocioId))
+                .GroupBy(x => x.NegocioId)
+                .ToDictionary(x => x.Key, x => x.OrderByDescending(y => y.Version).FirstOrDefault());
+
+            foreach (var contrato in listaContratos)
+            {
+
+                var datosContrato = new ControlDeBoletosDatosContratoHijoDto
+                {
+                    TipoBoleto = contrato.Boleto != null ? contrato.Boleto.Descripcion : string.Empty,
+                    BolsaCompraNet = contrato.Bolsa != null ? contrato.Bolsa.Descripcion : string.Empty,
+                    Material = contrato.Material != null ? contrato.Material.Descripcion : string.Empty,
+                    ContratoSAP = contrato.ContratoSAP,
+                    ContratoMadreSAP = contrato.ContratoMadre,
+                    Comercial = contrato.Comercial != null ? string.Format("{0} {1}", contrato.Comercial.Nombres, contrato.Comercial.Apellido) : string.Empty,
+                    Proveedor = contrato.Proveedor != null ? contrato.Proveedor.RazonSocial : string.Empty,
+                    NegocioId = contrato.Id
+                };
+                var controlDeBoletos = repositorio.Listar<ControlDeBoletos>(x => x.NegocioId == contrato.Id).FirstOrDefault();
+                if (controlDeBoletos != null)
+                {
+                    datosContrato.ExisteControlDeBoletos = true;
+                }
+                if (contrato.BoletoId == (int)EnumBoletoCompraNet.CONFIRMA)
+                {
+                    if (confirmasPorNegocio.TryGetValue(contrato.Id, out var confirma))
+                    {
+                        datosContrato.Version = confirma.Version != null ? confirma.Version.ToString() : string.Empty;
+                        datosContrato.FechaGeneracion = confirma.FechaGeneracion != null ? confirma.FechaGeneracion.ToString("dd/MM/yyyy") : string.Empty;
+                    }
+                }
+                else if (boletosPorNegocio.TryGetValue(contrato.Id, out var boleto))
+                {
+                    datosContrato.Version = boleto.Version != null ? boleto.Version.ToString() : string.Empty;
+                    datosContrato.FechaGeneracion = boleto.FechaGeneracion != null ? boleto.FechaGeneracion.ToString("dd/MM/yyyy") : string.Empty;
+                }
+
+                listaDatosContratos.Add(datosContrato);
+            }
+
+            return listaDatosContratos;
+        }
+        public Resultado AgregarContratosAlControlDeBoletos(string negociosIds)
+        {
+            var resultado = new Resultado();
+            try
+            {
+                var filtroContratos = negociosIds
+                    .Split(',')
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(x => int.Parse(x.Trim()))
+                    .ToList();
+                var listaContratos = repositorio.Listar<Negocio>(x => filtroContratos.Contains(x.Id));
+                foreach (var contrato in listaContratos)
+                {
+                    var controlBoletos = repositorio.Listar<ControlDeBoletos>(x => x.NegocioId == contrato.Id).FirstOrDefault();
+                    if (controlBoletos != null)
+                    {
+                        resultado.Errores.Add(new ErrorMessage { Message = $"El contrato {contrato.ContratoSAP} ya se encuentra agregado al control de boletos." });
+                        continue;
+                    }
+                    else
+                    {
+                        RegistroContratoPendienteDeControl(contrato.Id, null, null, false);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado.Errores.Add(new ErrorMessage { Message = ex.Message });
+                logger.Error(ex, "Error en AgregarContratosAlControlDeBoletos");
+            }
+            return resultado;
+        }
+
+        #endregion
+
         #region Metodos Privados
         private string ObtenerEstadoBoleto(BasicoBoleto boleto)
         {
@@ -1896,7 +2007,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             return mensaje;
         }
-
         private static IQueryable<ControlDeBoletosConsultaDto> AplicarOrdenControlBoletos(IQueryable<ControlDeBoletosConsultaDto> query, List<ControlBoletosSortDescriptor> sort)
         {
             if (sort != null && sort.Any())

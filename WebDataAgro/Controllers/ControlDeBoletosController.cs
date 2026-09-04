@@ -909,6 +909,11 @@ namespace WebDataAgro.Controllers
 
         #region Vistas Parciales
         [HttpGet]
+        public PartialViewResult _BuscarContratosHijo()
+        {
+            return PartialView("_BuscarContratosHijo");
+        }
+        [HttpGet]
         public PartialViewResult _ModificarDatosDelContrato(int id)
         {
             ViewBag.NegocioId = id;
@@ -1066,6 +1071,61 @@ namespace WebDataAgro.Controllers
                 documentoConfirma.PdfBinario,
                 "application/pdf",
                 $"Documento_Confirma_{controlDeBoletoId}.pdf");
+        }
+        #endregion
+
+        #region Modificacion masiva de boletos
+        [HttpPost]
+        public JsonResult ListarContratosHijos(string ContratosSAP)
+        {
+            try
+            {
+                var boletos = this._controlDeBoletosManager.ListarContratosHijos(ContratosSAP);
+
+                var result = new
+                {
+                    Data = boletos,
+                    Total = boletos.Count
+                };
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error en ListarContratosHijos: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+
+                return Json(new
+                {
+                    Data = new List<object>(),
+                    Total = 0,
+                    Errors = "Error al cargar datos: " + ex.Message
+                });
+            }
+        }
+        [HttpPost]
+        public JsonResult AgregarContratosHijos(string negociosIds)
+        {
+            try
+            {
+                var resultado = this._controlDeBoletosManager.AgregarContratosAlControlDeBoletos(negociosIds);
+                bool success = !resultado.HayError;
+                string mensaje = resultado.HayError ? resultado.ListaErrores.ToArray().Select(e => e.Message).Aggregate((current, next) => current + "; " + next) : "Se guardaron los cambios correctamente";
+                return Json(new
+                {
+                    success = success,
+                    message = mensaje
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error en GuardarBoletosParaModificarFechas: {ex.Message}");
+                return Json(new
+                {
+                    success = false,
+                    errors = new[] { new { Message = "Error al guardar fechas: " + ex.Message } }
+                });
+            }
         }
         #endregion
 

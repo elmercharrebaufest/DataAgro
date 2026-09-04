@@ -44,5 +44,7 @@ namespace Molinos.DataAgro.Interfaces.Managers
         ConfirmaDocumentoRegistradoDto ObtenerDocumentoConfirma(int controlDeBoletoId);
         Resultado EliminarPreCertificacion(int controlDeBoletosId);
         Resultado EliminarDatosSeguimiento(int controlDeBoletosId);
+        List<ControlDeBoletosDatosContratoHijoDto> ListarContratosHijos(string ContratosSAP);
+        Resultado AgregarContratosAlControlDeBoletos(string negociosIds);
     }
 }

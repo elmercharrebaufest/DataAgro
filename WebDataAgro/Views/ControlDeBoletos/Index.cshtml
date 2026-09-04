@@ -114,8 +114,9 @@
                 </div>
 
                 <!-- Botones -->
-                <div class="col-md-3 col-sm-6 filter-actions filter-actions-bottom">
+                <div class="col-md-3 col-sm-6 filter-actions filter-actions-bottom" style="margin-top: 30px">
                     <div class="form-group">
+
                         <button type="button"
                                 id="filtrarBoletos"
                                 class="btn btn-primary">
@@ -131,12 +132,20 @@
                         </button>
 
                         <button type="button"
+                                id="agregarContratoHijo"
+                                class="btn btn-success">
+                            <i class="fa fa-plus-square" aria-hidden="true"></i>
+                            <span class="d-none d-sm-inline">Agregar Contrato Hijo</span>
+                        </button>
+
+                        <button type="button"
                                 id="exportarExcel"
                                 class="btn btn-success"
                                 disabled>
                             <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                             <span class="d-none d-sm-inline">Excel</span>
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -192,6 +201,7 @@
 </div>
 
 @* Renderizar vistas parciales de modales *@
+@Html.Partial("_BuscarContratosHijo")
 @Html.Partial("_VisualizarContrato")
 @Html.Partial("_TrackingControlDeBoletos")
 @Html.Partial("_GestionControlBoleto")
