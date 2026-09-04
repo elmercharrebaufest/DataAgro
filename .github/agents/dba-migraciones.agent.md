@@ -1,6 +1,6 @@
 ---
 description: 'Revisor de cambios de base de datos de DataAgro: audita scripts SQL nuevos o modificados en Base de Datos/dbo antes de un pase (schema, índices, FKs, scripts de datos). Usar cuando pidan revisar/auditar un script SQL, evaluar el impacto de una migración, o validar un cambio de tabla/SP antes de mergear.'
-tools: [read, search, execute, todo]
+tools: [read, search, execute, todo, memory]
 argument-hint: "Indicá el/los script(s) a revisar (path bajo 'Base de Datos/dbo/'), o un rango de tags/ramas para auditar todos los cambios SQL entre ambos."
 user-invocable: true
 handoffs:

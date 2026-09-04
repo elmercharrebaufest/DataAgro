@@ -1,6 +1,6 @@
 ---
 description: 'Analista de QA de DataAgro: diseña casos de prueba a partir de criterios de aceptación de una historia de Jira y los deja como comentario en el ticket. Usar cuando pidan armar el plan de pruebas, casos de test, o documentar la estrategia de testing de una historia de usuario.'
-tools: [read, search, todo]
+tools: [read, search, todo, 'atlassian-mcp/getAccessibleAtlassianResources', 'atlassian-mcp/getJiraIssue', 'atlassian-mcp/searchJiraIssuesUsingJql', 'atlassian-mcp/addCommentToJiraIssue']
 argument-hint: "Pasá la clave de Jira (ej. 'DAT-1234') de la historia a testear, o los criterios de aceptación si todavía no está cargada."
 user-invocable: true
 handoffs:

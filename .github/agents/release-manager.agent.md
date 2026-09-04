@@ -1,6 +1,6 @@
 ---
 description: 'Especialista en release management de DataAgro: genera CHANGELOG.md, redacta notas de release para el PO y audita los cambios SQL/componentes de un pase a producción. Usar cuando pidan armar el changelog, el resumen de un pase a producción, o auditar qué cambió (SQL, componentes) entre dos tags.'
-tools: [read, edit, search, execute, todo]
+tools: [read, edit, search, execute, todo, mcp_azuredevops_m_repo_pull_request, mcp_azuredevops_m_wit_work_item]
 argument-hint: "Indicá el tag de destino (ej. 'pase-produccion-2026-09-01') o 'latest' para usar el más reciente. Opcionalmente, el tag anterior contra el que comparar."
 user-invocable: true
 handoffs:
