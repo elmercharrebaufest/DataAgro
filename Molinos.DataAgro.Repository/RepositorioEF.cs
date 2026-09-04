@@ -104,6 +104,11 @@ namespace Molinos.DataAgro.Repository
             return ListarQueryable(Set<TEntidad>(), filtro, orden, direccionOrden, maxResultados).ToList();
         }
 
+        public List<TEntidad> ListarNoTracking<TEntidad>(Expression<Func<TEntidad, bool>> filtro = null, int maxResultados = 0, string orden = null, DirOrden direccionOrden = DirOrden.Asc) where TEntidad : class
+        {
+            return ListarQueryable(Set<TEntidad>().AsNoTracking(), filtro, orden, direccionOrden, maxResultados).ToList();
+        }
+
         public List<TEntidad> Listar<TEntidad>(IEnumerable<Expression<Func<TEntidad, object>>> includes, Expression<Func<TEntidad, bool>> filtro, int maxResultados = 0, string orden = null, DirOrden direccionOrden = DirOrden.Asc) where TEntidad : class
         {
             IQueryable<TEntidad> resultado = Set<TEntidad>();
