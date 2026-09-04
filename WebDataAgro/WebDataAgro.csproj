@@ -3218,20 +3218,6 @@
     <Content Include="Views\ValidacionBoletoIA\_CargarBoletosValidacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DocumentacionCopilot\MATBA_Primary\MATBA.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DocumentacionCopilot\Localidades\Localidad_SAP_Confirma.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DocumentacionCopilot\Jobs\Jobs_Hangfire_ventana_Sab22h_Dom06h.md" />
-    <Content Include="DocumentacionCopilot\Jobs\Resumen_Gerencial_Apagado_Server_Sab22h_Dom06h.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DocumentacionCopilot\CompraNet\DAT-1264-No_trae_cosecha_guardada.md" />
-    <Content Include="DocumentacionCopilot\CompraNet\DAT-1265-No_carga_Procedencia_ni_Boleto.md" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\ControlDeBoletos\_BuscarContratosHijo.cshtml" />
   </ItemGroup>
   <PropertyGroup>
