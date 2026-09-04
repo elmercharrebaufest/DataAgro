@@ -33,6 +33,8 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
 
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>()))
+                .Returns(new Campaña { CampañaId = 1, Descripcion = "1" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
                 .Returns(comercial);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ObjetivoComercial, MaterialObjetivo>>>(), It.IsAny<Expression<Func<ObjetivoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
