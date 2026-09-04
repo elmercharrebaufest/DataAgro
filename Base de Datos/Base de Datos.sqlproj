@@ -409,4 +409,7 @@
   <ItemGroup>
     <RefactorLog Include="Base de Datos.refactorlog" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\ConfiguracionesDistribucionPlanta.sql" />
+  </ItemGroup>
 </Project>

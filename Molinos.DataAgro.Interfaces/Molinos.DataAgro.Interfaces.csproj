@@ -387,4 +387,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Compile Include="Managers\ISapArchivoParserManager.cs" />
+    <Compile Include="Managers\IDistribucionCuposManager.cs" />
+    <Compile Include="Managers\IConfiguracionDistribucionManager.cs" />
+  </ItemGroup>
 </Project>

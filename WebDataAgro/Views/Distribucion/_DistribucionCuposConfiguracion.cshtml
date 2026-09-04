@@ -1,0 +1,117 @@
+<!-- ══ PASO 2: TOPES + CONFIG AVANZADA ══ -->
+<div class="card hidden" id="card-limits">
+  <div class="ch gold"><span>⚙️</span><h2>Paso 2 — Configurar topes y criterios de distribución</h2></div>
+  <div class="cb">
+
+    <!-- Topes por material -->
+    <div class="al al-i"><span class="ico">ℹ️</span>
+      <div>El <strong>tope diario</strong> es la capacidad total. El CCPP se descuenta por CUIT. Además, un mismo CUIT no puede recibir más del <strong>30% del tope diario</strong> por material para evitar concentración.</div>
+    </div>
+    <div id="grid-limites"></div>
+
+    <!-- ── SECCIÓN A: Por tipo de operador ── -->
+    <div class="sdiv open mt-20" id="sdiv-op" onclick="toggleSection('sec-op','sdiv-op')">
+      <div class="sl"></div>
+      <div class="stitle">🏢 Distribución por tipo de operador <span class="arr">▶</span></div>
+      <div class="sl"></div>
+    </div>
+    <div id="sec-op">
+      <div class="grid-2col mb-14">
+        <!-- Stats -->
+        <div>
+          <div class="section-caption-upper">DISTRIBUCIÓN ACTUAL EN EL ARCHIVO</div>
+          <div class="stats-box">
+            <div class="sb-hdr sb-hdr-op">👥 Tipo de operador</div>
+            <div id="grid-stats-op"></div>
+          </div>
+        </div>
+        <!-- Controls -->
+        <div>
+          <div class="toggle-row">
+            <label class="toggle"><input type="checkbox" id="chk-op" onchange="onToggleOp()"><span class="slider"></span></label>
+            <label for="chk-op">Aplicar distribución por tipo de operador</label>
+          </div>
+          <div id="pct-op-wrap" class="hidden">
+            <div class="al al-p mb-10"><span class="ico">💡</span>
+              <div>Asigná el % de cupos para cada tipo de operador. El total debe ser ≤ 100%; el resto es libre. La prioridad original se aplica dentro de cada tipo.</div>
+            </div>
+            <div id="pct-op" class="pct-grid"></div>
+            <div id="pct-op-total" class="pct-total"></div>
+          </div>
+          <div id="pct-op-off" class="al al-w mt-8"><span class="ico">⚪</span>Sin restricción por operador. Activá el toggle para configurar.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECCIÓN B: Por clase de contrato ── -->
+    <div class="sdiv open mt-4" id="sdiv-cls" onclick="toggleSection('sec-cls','sdiv-cls')">
+      <div class="sl"></div>
+      <div class="stitle">📋 Distribución por clase de contrato <span class="arr">▶</span></div>
+      <div class="sl"></div>
+    </div>
+    <div id="sec-cls">
+      <div class="grid-2col mb-14">
+        <!-- Stats -->
+        <div>
+          <div class="section-caption-upper">DISTRIBUCIÓN ACTUAL EN EL ARCHIVO</div>
+          <div class="stats-box">
+            <div class="sb-hdr sb-hdr-cls">🏷️ Clase de contrato</div>
+            <div id="grid-stats-cls"></div>
+          </div>
+        </div>
+        <!-- Controls -->
+        <div>
+          <div class="toggle-row">
+            <label class="toggle"><input type="checkbox" id="chk-cls" onchange="onToggleCls()"><span class="slider"></span></label>
+            <label for="chk-cls">Aplicar distribución por clase de contrato</label>
+          </div>
+          <div id="pct-cls-wrap" class="hidden">
+            <div class="al al-p mb-10"><span class="ico">💡</span>
+              <div>Asigná el % de cupos para cada clase. El total debe ser ≤ 100%; el resto es libre. La prioridad original (Fasón &gt; Préstamo &gt; Fijo &gt; A Fijar) se aplica dentro de cada clase.</div>
+            </div>
+            <div id="pct-cls" class="pct-grid"></div>
+            <div id="pct-cls-total" class="pct-total"></div>
+          </div>
+          <div id="pct-cls-off" class="al al-w mt-8"><span class="ico">⚪</span>Sin restricción por clase. Activá el toggle para configurar.</div>
+        </div>
+      </div>
+      <!-- Exclusiones de clase -->
+      <div class="excl-wrap">
+        <span class="fs-12 fw-700 txt-muted as-center mr-4">EXCLUIR:</span>
+        <label class="excl-label" id="lbl-excl-fason">
+          <input type="checkbox" id="chk-excl-fason" onchange="S.excludeFason=this.checked;updateExclBadge('fason')" class="checkbox-sm">
+          <span class="bp p1">MP-Fasón</span>
+        </label>
+        <label class="excl-label" id="lbl-excl-agcompra">
+          <input type="checkbox" id="chk-excl-agcompra" onchange="S.excludeAgCompra=this.checked;updateExclBadge('agcompra')" class="checkbox-sm">
+          <span class="txt-purple fw-700">Ag. de Compra</span>
+        </label>
+        <span class="fs-11 txt-muted as-center">Los contratos excluidos no reciben cupos en el cálculo.</span>
+      </div>
+    </div>
+
+    <!-- ── SECCIÓN C: Filtro por rango de fechas ── -->
+    <div class="sdiv open mt-4" id="sdiv-date" onclick="toggleSection('sec-date','sdiv-date')">
+      <div class="sl"></div>
+      <div class="stitle">📅 Filtro por rango de fechas de contrato <span class="arr">▶</span></div>
+      <div class="sl"></div>
+    </div>
+    <div id="sec-date">
+      <div id="date-filter-ui"></div>
+    </div>
+
+    <!-- ── SECCIÓN D: Precios y sustentabilidad ── -->
+    <div class="sdiv open mt-4" id="sdiv-prices" onclick="toggleSection('sec-prices','sdiv-prices')">
+      <div class="sl"></div>
+      <div class="stitle">💰 Precios de referencia y sustentabilidad <span class="arr">▶</span></div>
+      <div class="sl"></div>
+    </div>
+    <div id="sec-prices">
+      <div id="prices-sust-ui"></div>
+    </div>
+
+    <div class="brow">
+      <button id="btn-calcular" class="btn btn-g" onclick="runDistribution()">🔄 Calcular distribución</button>
+    </div>
+  </div>
+</div>

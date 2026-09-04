@@ -429,10 +429,10 @@
     <Compile Include="Managers\LogDataAgroManager.cs" />
     <Compile Include="Managers\FechaFeriadoManager.cs" />
     <Compile Include="Managers\NegocioManager.cs" />
+    <Compile Include="Managers\ObjetivoManager.cs" />
     <Compile Include="Managers\UsuarioManager.cs" />
     <Compile Include="Managers\TokenManager.cs" />
     <Compile Include="Managers\FormulaManager.cs" />
-    <Compile Include="Managers\ObjetivoManager.cs" />
     <Compile Include="Managers\CampañaManager.cs" />
     <Compile Include="Managers\CanalOperacionManager.cs" />
     <Compile Include="Managers\AgenteCompraManager.cs" />
@@ -614,4 +614,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Compile Include="Managers\SapArchivoParserManager.cs" />
+    <Compile Include="Managers\DistribucionCuposManager.cs" />
+    <Compile Include="Managers\ConfiguracionDistribucionManager.cs" />
+  </ItemGroup>
 </Project>

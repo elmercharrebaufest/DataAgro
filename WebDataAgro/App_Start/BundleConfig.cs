@@ -45,6 +45,9 @@ namespace WebDataAgro
             bundles.Add(new StyleBundle("~/Content/mastersoft/css").Include(
                         "~/Content/Mastersoft.css"));
 
+            bundles.Add(new StyleBundle("~/Content/distribucion-cupos").Include(
+                        "~/Content/distribucion-cupos.css"));
+
             // -------------------------------------------------
             //   Scripts generales
             // -------------------------------------------------
@@ -83,6 +86,9 @@ namespace WebDataAgro
 
             bundles.Add(new ScriptBundle("~/bundles/mastersoft").Include(
                         "~/Scripts/Mastersoft.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/distribucion-cupos").Include(
+                        "~/Scripts/Distribucion/distribucion-cupos.js"));
 
             // -------------------------------------------------
             //   Scripts de aplicacion

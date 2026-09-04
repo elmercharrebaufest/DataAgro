@@ -1,30 +1,51 @@
 ﻿$tf
 /.vs
 /Base de Datos/bin/Output
-/Base de Datos/obj/Debug
+/Base de Datos/obj
 /Base de Datos/Base de Datos.dbmdl
 /Base de Datos/Base de Datos.jfm
 /Base de Datos/Base de Datos.sqlproj.user
-/Molinos.DataAgro.Agent/bin/Debug
-/Molinos.DataAgro.Agent/obj/Debug
-/Molinos.DataAgro.Build/bin/Debug
-/Molinos.DataAgro.Build/obj/Debug
-/Molinos.DataAgro.Business/bin/Debug
-/Molinos.DataAgro.Business/obj/Debug
-/Molinos.DataAgro.Entities/bin/Debug
-/Molinos.DataAgro.Entities/obj/Debug
-/Molinos.DataAgro.Interfaces/bin/Debug
-/Molinos.DataAgro.Interfaces/obj/Debug
-/Molinos.DataAgro.Report/bin/Debug
-/Molinos.DataAgro.Report/obj/Debug
-/Molinos.DataAgro.Repository/bin/Debug
-/Molinos.DataAgro.Repository/obj/Debug
-/Molinos.DataAgro.Test/obj/Debug
+/Molinos.DataAgro.Agent/bin
+/Molinos.DataAgro.Agent/obj
+/Molinos.DataAgro.Build/bin
+/Molinos.DataAgro.Build/obj
+/Molinos.DataAgro.Business/bin
+/Molinos.DataAgro.Business/obj
+/Molinos.DataAgro.Entities/bin
+/Molinos.DataAgro.Entities/obj
+/Molinos.DataAgro.Interfaces/bin
+/Molinos.DataAgro.Interfaces/obj
+/Molinos.DataAgro.Report/bin
+/Molinos.DataAgro.Report/obj
+/Molinos.DataAgro.Repository/bin
+/Molinos.DataAgro.Repository/obj
+/Molinos.DataAgro.DataContracts/bin
+/Molinos.DataAgro.DataContracts/obj
+/Molinos.DataAgro.Process/bin
+/Molinos.DataAgro.Process/obj
+/Processes/bin
+/Processes/obj
+/PruebaWCF/bin
+/PruebaWCF/obj
+/Molinos.DataAgro.Mapping/bin
+/Molinos.DataAgro.Mapping/obj
+/Molinos.DataAgro.ServiceHost/bin
+/Molinos.DataAgro.ServiceHost/obj
+/Molinos.DataAgro.ServiceClient/bin
+/Molinos.DataAgro.ServiceClient/obj
+/InicializarCompras/bin
+/InicializarCompras/obj
+/Molinos.DataAgro.Test/obj
+/Molinos.DataAgro.Test/bin
 /packages
 /WebDataAgro/bin
-/WebDataAgro/obj/Debug
+/WebDataAgro/obj
 /WebDataAgro/WebDataAgro.csproj.user
 Molinos.DataAgro.Test/bin
 .vs
 /WebDataAgro/accesos.log
 /WebDataAgro/whitelist.json
+
+# SDD: memoria de sesión activa, nunca se commitea (ver AGENTS.md)
+_sdd/progress/current/*
+!_sdd/progress/current/TEMPLATE.md

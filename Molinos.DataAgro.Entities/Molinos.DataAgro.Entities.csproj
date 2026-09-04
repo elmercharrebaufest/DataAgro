@@ -1118,4 +1118,23 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Compile Include="Dto\Distribucion\ContratoSapImportadoDto.cs" />
+    <Compile Include="Dto\Distribucion\EstadisticasImportacionDto.cs" />
+    <Compile Include="Dto\Distribucion\ImportacionSapResultadoDto.cs" />
+    <Compile Include="Dto\Distribucion\DistribucionCuposRequestDto.cs" />
+    <Compile Include="Dto\Distribucion\DistribucionConfigDto.cs" />
+    <Compile Include="Dto\Distribucion\ResultadoContratoDistribucionDto.cs" />
+    <Compile Include="Dto\Distribucion\FilaSapDto.cs" />
+    <Compile Include="Dto\Distribucion\ResumenDistribucionDto.cs" />
+    <Compile Include="Dto\Distribucion\DistribucionResponseDto.cs" />
+    <Compile Include="Dto\Distribucion\LimiteDiaDto.cs" />
+    <Compile Include="Dto\Distribucion\DistribucionMultiDiaRequestDto.cs" />
+    <Compile Include="Dto\Distribucion\ResultadoDiaDto.cs" />
+    <Compile Include="Dto\Distribucion\ResumenGlobalDto.cs" />
+    <Compile Include="Dto\Distribucion\DistribucionMultiDiaResponseDto.cs" />
+    <Compile Include="Dto\Distribucion\ConfiguracionDistribucionDto.cs" />
+    <Compile Include="Dto\Distribucion\ProcesarEnDataAgroRequestDto.cs" />
+    <Compile Include="Entities\ConfiguracionesDistribucionPlanta.cs" />
+  </ItemGroup>
 </Project>

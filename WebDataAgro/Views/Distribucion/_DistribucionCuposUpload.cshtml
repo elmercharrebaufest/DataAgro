@@ -1,0 +1,41 @@
+<!-- ══ PASO 1: CARGAR ══ -->
+<div class="card" id="card-upload">
+  <div class="ch green"><span>📂</span><h2>Paso 1 — Cargar archivo "A Recibir"</h2></div>
+  <div class="cb">
+    <div id="uz" class="uz">
+      <input type="file" id="fi" accept=".xls,.xlsx,.txt,.tsv">
+      <div class="ico">📊</div>
+      <h3>Arrastrá el archivo o hacé clic para seleccionarlo</h3>
+      <p>Exportación SAP "A Recibir" (.xls) — Planta San Lorenzo</p>
+    </div>
+    <div id="file-info" class="fi hidden">
+      <span class="ico">📄</span>
+      <div><div class="nm" id="fname"></div><div class="mt" id="fmeta"></div></div>
+      <button class="btn-x" onclick="removeFile()">✕</button>
+    </div>
+    <div class="dr">
+      <label>📅 Fecha de distribución:</label>
+      <input type="date" id="today-date" onchange="if(S.multiDay)updateDayDates()">
+    </div>
+    <div id="multiday-section" class="hidden mt-14 pt-12 bt-border">
+      <div class="toggle-row mb-0">
+        <label class="toggle"><input type="checkbox" id="chk-multiday" onchange="onToggleMultiDay()"><span class="slider"></span></label>
+        <label for="chk-multiday">Distribuir en rango de días (máx. 7)</label>
+      </div>
+      <div id="multiday-config" class="hidden mt-10">
+        <div class="d-flex-center gap-12 mb-10">
+          <label class="fs-13 fw-600 minw-130">Cantidad de días:</label>
+          <select id="day-count" onchange="onDayCountChange()" class="input-ui-lg">
+            <option value="2">2 días</option><option value="3">3 días</option><option value="4">4 días</option><option value="5">5 días</option><option value="6">6 días</option><option value="7">7 días</option>
+          </select>
+        </div>
+        <div id="day-dates-preview" class="day-preview"></div>
+        <div class="toggle-row mt-12">
+          <label class="toggle"><input type="checkbox" id="chk-spread" checked onchange="S.spreadDays=this.checked"><span class="slider"></span></label>
+          <label for="chk-spread" class="fs-13">Distribuir cupos en partes iguales por día</label>
+        </div>
+        <div class="al al-i mt-8 fs-12"><span class="ico">ℹ️</span><div>Si activado, los cupos de cada contrato se dividen en partes iguales entre los días. Ej: 10 cupos / 5 días = 2 por día.</div></div>
+      </div>
+    </div>
+  </div>
+</div>

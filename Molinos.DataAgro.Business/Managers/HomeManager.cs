@@ -641,16 +641,21 @@ namespace Molinos.DataAgro.Business.Managers
                 año += 1;
             var fechaDesde = new DateTime(año - 1, 04, 01);
             var fechaHasta = new DateTime(año, 03, 31);
-            foreach (var mat in material)
-            {
-                var c = repositorio.Listar<CampanaMaterialDetallePorMes>(x => 1 == 1
+
+            var materialIds = material.Select(m => m.MaterialId).ToList();
+            // Una sola consulta para todos los materiales (antes se repetia una vez por material) y sin change tracking (solo lectura)
+            var comprasTodas = repositorio.ListarNoTracking<CampanaMaterialDetallePorMes>(x => 1 == 1
                 && equipo.Contains(x.ComercialId.Value)
                 && (proveedorIds.Contains(x.ProveedorId) || proveedorIds.Contains(x.CorredorId))
-                && mat.MaterialId == x.MaterialId
+                && materialIds.Contains(x.MaterialId)
                 && (comercialId == null || comercialId == x.ComercialId)
                 && (zonaId == null || zonaId == x.Comercial.GrupoDeComprasId)
                 && x.FechaHasta <= fechaHasta && x.FechaHasta >= fechaDesde
                 );
+
+            foreach (var mat in material)
+            {
+                var c = comprasTodas.Where(x => x.MaterialId == mat.MaterialId);
 
                 año = int.Parse(DateTime.Now.Year.ToString().Substring(0, 2) + mat.Campaña.Descripcion.Substring(3, 2)) + 1;
                 var fechaCorteCampaña = new DateTime(año, 04, 01);

@@ -1,0 +1,99 @@
+{
+  "jiraKey": "MOA-1816",
+  "slug": "CambiosFormulario",
+  "estado": "in_progress",
+  "traceability": [
+    {
+      "requirement": "R1",
+      "type": "unit/manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "Molinos.DataAgro.Business/Managers/SapArchivoParserManager.cs",
+        "Molinos.DataAgro.Test/Managers/SapArchivoParserManagerTests.cs (ParsearArchivo_ExcluyeSoloContratosFuturosYUsaFechaHastaContraComoFallback)"
+      ]
+    },
+    {
+      "requirement": "R2",
+      "type": "unit/manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "Molinos.DataAgro.Business/Managers/SapArchivoParserManager.cs",
+        "Molinos.DataAgro.Business/Managers/DistribucionCuposManager.cs",
+        "Molinos.DataAgro.Entities/Dto/Distribucion/ContratoSapImportadoDto.cs",
+        "Molinos.DataAgro.Test/Managers/SapArchivoParserManagerTests.cs (ParsearArchivo_ExcluyeSoloContratosFuturosYUsaFechaHastaContraComoFallback)",
+        "Molinos.DataAgro.Test/Managers/DistribucionCuposManagerTests.cs (Calcular_UsaFechaHastaContraConFallbackCuandoHayFiltroDeFechas)"
+      ]
+    },
+    {
+      "requirement": "R3",
+      "type": "unit/manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "Molinos.DataAgro.Business/Managers/SapArchivoParserManager.cs",
+        "Molinos.DataAgro.Test/Managers/SapArchivoParserManagerTests.cs (ParsearArchivo_ExcluyeSoloContratosFuturosYUsaFechaHastaContraComoFallback)"
+      ]
+    },
+    {
+      "requirement": "R4",
+      "type": "unit/manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "Molinos.DataAgro.Business/Managers/DistribucionCuposManager.cs",
+        "Molinos.DataAgro.Test/Managers/DistribucionCuposManagerTests.cs (Calcular_OrdenamientoUsaFechaHastaYNoFechaHastaContra)"
+      ]
+    },
+    {
+      "requirement": "R5",
+      "type": "manual",
+      "artifacts": [
+        "Jira attachment: distribuidor_cupos_v2.html",
+        "WebDataAgro/Views/Distribucion/Index.cshtml",
+        "WebDataAgro/Views/Distribucion/_DistribucionCuposResultado.cshtml"
+      ]
+    },
+    {
+      "requirement": "R6",
+      "type": "manual",
+      "artifacts": [
+        "WebDataAgro/Views/Distribucion/Index.cshtml",
+        "WebDataAgro/Views/Distribucion/_DistribucionCuposUpload.cshtml",
+        "WebDataAgro/Views/Distribucion/_DistribucionCuposConfiguracion.cshtml",
+        "WebDataAgro/Views/Distribucion/_DistribucionCuposResultado.cshtml",
+        "WebDataAgro/Scripts/Distribucion/distribucion-cupos.js"
+      ]
+    }
+  ],
+  "qaManualPending": [
+    {
+      "requirement": "R1",
+      "description": "Validar en navegador con el archivo real de San Lorenzo que los contratos vencidos ya no queden excluidos y que solo siga faltando la restricción de contratos aún no iniciados. Cobertura unitaria ya en verde (SapArchivoParserManagerTests); falta el caso real de datos.",
+      "signOff": null
+    },
+    {
+      "requirement": "R2",
+      "description": "Validar en el archivo de muestra que el rango use Fecha Hasta Contra con fallback a Fecha Hasta y que los contratos con datos heterogéneos se calculen correctamente. Cobertura unitaria ya en verde; falta el caso real de datos (486 → 608 elegibles).",
+      "signOff": null
+    },
+    {
+      "requirement": "R3",
+      "description": "Validar en navegador que los contratos con Fecha Desde futura sigan excluidos con el archivo real. Cobertura unitaria ya en verde (SapArchivoParserManagerTests).",
+      "signOff": null
+    },
+    {
+      "requirement": "R4",
+      "description": "Confirmar visualmente en la UI que el ordenamiento no cambia de criterio y sigue usando Fecha Hasta como desempate. Cobertura unitaria ya en verde (DistribucionCuposManagerTests); falta la confirmación visual en pantalla.",
+      "signOff": null
+    },
+    {
+      "requirement": "R5",
+      "description": "Confirmar que el panel de diagnóstico sigue mostrando el rango de Fecha Hasta como referencia visual y no se rompe la UI del formulario.",
+      "signOff": null
+    },
+    {
+      "requirement": "R6",
+      "description": "Validar en la vista real del proyecto que la corrección quedó aplicada en el formulario actual de la solución y no solo en el adjunto HTML del issue.",
+      "signOff": null
+    }
+  ]
+}
+

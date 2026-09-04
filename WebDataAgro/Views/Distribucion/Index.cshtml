@@ -1,0 +1,31 @@
+@{
+    ViewBag.Title = "Distribuidor de Cupos – Planta San Lorenzo";
+}
+
+@section Styles {
+    @Styles.Render("~/Content/distribucion-cupos")
+}
+
+<div class="Titulo">
+    <h5>Distribuidor de Cupos – Planta San Lorenzo</h5>
+</div>
+
+<div class="main">
+    @Html.Partial("_DistribucionCuposTemplates")
+    @Html.Partial("_DistribucionCuposUpload")
+    @Html.Partial("_DistribucionCuposConfiguracion")
+    @Html.Partial("_DistribucionCuposResultado")
+</div><!-- /main -->
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        var API_IMPORTAR = '@Url.Action("Importar", "ContratosApi")';
+        var API_CALCULAR = '@Url.Action("Calcular", "DistribucionApi")';
+        var API_CALCULAR_MD = '@Url.Action("CalcularMultiDia", "DistribucionApi")';
+        var API_PROCESAR_DATAAGRO = '@Url.Action("ProcesarEnDataAgro", "DistribucionApi")';
+        var API_CONFIG_GET = '@Url.Action("ObtenerConfiguracion", "ConfiguracionDistribucion")';
+        var API_CONFIG_PUT = '@Url.Action("GuardarConfiguracion", "ConfiguracionDistribucion")';
+    </script>
+    @Scripts.Render("~/bundles/distribucion-cupos")
+}
