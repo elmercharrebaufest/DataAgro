@@ -489,6 +489,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     controlDeBoletosExiste.FechaAnulacionConfirma = DateTime.Now;
                     controlDeBoletosExiste.EstadoConfirmaId = (int)EnumEstadoConfirma.ANULADO;
+                    // Guardarnos de datos huérfanos en la FK del maestro de estados.
+                    if (!repositorio.Listar<ControlDeBoletosEstado>(e => e.Id == controlDeBoletosExiste.ControlDeBoletosEstadoId).Any())
+                    {
+                        controlDeBoletosExiste.ControlDeBoletosEstadoId = (int)EnumControlDeBoletosEstado.PENDIENTE_CONTROL;
+                    }
                     repositorio.GuardarCambios();
 
                     this.EliminarDatosSeguimiento(controlDeBoletosExiste.Id);
