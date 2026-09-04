@@ -36,6 +36,7 @@ Skills disponibles hoy:
 | Skill | Usar cuando... |
 |---|---|
 | [`nueva-operacion-manager`](../../.github/skills/nueva-operacion-manager/SKILL.md) | Agregar un método de negocio nuevo en un Manager (con su interfaz, y Consulta EF si aplica) |
+| [`patron-consulta-comando`](../../.github/skills/patron-consulta-comando/SKILL.md) | Crear una clase de Consulta/Comando EF (`IConsulta`/`IConsultaEscalar`/`IComando`) en `Repository/ConsultasEF` y cablearla en el Manager |
 | [`kendo-frontend`](../../.github/skills/kendo-frontend/SKILL.md) | Agregar/modificar una grilla, combo, buscador con autocompletado, fecha o campo numérico con Kendo UI |
 | [`nuevo-job-hangfire`](../../.github/skills/nuevo-job-hangfire/SKILL.md) | Crear una tarea programada/background job nueva |
 | [`nuevo-procesador-clausula`](../../.github/skills/nuevo-procesador-clausula/SKILL.md) | Agregar un procesador de cláusula contractual nuevo (boletos/contratos) |
@@ -52,20 +53,19 @@ Skills disponibles hoy:
 
 ## 3. Agents (`*.agent.md`)
 
-Son **subagentes especializados**: tienen un rol acotado y solo pueden usar ciertas herramientas (por ejemplo, no pueden tocar archivos fuera de una carpeta puntual). Se usan para tareas mecánicas que cruzan varios archivos, manteniendo la conversación principal más limpia.
+Son **especialistas con un rol acotado**: una persona/mindset distinto al del coder por defecto (negocio, arquitectura, DBA, QA) o un pipeline propio con sus herramientas. Para aplicar un patrón de código conocido (Kendo, Consulta/Comando, integración externa, etc.) se usa directamente la skill correspondiente, no un agent.
 
 Agents disponibles hoy:
 
 | Agent | Especialidad |
 |---|---|
-| `consulta-builder` | Crea clases de Consulta/Comando EF en `Repository/ConsultasEF` y las cablea en el Manager |
-| `kendo-grid-builder` | Arma una grilla Kendo server-driven de punta a punta (vista + JS + Controller + Manager + Repository) |
-| `agent-integracion-builder` | Crea una integración externa nueva (`{X}Agent`) para SAP u otra API |
 | `product-owner` | Define/refina historias de usuario, criterios de aceptación y reglas de negocio, antes de implementar |
 | `architect` | Diseño técnico: revisión de deuda técnica, refinamiento de diseño y documentación de arquitectura |
 | `release-manager` | Genera `CHANGELOG.md`, redacta notas de release para el PO y audita cambios SQL/componentes de un pase a producción |
+| `dba-migraciones` | Audita scripts SQL nuevos/modificados en `Base de Datos/dbo` antes de un pase (schema, índices, FKs, scripts de datos) |
+| `qa-tester` | Diseña casos de prueba a partir de los criterios de aceptación de una historia de Jira y los deja como comentario en el ticket |
 
-**Cómo se invocan**: se puede pedir explícitamente ("usá el agent consulta-builder para...") o el agente principal de Copilot puede delegar solo si detecta que el pedido coincide con la especialidad de alguno. Algunos agents tienen **handoffs** configurados: por ejemplo, `product-owner` puede pasarle el trabajo a `architect` una vez aprobados los requerimientos, y `release-manager` puede pedirle a `product-owner` que revise el lenguaje de las notas de release.
+**Cómo se invocan**: se puede pedir explícitamente ("usá el agent architect para...") o el agente principal de Copilot puede delegar solo si detecta que el pedido coincide con la especialidad de alguno. Algunos agents tienen **handoffs** configurados: por ejemplo, `product-owner` puede pasarle el trabajo a `architect` una vez aprobados los requerimientos, `qa-tester` puede derivar a `product-owner` si detecta un gap en un criterio de aceptación, y `dba-migraciones` puede derivar a `release-manager` para incluir un cambio ya auditado en el changelog del pase.
 
 ## 4. Prompts (`*.prompt.md`)
 

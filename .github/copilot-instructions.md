@@ -147,6 +147,7 @@ Evitar sugerir APIs o sintaxis de versiones más nuevas que no existan en este p
 ### Skills
 
 - `nueva-operacion-manager`: agregar un método nuevo en un Manager con su interfaz y Consulta EF si aplica.
+- `patron-consulta-comando`: clase de Consulta/Comando EF en `Repository/ConsultasEF` y su wiring en el Manager.
 - `kendo-frontend`: grillas, combo, autocompletado, filtros, fechas y campos numéricos con Kendo UI.
 - `nuevo-job-hangfire`: job programado/background.
 - `nuevo-procesador-clausula`: procesador de cláusulas contractuales.
@@ -161,12 +162,11 @@ Evitar sugerir APIs o sintaxis de versiones más nuevas que no existan en este p
 
 ### Agents y prompts
 
-- `consulta-builder`: clases de Consulta/Comando EF y su wiring en el Manager.
-- `kendo-grid-builder`: grilla Kendo server-driven de punta a punta.
-- `agent-integracion-builder`: integración externa nueva.
 - `product-owner`: definición/refinamiento de historias y reglas de negocio.
 - `architect`: revisión arquitectónica y refinamiento de diseño.
 - `release-manager`: changelog y notas de release.
+- `dba-migraciones`: auditoría de scripts SQL (`Base de Datos/dbo`) antes de un pase a producción.
+- `qa-tester`: casos de prueba a partir de criterios de aceptación de una historia de Jira.
 
 ## 9. Glosario de dominio
 
