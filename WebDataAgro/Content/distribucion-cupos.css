@@ -22,7 +22,6 @@ body{font-family:"G-Open Sans-n4",Arial,sans-serif;background:var(--dc-bg);color
 }
 .hdr-bg{
   position:absolute;inset:0;z-index:0;
-  background-image:url('/Content/Images/distribucion-cupos-header-bg.jpg');
   background-size:cover;background-position:center 40%;
   opacity:0.22;
 }

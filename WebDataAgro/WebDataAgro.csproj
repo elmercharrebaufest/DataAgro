@@ -401,6 +401,10 @@
     <Content Include="Views\ControlDeBoletos\SeguimientoBoletos.cshtml" />
     <Content Include="Views\ControlDeBoletos\ModificacionMasivaBoletos.cshtml" />
     <Content Include="Views\Distribucion\Index.cshtml" />
+    <Content Include="Views\Distribucion\_DistribucionCuposTemplates.cshtml" />
+    <Content Include="Views\Distribucion\_DistribucionCuposUpload.cshtml" />
+    <Content Include="Views\Distribucion\_DistribucionCuposConfiguracion.cshtml" />
+    <Content Include="Views\Distribucion\_DistribucionCuposResultado.cshtml" />
     <Content Include="Views\ContactoComercialAuditoria\Index.cshtml" />
     <Compile Include="Controllers\ContactoComercialAuditoriaController.cs" />
     <Compile Include="Controllers\ControlDeBoletosController.cs" />
