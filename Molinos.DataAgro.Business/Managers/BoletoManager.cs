@@ -169,7 +169,15 @@ namespace Molinos.DataAgro.Business.Managers
                             boletoResult.BoletosDto.Add(boletoDto);
 
                             // 6. SEXTO: RegistrarDatosCertificacion Control de Boleto
-                            controlDeBoletosManager.RegistroContratoPendienteDeControl(negocio.Id);
+                            try
+                            {
+                                controlDeBoletosManager.RegistroContratoPendienteDeControl(negocio.Id);
+                            }
+                            catch (Exception exCtrl)
+                            {
+                                logger.Error(exCtrl, $"Boleto {negocio.ContratoSAP} generado OK pero falló el alta en ControlDeBoletos.");
+                                boletoDto.Mensaje += " (Advertencia: no se pudo registrar en Control de Boletos).";
+                            }
 
                             // Se limpia el cache para que se vuelva a consultar el estado del boleto
                             var cacheKey = $"EstadoBoleto_Fisico_{negocio.ContratoSAP}";
@@ -188,12 +196,15 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         catch (Exception ex)
                         {
-                            // Error general después de guardar PDF
-                            boletoDto.Mensaje += $" Error:  {ex.Message}";
-                            logger.Error(ex);
+                            if (string.IsNullOrEmpty(ex.Message))
+                            {
+                                // Error general después de guardar PDF
+                                boletoDto.Mensaje += $" Error:  {ex.Message}";
+                                logger.Error(ex);
 
-                            // Ya se guardó en BD, así que agregamos al resultado
-                            boletoResult.BoletosDto.Add(boletoDto);
+                                // Ya se guardó en BD, así que agregamos al resultado
+                                boletoResult.BoletosDto.Add(boletoDto);
+                            }
                         }
                     }
                     catch (Exception ex)
