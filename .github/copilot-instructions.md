@@ -50,16 +50,7 @@ Si se crea un nuevo `{X}Manager : I{X}Manager` siguiendo esa convención, queda 
 
 ### Patrón Consulta/Comando (Repository/ConsultasEF)
 
-Para queries EF complejas (joins, agregaciones, `TransactionScope`), se crea una clase dedicada en `Molinos.DataAgro.Repository/ConsultasEF` en lugar de escribir LINQ inline en el Manager:
-
-```csharp
-public class Traer{Algo} : IConsulta<{Entidad}>
-{
-    public Traer{Algo}(/* parámetros de filtro */) { ... }
-    public virtual List<{Entidad}> Ejecutar(DbContext contexto) { ... }
-}
-```
-
+Para queries EF complejas (joins, agregaciones, `TransactionScope`), se crea una clase dedicada en `Molinos.DataAgro.Repository/ConsultasEF` en vez de escribir LINQ inline en el Manager, implementando `IConsulta<T>`, `IConsultaEscalar<T>` o `IComando<T>`. Ver skill [patron-consulta-comando](skills/patron-consulta-comando/SKILL.md) para el detalle completo del patrón y el procedimiento.
 Se invoca desde el Manager con:
 
 ```csharp
