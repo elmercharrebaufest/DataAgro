@@ -16,7 +16,7 @@ description: 'Patrones de uso de Kendo UI (JS/jQuery) en el front de WebDataAgro
 
 ### Server-driven (usar por defecto, salvo que el dataset sea chico/estático)
 
-Cruza 4 capas. Flujo completo:
+Cruza 4 capas. Flujo completo (ver también la skill [patron-consulta-comando](../patron-consulta-comando/SKILL.md) para el patrón general de Consulta/Comando EF):
 
 1. **Repository** (`Molinos.DataAgro.Repository/ConsultasEF/Traer{X}PorFiltro.cs`): clase `IConsultaEscalar<DataSourceResult>` que arma el `IQueryable` y llama `queryable.ToDataSourceResult<TProyeccion>(request)` (paquete `Kendo.DynamicLinq`).
    ```csharp

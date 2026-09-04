@@ -19,7 +19,7 @@ description: 'Workflow para agregar una nueva operación de negocio de punta a p
    - Para queries complejas (joins, agregaciones, performance crítica), ir al paso 3.
    - No agregar try/catch salvo que el Manager ya use ese patrón.
 
-3. **(Si la query es compleja) Crear una clase en `Molinos.DataAgro.Repository/ConsultasEF`** implementando `IConsulta<TEntidad>` (lista), `IConsultaEscalar<TEntidad>` (valor único) o `IComando<TResultado>` (con side-effects), con el método `Ejecutar(DbContext contexto)`. Invocarla desde el Manager con `repositorio.ListarConsulta(...)` / `ObtenerConsultaEscalar(...)`.
+3. **(Si la query es compleja) Crear una clase en `Molinos.DataAgro.Repository/ConsultasEF`** siguiendo la skill [patron-consulta-comando](../patron-consulta-comando/SKILL.md) (`IConsulta<T>`/`IConsultaEscalar<T>`/`IComando<T>`).
 
 4. **Consumir el método desde un Controller de `WebDataAgro`.**
    - Inyectar `I{X}Manager` por constructor (Autofac lo resuelve automáticamente por convención de nombre, no requiere tocar `Startup.Dependencias.cs`).

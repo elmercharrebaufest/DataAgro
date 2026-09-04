@@ -38,17 +38,7 @@ Si se crea un nuevo `{X}Manager : I{X}Manager` siguiendo esa convención de nomb
 
 ## Patrón Consulta/Comando (Repository/ConsultasEF)
 
-Para queries EF complejas (joins, agregaciones, `TransactionScope`), se crea una clase dedicada en `Molinos.DataAgro.Repository/ConsultasEF` en vez de escribir LINQ inline en el Manager:
-
-```csharp
-public class Traer{Algo} : IConsulta<{Entidad}>
-{
-    public Traer{Algo}(/* parámetros de filtro */) { ... }
-    public virtual List<{Entidad}> Ejecutar(DbContext contexto) { ... }
-}
-```
-
-Se invoca desde el Manager con `repositorio.ListarConsulta(new Traer{Algo}(...))`. Los nombres de estas clases no siguen un único verbo fijo (conviven `Traer`, `Devolver`, `Buscar`, `Obtener`, `Consultar`); no forzar una convención nueva sobre el código existente.
+Para queries EF complejas (joins, agregaciones, `TransactionScope`), se crea una clase dedicada en `Molinos.DataAgro.Repository/ConsultasEF` en vez de escribir LINQ inline en el Manager, implementando `IConsulta<T>`, `IConsultaEscalar<T>` o `IComando<T>`. Ver skill [patron-consulta-comando](skills/patron-consulta-comando/SKILL.md) para el detalle completo del patrón y el procedimiento.
 
 ## Permisos en Controllers (WebDataAgro)
 
@@ -70,6 +60,7 @@ Este proyecto usa Azure DevOps (organización `molinosagro`, proyecto `DataAgro`
 | Skill | Usar cuando... |
 |---|---|
 | [`nueva-operacion-manager`](skills/nueva-operacion-manager/SKILL.md) | Agregar un método de negocio nuevo en un Manager (con su interfaz, y Consulta EF si aplica) |
+| [`patron-consulta-comando`](skills/patron-consulta-comando/SKILL.md) | Crear una clase de Consulta/Comando EF en `Repository/ConsultasEF` (`IConsulta<T>`/`IConsultaEscalar<T>`/`IComando<T>`) y cablearla en el Manager |
 | [`kendo-frontend`](skills/kendo-frontend/SKILL.md) | Agregar/modificar una grilla, combo, buscador con autocompletado, fecha o campo numérico con Kendo UI |
 | [`nuevo-job-hangfire`](skills/nuevo-job-hangfire/SKILL.md) | Crear una tarea programada/background job nueva |
 | [`nuevo-procesador-clausula`](skills/nuevo-procesador-clausula/SKILL.md) | Agregar un procesador de cláusula contractual nuevo (boletos/contratos) |
@@ -82,16 +73,15 @@ Este proyecto usa Azure DevOps (organización `molinosagro`, proyecto `DataAgro`
 | [`user-story`](skills/user-story/SKILL.md) | Definir o refinar una historia de usuario, criterios de aceptación o reglas de negocio antes de implementar |
 | [`release-notes`](skills/release-notes/SKILL.md) | Generar una entrada de changelog o notas de release de un pase a producción |
 
-**Agents** (`.github/agents/*.agent.md`, subagentes con tools acotadas):
+**Agents** (`.github/agents/*.agent.md`, subagentes con tools acotadas): reservados para tareas que requieren una persona/mindset distinto al del coder por defecto (negocio, arquitectura) o un pipeline multi-paso que conviene aislar del hilo principal. Para aplicar un patrón de código conocido (Kendo, Consulta/Comando, integración externa, etc.) se usa directamente la skill correspondiente, no un agent dedicado.
 
 | Agent | Especialidad |
 |---|---|
-| `consulta-builder` | Crea clases de Consulta/Comando EF en `Repository/ConsultasEF` y las cablea en el Manager |
-| `kendo-grid-builder` | Arma una grilla Kendo server-driven de punta a punta (vista + JS + Controller + Manager + Repository) |
-| `agent-integracion-builder` | Crea una integración externa nueva (`{X}Agent`) para SAP u otra API |
 | `product-owner` | Define/refina historias de usuario, criterios de aceptación y reglas de negocio antes de implementar |
 | `architect` | Diseño técnico: revisión de deuda técnica, refinamiento de diseño y documentación de arquitectura |
 | `release-manager` | Genera `CHANGELOG.md`, notas de release para el PO y audita cambios SQL/componentes de un pase a producción |
+| `dba-migraciones` | Audita scripts SQL nuevos/modificados en `Base de Datos/dbo` (schema, índices, FKs, idempotencia) antes de un pase |
+| `qa-tester` | Diseña casos de prueba a partir de criterios de aceptación de una historia de Jira y los publica como comentario en el ticket |
 
 **Prompts** (`.github/prompts/*.prompt.md`):
 
