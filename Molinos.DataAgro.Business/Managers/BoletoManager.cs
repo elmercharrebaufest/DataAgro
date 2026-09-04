@@ -176,7 +176,7 @@ namespace Molinos.DataAgro.Business.Managers
                             catch (Exception exCtrl)
                             {
                                 logger.Error(exCtrl, $"Boleto {negocio.ContratoSAP} generado OK pero falló el alta en ControlDeBoletos.");
-                                boletoDto.Mensaje += " (Advertencia: no se pudo registrar en Control de Boletos).";
+                                boletoDto.Mensaje += " (Error: no se pudo registrar en Control de Boletos).";
                             }
 
                             // Se limpia el cache para que se vuelva a consultar el estado del boleto
